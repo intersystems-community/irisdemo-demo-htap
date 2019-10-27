@@ -19,7 +19,7 @@ build_java_project() {
 	fi
 }
 
-docker-compose stop -f iris-community-docker-compose.yml
+docker-compose stop
 docker-compose rm -f 
 
 build_java_project "image-master"
@@ -28,4 +28,5 @@ docker build -t ${IMAGE_MASTER_NAME} ./image-master
 build_java_project "image-iris-jdbc-ingest-worker"
 docker build -t ${IMAGE_IRIS_JDBC_INGEST_WORKER_NAME} ./image-iris-jdbc-ingest-worker
 
-# docker build -t ${IMAGE_UI_NAME} ./image-ui
+docker build -t ${IMAGE_UI_NAME} ./image-ui
+

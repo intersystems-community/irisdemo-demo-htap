@@ -2,6 +2,9 @@
 
 source /ICMDurable/env.sh
 
+rm -rf ${SSH_DIR}
+rm -rf ${TLS_DIR}
+
 printf "\n\nGenerating SSH keys on $SSH_DIR:\n"
 /ICM/bin/keygenSSH.sh $SSH_DIR
 

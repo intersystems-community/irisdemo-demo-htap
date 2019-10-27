@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo
+echo "### HOOK - build environment:"
+echo "   SOURCE_BRANCH  : $SOURCE_BRANCH"
+echo "   SOURCE_COMMIT  : $SOURCE_COMMIT"
+echo "   COMMIT_MSG     : $COMMIT_MSG"
+echo "   DOCKER_REPO    : $DOCKER_REPO"
+echo "   DOCKERFILE_PATH: $DOCKERFILE_PATH"
+echo "   DOCKER_TAG     : $DOCKER_TAG"
+echo "   DOCKER_TAG     : $IMAGE_NAME"
+
+echo
+echo "### HOOK - building the JAR..."
+docker run -it \
+    -v ${PWD}/projects:/usr/projects \
+    --name irismasterJAR intersystemsdc/irisdemo-base-mavenc:latest
+
+echo
+echo "### HOOK - building $IMAGE_NAME..."
+#docker build --build-arg DOCKER_TAG=$DOCKER_TAG -t $IMAGE_NAME .
+docker build -t $IMAGE_NAME .
