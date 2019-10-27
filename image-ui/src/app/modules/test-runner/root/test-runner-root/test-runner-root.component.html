@@ -1,0 +1,91 @@
+<div class="test-runner-layout">
+    <div class="test-running-stats-wrapper">
+        <div class="test-runner-button-wrapper">
+            <button [disabled]="testRunning" class="test-button" (click)="runTest()">Run Test</button>
+        </div>
+
+        <div class="stat-tracker">
+            <h2>{{runTime}} secs</h2>
+            <p>Run Time</p>
+        </div>
+
+        <div class="stat-tracker">
+            <h2>{{rowsIngested.toLocaleString(undefined,{maximumFractionDigits:0})}}</h2>
+            <p>Records Ingested</p>
+        </div>
+
+        <div class="stat-tracker">
+            <h2>{{rowsConsumed.toLocaleString(undefined,{maximumFractionDigits:0})}}</h2>
+            <p>Records Consumed</p>
+        </div>
+
+        <div class="stat-tracker"> 
+            <h2>{{mbIngested.toLocaleString(undefined,{minimumFractionDigits:3, maximumFractionDigits:3})}}</h2>
+            <p>MB Ingested</p>
+        </div>
+
+        <div class="stat-tracker"> 
+            <h2>{{mbConsumed.toLocaleString(undefined,{minimumFractionDigits:3, maximumFractionDigits:3})}}</h2>
+            <p>MB Consumed</p>
+        </div>
+        <div class="stat-tracker"> 
+            <h2>{{avgQueryTime.toLocaleString(undefined,{minimumFractionDigits:5, maximumFractionDigits:5})}}</h2>
+            <p>Average Query Time in Ms</p>
+        </div>
+    </div>
+    <div class="test-graph-wrapper">
+        <div class="graph-wrapper">
+            <ngx-charts-line-chart
+            [scheme]="sharedGraphConfiguration.colorScheme"
+            [results]="dataIngestRecords"
+            [gradient]="sharedGraphConfiguration.gradient"
+            [xAxis]="sharedGraphConfiguration.showXAxis"
+            [yAxis]="sharedGraphConfiguration.showYAxis"
+            [legend]="sharedGraphConfiguration.showLegend"
+            [showXAxisLabel]="sharedGraphConfiguration.showXAxisLabel"
+            [showYAxisLabel]="sharedGraphConfiguration.showYAxisLabel"
+            [xAxisLabel]="sharedGraphConfiguration.xAxisLabel"
+            yAxisLabel="Ingestion Rate Rec"
+            [xScaleMin]="sharedGraphConfiguration.xScaleMin"
+            [yScaleMin]="sharedGraphConfiguration.yScaleMin"
+            (select)="onSelect($event)">
+            </ngx-charts-line-chart>
+        </div>
+
+        <div class="graph-wrapper">
+            <ngx-charts-line-chart
+            [scheme]="sharedGraphConfiguration.colorScheme"
+            [results]="dataIngestMB"
+            [gradient]="sharedGraphConfiguration.gradient"
+            [xAxis]="sharedGraphConfiguration.showXAxis"
+            [yAxis]="sharedGraphConfiguration.showYAxis"
+            [legend]="sharedGraphConfiguration.showLegend"
+            [showXAxisLabel]="sharedGraphConfiguration.showXAxisLabel"
+            [showYAxisLabel]="sharedGraphConfiguration.showYAxisLabel"
+            [xAxisLabel]="sharedGraphConfiguration.xAxisLabel"
+            yAxisLabel="Ingestion Rate Mb"
+            [xScaleMin]="sharedGraphConfiguration.xScaleMin"
+            [yScaleMin]="sharedGraphConfiguration.yScaleMin"
+            (select)="onSelect($event)">
+            </ngx-charts-line-chart>
+        </div>
+
+        <div class="graph-wrapper">
+            <ngx-charts-line-chart
+            [scheme]="sharedGraphConfiguration.colorScheme"
+            [results]="dataConsumptionRecords"
+            [gradient]="sharedGraphConfiguration.gradient"
+            [xAxis]="sharedGraphConfiguration.showXAxis"
+            [yAxis]="sharedGraphConfiguration.showYAxis"
+            [legend]="sharedGraphConfiguration.showLegend"
+            [showXAxisLabel]="sharedGraphConfiguration.showXAxisLabel"
+            [showYAxisLabel]="sharedGraphConfiguration.showYAxisLabel"
+            [xAxisLabel]="sharedGraphConfiguration.xAxisLabel"
+            yAxisLabel="Consumption Rate Rec"
+            [xScaleMin]="sharedGraphConfiguration.xScaleMin"
+            [yScaleMin]="sharedGraphConfiguration.yScaleMin"
+            (select)="onSelect($event)">
+            </ngx-charts-line-chart>
+        </div>
+    </div>
+</div>
