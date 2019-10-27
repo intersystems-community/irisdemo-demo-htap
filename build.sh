@@ -19,7 +19,7 @@ build_java_project() {
 	fi
 }
 
-docker-compose stop 
+docker-compose stop -f iris-community-docker-compose.yml
 docker-compose rm -f 
 
 build_java_project "image-master"

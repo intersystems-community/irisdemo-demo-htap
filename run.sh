@@ -2,4 +2,4 @@
 
 docker-compose stop
 docker-compose rm -f
-docker-compose up -f $1
+docker-compose up
