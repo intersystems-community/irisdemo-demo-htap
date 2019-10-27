@@ -147,7 +147,7 @@ export class TestRunnerRootComponent implements OnInit {
       response => {
         this.$startSubscription.unsubscribe();
         this.testRunning = true;
-        this.startTestSafetyKill();
+        //this.startTestSafetyKill();
         this.monitorMetrics();
       },
       error => {
