@@ -28,7 +28,7 @@ hs_err_pid*
 
 #ICM
 **/State
-**/.terraform
+**/.terraform/
 **/keys
 **/license
 **/instances.json
