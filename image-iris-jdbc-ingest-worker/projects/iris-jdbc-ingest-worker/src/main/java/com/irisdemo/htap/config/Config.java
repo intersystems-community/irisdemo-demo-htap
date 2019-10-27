@@ -20,13 +20,13 @@ public class Config
 	WORKER CONFIGURATION
 	*/
 	private String masterHostName;
+	private String masterPort;
 	private String thisHostName;
 	private String workerNodePrefix;
 	
 	/* 
 	GENERAL CONFIGURATION THAT WILL BE COMING FROM THE MASTER
 	*/
-	private int runningTimeInSeconds;
 	private boolean startConsumers;
 
 	/* 
@@ -113,6 +113,16 @@ public class Config
 		this.masterHostName = masterHostName;
 	}
 
+	public String getMasterPort() {
+		return masterPort;
+	}
+		
+	@Value( "${MASTER_PORT:80}" )
+	public void setMasterPort(String masterPort) {
+		logger.info("Setting MASTER_PORT = " + masterPort);
+		this.masterPort = masterPort;
+	}
+
 	public int getIngestionNumThreadsPerWorker() 
 	{
 		return ingestionNumThreadsPerWorker;
@@ -122,15 +132,6 @@ public class Config
 	{
 		logger.info("Setting INGESTION_THREADS_PER_WORKER = " + value);
 		ingestionNumThreadsPerWorker=value;
-	}
-
-	public int getRunningTimeInSeconds() {
-		return runningTimeInSeconds;
-	}
-	
-	public void setRunningTimeInSeconds(int runningTimeInSeconds) {
-		logger.info("Setting RUNNING_TIME_IN_SECONDS = " + runningTimeInSeconds);
-		this.runningTimeInSeconds = runningTimeInSeconds;
 	}
 
 	public boolean getStartConsumers() {

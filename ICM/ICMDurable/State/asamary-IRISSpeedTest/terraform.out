@@ -1,3 +1,0 @@
-aws_subnet_default_ids = "subnet-0b83edca88b4280cc,subnet-0ebb18fce0b46d2b4"
-aws_key_pair_default_id = "asamary-IRISSpeedTest"
-aws_vpc_default_id = "vpc-0c4f1db65b053e888"

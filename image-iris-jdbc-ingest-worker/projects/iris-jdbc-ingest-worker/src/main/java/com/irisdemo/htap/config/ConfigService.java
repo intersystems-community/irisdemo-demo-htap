@@ -29,7 +29,7 @@ public class ConfigService implements CommandLineRunner
     
     private void registerWithMasterAndGetConfig() throws Exception
     {
-    	String registrationUrl = "http://" + config.getMasterHostName()+":8080/master/ingestworker/register/" + config.getThisHostName();
+    	String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/ingestworker/register/" + config.getThisHostName();
     	
     	logger.info("Registering with " + registrationUrl);
     	
@@ -48,7 +48,6 @@ public class ConfigService implements CommandLineRunner
 		config.setIngestionJDBCURL(workerConfig.config.ingestionJDBCURL);
 		config.setIngestionJDBCUserName(workerConfig.config.ingestionJDBCUserName);
 		config.setIngestionNumThreadsPerWorker(workerConfig.config.ingestionNumThreadsPerWorker);
-		config.setRunningTimeInSeconds(workerConfig.config.runningTimeInSeconds);
 		config.setInsertStatement(workerConfig.config.insertStatement);
 		config.setQueryStatement(workerConfig.config.queryStatement);
 		config.setQueryByIdStatement(workerConfig.config.queryByIdStatement);

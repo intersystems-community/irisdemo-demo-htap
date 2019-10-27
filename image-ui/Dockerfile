@@ -2,6 +2,9 @@ FROM node:alpine AS builder
 
 ADD . /app
 
+ENV MASTER_HOSTNAME="htapmaster"
+ENV MASTER_PORT=80
+
 WORKDIR /app
 
 RUN npm install 

@@ -19,9 +19,21 @@
 *.nar
 *.ear
 *.zip
+*.gz
 *.tar.gz
 *.rar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+#ICM
+**/State
+**/.terraform
+**/keys
+**/license
+**/instances.json
+**/credentials.ADFS-PowerUsers
+*.log
+*.err
+
 

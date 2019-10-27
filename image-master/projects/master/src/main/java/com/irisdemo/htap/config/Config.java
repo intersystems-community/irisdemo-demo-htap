@@ -22,7 +22,6 @@ public class Config
 	/* 
 	GENERAL CONFIGURATION 
 	*/
-	private int runningTimeInSeconds;
 	private boolean startConsumers;
 	private boolean disableJournalForDropTable;
 	private boolean disableJournalForTruncateTable;
@@ -113,28 +112,18 @@ public class Config
 		return insertStatement;
 	}
 	
-	@Value( "${INGESTION_THREADS_PER_WORKER}" )
+	@Value( "${INGESTION_THREADS_PER_WORKER:10}" )
 	public void setIngestionNumThreadsPerWorker(int value) 
 	{
 		logger.info("Setting INGESTION_THREADS_PER_WORKER = " + value);
 		ingestionNumThreadsPerWorker=value;
 	}
 
-	public int getRunningTimeInSeconds() {
-		return runningTimeInSeconds;
-	}
-	
-	@Value( "${RUNNING_TIME_IN_SECONDS}" )
-	public void setRunningTimeInSeconds(int runningTimeInSeconds) {
-		logger.info("Setting RUNNING_TIME_IN_SECONDS = " + runningTimeInSeconds);
-		this.runningTimeInSeconds = runningTimeInSeconds;
-	}
-
 	public boolean getStartConsumers() {
 		return startConsumers;
 	}
 	
-	@Value( "${START_CONSUMERS}" )
+	@Value( "${START_CONSUMERS:true}" )
 	public void setStartConsumers(boolean startConsumers) {
 		logger.info("Setting START_CONSUMERS = " + startConsumers);
 		this.startConsumers = startConsumers;
@@ -144,7 +133,7 @@ public class Config
 		return disableJournalForDropTable;
 	}
 	
-	@Value( "${DISABLE_JOURNAL_FOR_DROP_TABLE}" )
+	@Value( "${DISABLE_JOURNAL_FOR_DROP_TABLE:true}" )
 	public void setDisableJournalForDropTable(boolean disableJournalForDropTable) {
 		logger.info("Setting DISABLE_JOURNAL_FOR_DROP_TABLE = " + disableJournalForDropTable);
 		this.disableJournalForDropTable = disableJournalForDropTable;
@@ -154,7 +143,7 @@ public class Config
 		return disableJournalForTruncateTable;
 	}
 	
-	@Value( "${DISABLE_JOURNAL_FOR_TRUNCATE_TABLE}" )
+	@Value( "${DISABLE_JOURNAL_FOR_TRUNCATE_TABLE:true}" )
 	public void setDisableJournalForTruncateTable(boolean disableJournalForTruncateTable) {
 		logger.info("Setting DISABLE_JOURNAL_FOR_TRUNCATE_TABLE = " + disableJournalForTruncateTable);
 		this.disableJournalForTruncateTable = disableJournalForTruncateTable;
@@ -194,7 +183,7 @@ public class Config
 		return ingestionBatchSize;
 	}
 	
-	@Value( "${INGESTION_BATCH_SIZE}" )
+	@Value( "${INGESTION_BATCH_SIZE:1000}" )
 	public void setIngestionBatchSize(int ingestionBatchSize) {
 		logger.info("Setting INGESTION_BATCH_SIZE = " + ingestionBatchSize);
 		this.ingestionBatchSize = ingestionBatchSize;
@@ -234,7 +223,7 @@ public class Config
 		return consumptionProgression;
 	}
 	
-	@Value( "${CONSUMER_PROGRESSION}" )
+	@Value( "${CONSUMER_PROGRESSION:10}" )
 	public void setConsumptionProgression(String consumptionProgression) {
 		logger.info("Setting CONSUMER_PROGRESSION = " + consumptionProgression);
 		this.consumptionProgression = consumptionProgression;
@@ -244,7 +233,7 @@ public class Config
 		return consumptionTimeBetweenQueriesInMillis;
 	}
 	
-	@Value( "${CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS}" )
+	@Value( "${CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS:0}" )
 	public void setConsumptionTimeBetweenQueriesInMillis(int consumptionTimeBetweenQueriesInMillis) {
 		logger.info("Setting CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS = " + consumptionTimeBetweenQueriesInMillis);
 		this.consumptionTimeBetweenQueriesInMillis = consumptionTimeBetweenQueriesInMillis;

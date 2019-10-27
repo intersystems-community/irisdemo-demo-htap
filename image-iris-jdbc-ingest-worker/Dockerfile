@@ -7,6 +7,7 @@ ENV JAVA_OPTS=-Xmx1024M
 
 # Default configuration. Should be replaced on docker run or docker-compose.yml file
 ENV MASTER_HOSTNAME=master
+ENV MASTER_PORT=80
 
 ADD ./projects/app.jar /app/
 
