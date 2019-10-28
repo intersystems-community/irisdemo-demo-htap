@@ -118,7 +118,7 @@ export class TestRunnerRootComponent implements OnInit {
 
     let ingestionMatch =  this.latestMetrics.numberOfRowsIngested === currentMetrics.numberOfRowsIngested;
     let consumptionMatch = this.latestMetrics.numberOfRowsConsumed === currentMetrics.numberOfRowsConsumed;
-    if(ingestionMatch && consumptionMatch){
+    if(!this.testRunning && ingestionMatch && consumptionMatch){
       this.$metricsSubscription.unsubscribe();
     }
 

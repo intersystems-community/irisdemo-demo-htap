@@ -10,4 +10,4 @@ WORKDIR /app
 RUN npm install 
 RUN npm install -g @angular/cli@8.3.6
 
-CMD cd /app && ng serve --host 0.0.0.0
+CMD cd /app && npm run proxy

@@ -9,7 +9,7 @@ export class TestDirectorService {
 
   constructor(private http: HttpClient) { }
 
-  baseURL: string = "http://localhost:10002/master"
+  baseURL: string = "http://" + window.location.host + "/master"
   apiConfig: any = {
     testConnection: "/test",
     startTest: "/startSpeedTest",
@@ -17,8 +17,21 @@ export class TestDirectorService {
     getMetrics: "/getMetrics"
   }
 
+  getHostName(){
+    let hostName:  string  = window.location.hostname
+
+    if(hostName.includes("CN-IRISSpeedTest-0001")){
+      hostName = hostName.replace("htapui", "htapmaster");
+      hostName = hostName.replace("0001", "0002")
+    }else{
+      hostName = this.baseURL
+    }
+
+    return hostName;
+  }
+
   generateURL(apiEndpoint: string): string {
-    return this.baseURL + this.apiConfig[apiEndpoint];
+    return this.getHostName() + this.apiConfig[apiEndpoint];
   }
 
   testConnection(): Observable<any>{
