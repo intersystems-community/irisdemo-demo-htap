@@ -25,7 +25,7 @@ public class ConfigService implements CommandLineRunner
     
     private void registerWithMasterAndGetConfig() throws Exception
     {
-    	String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/ingestworker/register/" + config.getThisHostName() + ":" + config.getMasterPort();
+    	String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/queryworker/register/" + config.getThisHostName() + ":" + config.getMasterPort();
     	
     	logger.info("Registering with " + registrationUrl);
     	
@@ -37,7 +37,7 @@ public class ConfigService implements CommandLineRunner
     	config.setConsumptionJDBCPassword(workerConfig.config.consumptionJDBCPassword);
 		config.setConsumptionJDBCURL(workerConfig.config.consumptionJDBCURL);
 		config.setConsumptionJDBCUserName(workerConfig.config.consumptionJDBCUserName);
-		config.setConsumptionProgression(workerConfig.config.consumptionProgression);
+		config.setConsumptionNumThreadsPerWorker(workerConfig.config.consumptionNumThreadsPerWorker);
 		config.setConsumptionTimeBetweenQueriesInMillis(workerConfig.config.runningTimeInSeconds);
 		config.setIngestionBatchSize(workerConfig.config.ingestionBatchSize);
 		config.setIngestionJDBCPassword(workerConfig.config.ingestionJDBCPassword);

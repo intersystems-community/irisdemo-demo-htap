@@ -12,8 +12,7 @@ public class QueryMetrics extends MetricsType
     protected double MBConsumedPerSec;
     protected double avgMBConsumedPerSec;
 
-    protected double queryAndConsumptionTimeInMs;
-    protected double avgQueryAndConsumptionTimeInMs;
+    protected double avgQueryAndConsumptionTimeInMillis;
 
     synchronized public double getNumberOfRowsConsumed() {
         return numberOfRowsConsumed;
@@ -63,20 +62,12 @@ public class QueryMetrics extends MetricsType
         this.avgMBConsumedPerSec = avgMBConsumedPerSec;
     }
 
-    synchronized public double getQueryAndConsumptionTimeInMs() {
-        return queryAndConsumptionTimeInMs;
+    synchronized public double getAvgQueryAndConsumptionTimeInMillis() {
+        return avgQueryAndConsumptionTimeInMillis;
     }
 
-    synchronized public void setQueryAndConsumptionTimeInMs(double queryAndConsumptionTimeInMs) {
-        this.queryAndConsumptionTimeInMs = queryAndConsumptionTimeInMs;
-    }
-
-    synchronized public double getAvgQueryAndConsumptionTimeInMs() {
-        return avgQueryAndConsumptionTimeInMs;
-    }
-
-    synchronized public void setAvgQueryAndConsumptionTimeInMs(double avgQueryAndConsumptionTimeInMs) {
-        this.avgQueryAndConsumptionTimeInMs = avgQueryAndConsumptionTimeInMs;
+    synchronized public void setAvgQueryAndConsumptionTimeInMillis(double avgQueryAndConsumptionTimeInMillis) {
+        this.avgQueryAndConsumptionTimeInMillis = avgQueryAndConsumptionTimeInMillis;
     }
 
 }

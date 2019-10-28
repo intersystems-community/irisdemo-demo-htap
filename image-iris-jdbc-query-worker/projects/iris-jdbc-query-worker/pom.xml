@@ -9,7 +9,7 @@
 	</parent>
 
 	<groupId>com.irisdemo.htap</groupId>
-	<artifactId>iris-jdbc-ingest-worker</artifactId>
+	<artifactId>iris-jdbc-query-worker</artifactId>
 	<version>1.0.0</version>
 	<name>IRIS JDBC Worker</name>
 	<packaging>jar</packaging>

@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -46,8 +47,8 @@ public class App implements ApplicationRunner
     @Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) 
     {
-		return builder.build();
-	}
+    	return builder.build();
+    }
 	
 	public static void main(String[] args) throws IOException
 	{

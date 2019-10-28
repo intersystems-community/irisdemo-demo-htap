@@ -120,7 +120,7 @@ public class AppController
         return ingestWorkerRegistryService.register(worker);
     }
 
-    @GetMapping(value = "/master/queryworker/register")
+    @GetMapping(value = "/master/queryworker/register/{hostname}")
     public WorkerConfig registerQueryWorker(@PathVariable String hostname) 
     {
         QueryWorker worker = new QueryWorker(hostname);
@@ -161,7 +161,7 @@ public class AppController
 	    	
 	    	ingestWorkers.forEach((hostname, worker) -> {
 	    		
-	    		String url = "http://" + hostname +":8080/worker/getMetrics";
+	    		String url = "http://" + hostname +"/worker/getMetrics";
 	    		
 	    		try
 	    		{
@@ -170,7 +170,7 @@ public class AppController
 	    		}
 	    		catch (RestClientException restException)
 	    		{
-	    			logger.info("Ingestion worker on " + hostname + " is not responding. Marking worker as unavailable.");
+	    			logger.info("Ingestion worker on " + hostname + " is not responding. Marking worker as unavailable because of: " + restException.getMessage());
 	    			worker.setAvailable(false);
 	    		}
 	
@@ -190,7 +190,7 @@ public class AppController
 	    	
 	    	QueryWorkers.forEach((hostname, worker) -> {
 	    		
-	    		String url = "http://" + hostname +":8080/worker/getMetrics";
+	    		String url = "http://" + hostname +"/worker/getMetrics";
 	    		
 	    		try
 	    		{
@@ -199,7 +199,7 @@ public class AppController
 	    		}
 	    		catch (RestClientException restException)
 	    		{
-	    			logger.info("Query worker on " + hostname + " is not responding. Marking worker as unavailable.");
+	    			logger.info("Query worker on " + hostname + " is not responding. Marking worker as unavailable because of: " + restException.getMessage());
 	    			worker.setAvailable(false);
 	    		}
 	

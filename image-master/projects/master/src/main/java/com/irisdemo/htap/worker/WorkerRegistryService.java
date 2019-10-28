@@ -67,7 +67,7 @@ public class WorkerRegistryService<W extends Worker>
     	
     	workers.forEach((hostname, worker) -> {
     		
-    		String url = "http://" + hostname +":8080/worker/startSpeedTest";
+    		String url = "http://" + hostname +"/worker/startSpeedTest";
     		
     		try
     		{
@@ -76,7 +76,7 @@ public class WorkerRegistryService<W extends Worker>
     		}
     		catch (RestClientException restException)
     		{
-    			logger.info("Worker on " + hostname + " is not responding. Marking worker as unavailable.");
+    			logger.info("Worker on " + hostname + " is not responding. Marking worker as unavailablebecause of: " + restException.getMessage());
     			worker.setAvailable(false);
     		}
 
@@ -88,7 +88,7 @@ public class WorkerRegistryService<W extends Worker>
     {
     	workers.forEach((hostname, worker) -> {
     		
-    		String url = "http://" + hostname +":8080/worker/stopSpeedTest";
+    		String url = "http://" + hostname +"/worker/stopSpeedTest";
     		
     		try
     		{
@@ -97,7 +97,7 @@ public class WorkerRegistryService<W extends Worker>
     		}
     		catch (RestClientException restException)
     		{
-    			logger.info("Worker on " + hostname + " is not responding. Marking worker as unavailable.");
+    			logger.info("Worker on " + hostname + " is not responding. Marking worker as unavailable because of: " + restException.getMessage());
     			worker.setAvailable(false);
     		}
 

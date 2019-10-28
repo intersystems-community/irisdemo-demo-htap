@@ -11,5 +11,5 @@ printf "\n\nGenerating SSH keys on $SSH_DIR:\n"
 printf "\n\nGenerating TLS keys on $TLS_DIR:\n"
 /ICM/bin/keygenTLS.sh $TLS_DIR
 
-printf "\n\nPut your AWS credentials on file credentials.ADFS-PowerUsers"
+printf "\n\nPut your AWS credentials on file credentials.ADFS-PowerUsers\n\n"
 touch ./credentials.ADFS-PowerUsers

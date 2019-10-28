@@ -17,6 +17,7 @@ public class AccumulatedQueryMetrics extends QueryMetrics
 		this.numberOfRowsConsumed=accumulatedMetrics.getNumberOfRowsConsumed();
 		this.recordsConsumedPerSec=accumulatedMetrics.getRecordsConsumedPerSec();
 		this.avgRecordsConsumedPerSec=accumulatedMetrics.getAvgRecordsConsumedPerSec();
+		this.avgQueryAndConsumptionTimeInMillis=accumulatedMetrics.getAvgQueryAndConsumptionTimeInMillis();
 	}
 	
 	public void addToStats(QueryMetrics newMetrics)
@@ -24,8 +25,9 @@ public class AccumulatedQueryMetrics extends QueryMetrics
 		this.MBConsumed+=newMetrics.getMBConsumed();
 		this.MBConsumedPerSec+=newMetrics.getMBConsumedPerSec();
 		this.avgMBConsumedPerSec+=newMetrics.getAvgMBConsumedPerSec();
-		this.numberOfRowsConsumed+=getNumberOfRowsConsumed();
+		this.numberOfRowsConsumed+=newMetrics.getNumberOfRowsConsumed();
 		this.recordsConsumedPerSec+=newMetrics.getRecordsConsumedPerSec();
 		this.avgRecordsConsumedPerSec+=newMetrics.getAvgRecordsConsumedPerSec();
+		this.avgQueryAndConsumptionTimeInMillis+=newMetrics.getAvgQueryAndConsumptionTimeInMillis();
 	}
 }

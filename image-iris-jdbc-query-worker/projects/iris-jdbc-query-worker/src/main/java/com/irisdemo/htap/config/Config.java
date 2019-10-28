@@ -3,9 +3,6 @@ package com.irisdemo.htap.config;
 import org.springframework.stereotype.*;
 
 import com.irisdemo.htap.App;
-import com.irisdemo.htap.db.Util;
-
-import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +16,21 @@ public class Config
 {
 	Logger logger = LoggerFactory.getLogger(Config.class);
 	
+	/*
+	WORKER CONFIGURATION
+	*/
+	private String masterHostName;
+	private String masterPort;
+	private String thisHostName;
+	private String workerNodePrefix;
+	
 	/* 
-	GENERAL CONFIGURATION 
+	GENERAL CONFIGURATION THAT WILL BE COMING FROM THE MASTER
 	*/
 	private boolean startConsumers;
-	private boolean disableJournalForDropTable;
-	private boolean disableJournalForTruncateTable;
 
 	/* 
-	INGESTION CONFIGURATION 
+	INGESTION CONFIGURATION THAT WILL BE COMING FROM THE MASTER
 	*/
 	private String ingestionJDBCURL;
 	private String ingestionJDBCUserName;
@@ -35,9 +38,10 @@ public class Config
 	private int ingestionBatchSize;
 	private int ingestionNumThreadsPerWorker;
 	private String insertStatement;
+	private String queryByIdStatement;
 
 	/* 
-	CONSUMPTION CONFIGURATION 
+	CONSUMPTION CONFIGURATION THAT WILL BE COMING FROM THE MASTER
 	*/
 	private String consumptionJDBCURL;
 	private String consumptionJDBCUserName;
@@ -45,44 +49,15 @@ public class Config
 	private int consumptionNumThreadsPerWorker;
 	private int consumptionTimeBetweenQueriesInMillis;
 	private String queryStatement;
-	private String queryByIdStatement;
 
-	public Config()
+	public void setWorkerNodePrefix(String workerNodePrefix)
 	{
-		try
-		{
-			queryStatement=Util.getSingleStatementFromFile("TABLE_SELECT.sql");
-			logger.info("Read QUERY statement from file TABLE_SELECT.sql: " + queryStatement);
-		}
-		catch (IOException ioE)
-		{
-			logger.warn("Could not read QUERY statement from file TABLE_SELECT.sql");
-		}
-
-		try
-		{
-			queryByIdStatement=Util.getSingleStatementFromFile("TABLE_SELECT_ROW.sql");
-			logger.info("Read QUERY statement from file TABLE_SELECT_ROW.sql: " + queryByIdStatement);
-		}
-		catch (IOException ioE)
-		{
-			logger.warn("Could not read QUERY By ID statement from file TABLE_SELECT_ROW.sql");
-		}
-
-		try
-		{
-			insertStatement=Util.getSingleStatementFromFile("TABLE_INSERT.sql");
-			logger.info("Read INSERT statement from file TABLE_INSERT.sql:" + insertStatement);
-		}
-		catch (IOException ioE)
-		{
-			logger.warn("Could not read INSERT statement from file TABLE_INSERT.sql");
-		}
+		this.workerNodePrefix=workerNodePrefix;
 	}
 	
-	public int getIngestionNumThreadsPerWorker() 
+	public String getWorkerNodePrefix()
 	{
-		return ingestionNumThreadsPerWorker;
+		return this.workerNodePrefix;
 	}
 	
 	public void setInsertStatement(String insertStatement) 
@@ -107,12 +82,52 @@ public class Config
 		this.queryStatement=queryStatement;
 	}
 
-	public String getInsertStatement()
+	public void setQueryByIdStatement(String queryByIdStatement) 
+	{
+		logger.info("Setting QUERY By ID statement = " + queryByIdStatement);
+		this.queryByIdStatement=queryByIdStatement;
+	}
+
+	public String getInsertStatement() 
 	{
 		return insertStatement;
 	}
 	
-	@Value( "${INGESTION_THREADS_PER_WORKER:10}" )
+	@Value( "${HOSTNAME}" )
+	public void setThisHostName(String thisHostName) {
+		logger.info("This hostname is " + thisHostName);
+		this.thisHostName = thisHostName;
+	}
+
+	public String getThisHostName() {
+		return thisHostName;
+	}
+
+	public String getMasterHostName() {
+		return masterHostName;
+	}
+		
+	@Value( "${MASTER_HOSTNAME}" )
+	public void setMasterHostName(String masterHostName) {
+		logger.info("Setting MASTER_HOSTNAME = " + masterHostName);
+		this.masterHostName = masterHostName;
+	}
+
+	public String getMasterPort() {
+		return masterPort;
+	}
+		
+	@Value( "${MASTER_PORT:80}" )
+	public void setMasterPort(String masterPort) {
+		logger.info("Setting MASTER_PORT = " + masterPort);
+		this.masterPort = masterPort;
+	}
+
+	public int getIngestionNumThreadsPerWorker() 
+	{
+		return ingestionNumThreadsPerWorker;
+	}
+	
 	public void setIngestionNumThreadsPerWorker(int value) 
 	{
 		logger.info("Setting INGESTION_THREADS_PER_WORKER = " + value);
@@ -123,37 +138,15 @@ public class Config
 		return startConsumers;
 	}
 	
-	@Value( "${START_CONSUMERS:true}" )
 	public void setStartConsumers(boolean startConsumers) {
 		logger.info("Setting START_CONSUMERS = " + startConsumers);
 		this.startConsumers = startConsumers;
-	}
-
-	public boolean getDisableJournalForDropTable() {
-		return disableJournalForDropTable;
-	}
-	
-	@Value( "${DISABLE_JOURNAL_FOR_DROP_TABLE:true}" )
-	public void setDisableJournalForDropTable(boolean disableJournalForDropTable) {
-		logger.info("Setting DISABLE_JOURNAL_FOR_DROP_TABLE = " + disableJournalForDropTable);
-		this.disableJournalForDropTable = disableJournalForDropTable;
-	}
-
-	public boolean getDisableJournalForTruncateTable() {
-		return disableJournalForTruncateTable;
-	}
-	
-	@Value( "${DISABLE_JOURNAL_FOR_TRUNCATE_TABLE:true}" )
-	public void setDisableJournalForTruncateTable(boolean disableJournalForTruncateTable) {
-		logger.info("Setting DISABLE_JOURNAL_FOR_TRUNCATE_TABLE = " + disableJournalForTruncateTable);
-		this.disableJournalForTruncateTable = disableJournalForTruncateTable;
 	}
 
 	public String getIngestionJDBCURL() {
 		return ingestionJDBCURL;
 	}
 	
-	@Value( "${INGESTION_JDBC_URL}" )
 	public void setIngestionJDBCURL(String ingestionJDBCURL) {
 		logger.info("Setting INGESTION_JDBC_URL = " + ingestionJDBCURL);
 		this.ingestionJDBCURL = ingestionJDBCURL;
@@ -163,7 +156,6 @@ public class Config
 		return ingestionJDBCUserName;
 	}
 	
-	@Value( "${INGESTION_JDBC_USERNAME}" )
 	public void setIngestionJDBCUserName(String ingestionJDBCUserName) {
 		logger.info("Setting INGESTION_JDBC_USERNAME = " + ingestionJDBCUserName);
 		this.ingestionJDBCUserName = ingestionJDBCUserName;
@@ -173,7 +165,6 @@ public class Config
 		return ingestionJDBCPassword;
 	}
 	
-	@Value( "${INGESTION_JDBC_PASSWORD}" )
 	public void setIngestionJDBCPassword(String ingestionJDBCPassword) {
 		logger.info("Setting INGESTION_JDBC_PASSWORD = " + ingestionJDBCPassword);
 		this.ingestionJDBCPassword = ingestionJDBCPassword;
@@ -183,7 +174,6 @@ public class Config
 		return ingestionBatchSize;
 	}
 	
-	@Value( "${INGESTION_BATCH_SIZE:1000}" )
 	public void setIngestionBatchSize(int ingestionBatchSize) {
 		logger.info("Setting INGESTION_BATCH_SIZE = " + ingestionBatchSize);
 		this.ingestionBatchSize = ingestionBatchSize;
@@ -193,7 +183,6 @@ public class Config
 		return consumptionJDBCURL;
 	}
 	
-	@Value( "${CONSUMER_JDBC_URL}" )
 	public void setConsumptionJDBCURL(String consumptionJDBCURL) {
 		logger.info("Setting CONSUMER_JDBC_URL = " + consumptionJDBCURL);
 		this.consumptionJDBCURL = consumptionJDBCURL;
@@ -203,7 +192,6 @@ public class Config
 		return consumptionJDBCUserName;
 	}
 	
-	@Value( "${CONSUMER_JDBC_USERNAME}" )
 	public void setConsumptionJDBCUserName(String consumptionJDBCUserName) {
 		logger.info("Setting CONSUMER_JDBC_USERNAME = " + consumptionJDBCUserName);
 		this.consumptionJDBCUserName = consumptionJDBCUserName;
@@ -213,7 +201,6 @@ public class Config
 		return consumptionJDBCPassword;
 	}
 	
-	@Value( "${CONSUMER_JDBC_PASSWORD}" )
 	public void setConsumptionJDBCPassword(String consumptionJDBCPassword) {
 		logger.info("Setting CONSUMER_JDBC_PASSWORD = " + consumptionJDBCPassword);
 		this.consumptionJDBCPassword = consumptionJDBCPassword;
@@ -223,9 +210,8 @@ public class Config
 		return consumptionNumThreadsPerWorker;
 	}
 	
-	@Value( "${CONSUMER_THREADS_PER_WORKER:10}" )
 	public void setConsumptionNumThreadsPerWorker(int consumptionNumThreadsPerWorker) {
-		logger.info("Setting CONSUMER_THREADS_PER_WORKER= " + consumptionNumThreadsPerWorker);
+		logger.info("Setting CONSUMER_THREADS_PER_WORKER = " + consumptionNumThreadsPerWorker);
 		this.consumptionNumThreadsPerWorker = consumptionNumThreadsPerWorker;
 	}
 
@@ -233,7 +219,6 @@ public class Config
 		return consumptionTimeBetweenQueriesInMillis;
 	}
 	
-	@Value( "${CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS:0}" )
 	public void setConsumptionTimeBetweenQueriesInMillis(int consumptionTimeBetweenQueriesInMillis) {
 		logger.info("Setting CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS = " + consumptionTimeBetweenQueriesInMillis);
 		this.consumptionTimeBetweenQueriesInMillis = consumptionTimeBetweenQueriesInMillis;

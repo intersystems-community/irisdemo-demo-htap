@@ -36,4 +36,7 @@ hs_err_pid*
 *.log
 *.err
 
+#Java
+
+**/target
 
