@@ -4,7 +4,7 @@ This demo shows how IRIS can ingest thousands or millions of records per second 
 
 The picture bellow shows the architecture of the HTAP Demo:
 
-![Demo Landing Page](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-twittersentiment/master/README.png?raw=true)
+![Demo Landing Page](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/README.png?raw=true)
 
 ## How to run the demo
 
