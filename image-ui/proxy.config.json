@@ -1,0 +1,6 @@
+{
+    "/master":{
+        "target":"http://htapmaster:8080",
+        "secure": false
+    }
+}
