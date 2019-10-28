@@ -30,37 +30,24 @@ When starting, it is going to show you lots of messages from all the containers 
 
 When it is done, it will just hang there, without returning control to you. That is fine too. Just leave this window open. If you CTRL+C on this window, docker compose will stop all the containers (and stop the demo!).
 
-After all the containers have started, open the demo landing page on [http://localhost:9092/csp/appint/demo.csp](http://localhost:52773/csp/appint/demo.csp).
+After all the containers have started, open the it on [http://localhost:10000](http://localhost:10000).
 
-Use the username **SuperUser** and the password **sys**. This is just a demo that is running on your machine, so we are using a default password. You will see the demo landing page. Everything that is purple on this screen is something you can click an open a specific screen of the demo. Click on the bottom/right button that reads **Show Instructions** to understand how to configure your Twitter credentials on the demo.
+Just click on the **Run Test** button to run the HTAP Demo!
 
 # Architecture
 
 This demo uses docker-compose to start four services:
 
-* twittersrv - This service runs an IRIS integration production that has a native business service that implements the HTTP Streaming Protocol and the statuses/filter API for streaming tweets in real time. You are going to need Twitter Credentials to use the API (and run the demo). 
-* twittersentiment - This is where all tweets are being stored. We want to do that in order to use NLP capabilities to explore past and current tweets to keep enhancing our dictionaries and services. This box exposes a REST service we call from the twittersrv to get the sentiment score.
-* callcenterdb - This service is the database of a simulated legacy CRM application. This database is IRIS and it exposes a SOAP service that the twittersrv calls to create a ticket in the callcenter application.
-* callcenterui - This is a Java application that simulates the UI of the CRM application. 
+* htapui - this is the Angular UI you use to run the demo.
+* htapirisdb - this is IRIS Community! So you don't need an IRIS license to run this demo. But it is bad because IRIS Community has two important limitations:
+ - Max of 5 connections: So we won't be able to use a high number of threads
+ - Max Database size of 10Gb: So we won't be able to let the speed test run for too long
+* htapmaster - This is the HTAP Demo master. The UI talks to it and to start/stop the speed test.
+* ingest-worker1 - This is an ingestion worker. You can actually have more than one ingestion worker. Just give each one a different service name. They will try to flood IRIS with INSERTs.
+* query-worker1 - This is the a consumption worker. You can have more than one of these as well. 
 
-# Highlights
-
-This demo helps us to demonstrate:
-* IRIS Community
-* Product features:
-    - Containers Support
-    - Native Twitter Streaming Integration (requires a Twitter credential)
-    - Basic IRIS Productions (Business Services, Processes and Operations)
-    - Business Processes
-    - Business Rules with Tweets Metadata (number of followers, number of retweets, etc) and the sentiment score of the tweets' text.
-    - Message Trace
-    - IRIS NLP with Sentiment Analysis, Business Dictionaries and Negation
-    - IRIS NLP Explorer
-    - SQL
-    - SOAP Integration 
-    - REST Integration
-* Java Application built with Java Prime Faces and IRIS JDBC
+If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it. But you are going to need an IRIS license to run it. The example is on iris-enterprise-docker-compose.xml.
 
 # Report any Issues
 
-Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-twittersentiment/issues).
+Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).

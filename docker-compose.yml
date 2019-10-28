@@ -1,8 +1,12 @@
-# Starts the SpeedTest using IRIS. 
+# Starts the SpeedTest using IRIS Community. 
 #
-# This will use standard IRIS to run the speed test. If you are a customer, you can
-# pull it form the Docker Store with your DockerHub username and password. If you are an
-# InterSystems employee
+# This is good because it doesn't require an IRIS license to run.
+#
+# This is bad because IRIS Community has two important limitations:
+# - Max of 5 connections: So we won't be able to use a high number of threads
+# - Max Database size of 10Gb: So we won't be able to let the speed test run for too long
+#
+# But this configuration is good for development.
 version: '2.4'
 
 services:
