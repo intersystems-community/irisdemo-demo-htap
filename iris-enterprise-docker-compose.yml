@@ -1,12 +1,9 @@
-# Starts the SpeedTest using IRIS Community. 
+# Starts the SpeedTest using IRIS. 
 #
-# This is good because it doesn't require an IRIS license to run.
-#
-# This is bad because IRIS Community has two important limitations:
-# - Max of 5 connections: So we won't be able to use a high number of threads
-# - Max Database size of 10Gb: So we won't be able to let the speed test run for too long
-#
-# But this configuration is good for development.
+# This will use standard IRIS to run the speed test. If you are a customer, you can
+# pull it form the Docker Store with your DockerHub username and password. If you are an
+# InterSystems employee
+
 version: '2.4'
 
 services:
@@ -60,8 +57,8 @@ services:
       - CONSUMER_JDBC_URL=jdbc:IRIS://htapirisdb:51773/USER
       - CONSUMER_JDBC_USERNAME=SuperUser
       - CONSUMER_JDBC_PASSWORD=sys
-      - CONSUMER_PROGRESSION="10"
-      - CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS=0
+      - CONSUMER_THREADS_PER_WORKER=1
+      - CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS=10
 
   ingest-worker1:
     depends_on: 
@@ -75,16 +72,18 @@ services:
       - "10003:8080" # Where Springboot Will be listening
     environment:
       - MASTER_HOSTNAME=htapmaster
+      - MASTER_PORT=8080
 
-  ingest-worker2:
+  query-worker1:
     depends_on: 
       htapmaster:
         condition: service_healthy
-    container_name: ingest-worker2
-    hostname: ingest-worker2
+    container_name: query-worker1
+    hostname: query-worker1
     init: true
-    image: ${DOCKER_REPO}:iris-jdbc-ingest-worker-version-${TAG}
+    image: ${DOCKER_REPO}:iris-jdbc-query-worker-version-${TAG}
     ports:
       - "10004:8080" # Where Springboot Will be listening
     environment:
       - MASTER_HOSTNAME=htapmaster
+      - MASTER_PORT=8080
