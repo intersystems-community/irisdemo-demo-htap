@@ -74,7 +74,7 @@ public class AccumulatedMetrics
     synchronized public void addToStats(double timeSpentOnWorkInMillis, double numberOfRowsConsumed, double bytesConsumed) {
         this.setNumberOfRowsConsumed(this.getNumberOfRowsConsumed() + numberOfRowsConsumed);
         this.bytesConsumed+=bytesConsumed;
-        this.MBConsumed+=this.bytesConsumed/1024/1024;
+        this.MBConsumed=this.bytesConsumed/1024/1024;
         this.timeSpentOnWorkInMillis+=timeSpentOnWorkInMillis;
     }
 
