@@ -1,5 +1,7 @@
 # HTAP Demo
 
+**DISCLAIMER: Running this demo on Docker, with reduced resources, on a single PC may lead to poor performance. I get about 60K inserts per second on my PC. But MySQL and Aurora can't do better then that running on bigger machines and with the best tunning! So, as long as you give people contest, running this on Dockers is fine. We are working on a version of this demo that can be run stand alone (without dockers) and also on the cloud. Stay tunned.**
+
 This demo shows how IRIS can ingest thousands or millions of records per second while allowing for queries on the same cluster. Works on a single IRIS instance or on an IRIS cluster on the cloud (using ICM - still working on this).
 
 The picture bellow shows the architecture of the HTAP Demo:
@@ -10,8 +12,8 @@ Each This demo uses docker-compose to start four services:
 
 * htapui - this is the Angular UI you use to run the demo.
 * htapirisdb - this is IRIS Community! So you don't need an IRIS license to run this demo. But it is bad because IRIS Community has two important limitations:
- - Max of 5 connections: So we won't be able to use a high number of threads
- - Max Database size of 10Gb: So we won't be able to let the speed test run for too long
+ * Max of 5 connections: So we won't be able to use a high number of threads
+ * Max Database size of 10Gb: So we won't be able to let the speed test run for too long
 * htapmaster - This is the HTAP Demo master. The UI talks to it and to start/stop the speed test.
 * ingest-worker1 - This is an ingestion worker. You can actually have more than one ingestion worker. Just give each one a different service name. They will try to flood IRIS with INSERTs.
 * query-worker1 - This is the a consumption worker. You can have more than one of these as well. 
