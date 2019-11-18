@@ -1,0 +1,22 @@
+#!/bin/bash
+
+IMAGE_MASTER_NAME=${DOCKER_REPO}:master-${DOCKER_TAG}
+IMAGE_IRIS_JDBC_INGEST_WORKER_NAME=${DOCKER_REPO}:iris-jdbc-ingest-worker-${DOCKER_TAG}
+IMAGE_IRIS_JDBC_QUERY_WORKER_NAME=${DOCKER_REPO}:iris-jdbc-query-worker-${DOCKER_TAG}
+IMAGE_UI_NAME=${DOCKER_REPO}:ui-${DOCKER_TAG}
+
+echo
+echo "### HOOK - Pushing image-master..."
+docker push ${IMAGE_MASTER_NAME}
+
+echo
+echo "### HOOK - Pushing image-iris-jdbc-ingest-worker..."
+docker push ${IMAGE_IRIS_JDBC_INGEST_WORKER_NAME}
+
+echo
+echo "### HOOK - Pushing image-iris-jdbc-query-worker..."
+docker push ${IMAGE_IRIS_JDBC_QUERY_WORKER_NAME}
+
+echo
+echo "### HOOK - Pushing image-ui..."
+docker push ${IMAGE_UI_NAME}

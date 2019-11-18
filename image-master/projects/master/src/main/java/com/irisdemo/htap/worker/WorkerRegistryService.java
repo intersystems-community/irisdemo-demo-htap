@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import com.irisdemo.htap.config.*;
 
 import java.util.HashMap;
+import java.util.Iterator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.irisdemo.htap.worker.Worker;
@@ -26,6 +28,9 @@ public class WorkerRegistryService<W extends Worker>
 
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    WorkerSemaphore workerSemaphore;
 
     Logger logger = LoggerFactory.getLogger(WorkerRegistryService.class);
 
@@ -41,6 +46,12 @@ public class WorkerRegistryService<W extends Worker>
     	return workers;
     }
     
+    synchronized public W getOneWorker()
+    {
+    	Iterator it = workers.keySet().iterator();
+    	return workers.get(it.next());
+    }
+    
     /*
      * This method is called by a REST service implementation on class WorkerController. That
      * service is called by Workers to register with this master.
@@ -48,12 +59,16 @@ public class WorkerRegistryService<W extends Worker>
     synchronized public WorkerConfig register(W worker)
     {
         int numWorkers = getNumOfWorkers()+1;
-
-        logger.trace("Registering " + worker.getWorkerType() + " Worker #" + (numWorkers) + " on host name '" + worker.getHostname() + "'.");
+        boolean electedToPrepareDatabase = false;
+        
+        if (numWorkers==1)
+        	electedToPrepareDatabase=true;
+        
+        logger.trace("Registering " + worker.getWorkerType() + " Worker #" + (numWorkers) + " on host name '" + worker.getHostname() + "'." + (electedToPrepareDatabase?" Elected to prepare the database.":""));
 
         workers.put(worker.getHostname(), worker);
 
-        return new WorkerConfig(this.config, "W"+numWorkers);
+        return new WorkerConfig(this.config, "W"+numWorkers, electedToPrepareDatabase);
     }
 
     synchronized public int getNumOfWorkers()
@@ -67,12 +82,12 @@ public class WorkerRegistryService<W extends Worker>
     	
     	workers.forEach((hostname, worker) -> {
     		
-    		String url = "http://" + hostname +"/worker/startSpeedTest";
+    		String urlStart = "http://" + hostname +"/worker/startSpeedTest";
     		
     		try
-    		{
+    		{    			
     			logger.info("Starting speed test on " + hostname);
-    			restTemplate.postForEntity(url, null, null);
+    			restTemplate.postForEntity(urlStart, null, null);
     		}
     		catch (RestClientException restException)
     		{

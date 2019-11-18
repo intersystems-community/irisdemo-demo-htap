@@ -1,65 +1,55 @@
 package com.irisdemo.htap.worker;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
 import com.irisdemo.htap.config.Config;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class Worker 
+public class WorkerDBUtils 
 {
-    Logger logger = LoggerFactory.getLogger(Worker.class);
-
-    @Autowired
-    WorkerSemaphore workerSemaphore;
-    
-    @Autowired 
-    AccumulatedMetrics accumulatedMetrics;
+	protected static Logger logger = LoggerFactory.getLogger(WorkerDBUtils.class);
     
     @Autowired
-    Config config;    
-
-    DriverManagerDataSource dataSourceCache;
-
-	private long recordsIngested;
+    protected Config config;    
 	
-	private long bytesIngested;
+    protected static Object[][] paramRandomValues;
 	
-	private char[] prefixes = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    protected static int[] paramDataTypes;
 	
-	private static Object[][] paramRandomValues;
+    protected static long[][] paramSizeInBytes;
 	
-	private static int[] paramDataTypes;
+    protected static boolean randomMappingInitialized = false;
+    
+    protected static DriverManagerDataSource dataSourceCache = null;
 	
-	private static long[][] paramSizeInBytes;
-	
-	private static boolean randomMappingInitialized = false;
-
 	/**
 	 * I could not make this a Bean. It would get created before we had fetched the connection information from
 	 * the master.
+	 * 
+	 * This method can't be static because it relies on the auto-wiring of config to work.
 	 * 
 	 * @return
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	synchronized public DriverManagerDataSource getDataSource() throws SQLException, IOException
+	synchronized public DriverManagerDataSource getDataSource() throws SQLException
 	{
 		if (dataSourceCache==null)
 		{
@@ -73,70 +63,6 @@ public class Worker
         
         return dataSourceCache;
     }
-
-	@Async
-    public CompletableFuture<Long> startOneFeed(String nodePrefix, int threadNum) throws IOException, SQLException
-    {	
-		long recordNum = 0;
-		long batchSizeInBytes;
-		
-		Connection connection = getDataSource().getConnection();
-    	
-		logger.info("Worker #"+threadNum+" started.");
-		
-		connection.setAutoCommit(false);
-		
-		PreparedStatement preparedStatement = connection.prepareStatement(config.getInsertStatement());
-
-		int parameterCount = preparedStatement.getParameterMetaData().getParameterCount();
-		
-		initializeRandomMapping(connection);
-		
-    	try
-    	{    		
-    		String threadPrefix = nodePrefix+prefixes[threadNum];
-    		
-    		int currentBatchSize;
-        	
-	    	while(workerSemaphore.green())
-	    	{
-	    		currentBatchSize = 0;
-	    		batchSizeInBytes = 0;
-	    		
-	    		while(workerSemaphore.green())
-	    		{
-	    			if (currentBatchSize==config.getIngestionBatchSize()) 
-	    				break;
-	    			
-	    			batchSizeInBytes+= pupulatePreparedStatement(parameterCount, ++recordNum, threadPrefix, preparedStatement);
-	    		
-	    			preparedStatement.addBatch();
-	    			preparedStatement.clearParameters();
-	    			currentBatchSize++;	    			
-	    		}
-
-				if(workerSemaphore.green())
-				{
-					preparedStatement.executeBatch();
-					preparedStatement.clearBatch();
-					connection.commit();
-					accumulatedMetrics.addToStats(currentBatchSize, batchSizeInBytes);
-				}
-	    	}	
-			
-		} 
-    	catch (SQLException sqlException) 
-    	{
-			throw sqlException;
-		} 
-    	finally
-    	{
-    		connection.close();
-    	}
-    	
-    	logger.info("Worker #"+threadNum+" finished.");
-    	return CompletableFuture.completedFuture(recordsIngested);
-	}
 	
 	/*
 	 * This method will prepare the statement on TABLE_SELECT and use that to:
@@ -144,12 +70,12 @@ public class Worker
 	 * - Create the paramRandomValues and paramDataTypes based on the number of columns
 	 * - Loop on each column and create 1000 random values for it.
 	 */
-	private synchronized void initializeRandomMapping(Connection connection) throws SQLException, IOException
+	public synchronized void initializeRandomMapping(Connection connection) throws SQLException, IOException
 	{
 		int type;
 		int precision;
 		int shorterPrecision;
-		String typeName;
+		//String typeName;
 		
 		if (randomMappingInitialized)
 			return;
@@ -172,7 +98,7 @@ public class Worker
 			paramDataTypes[column]=type;
 			
 			precision = metaData.getPrecision(column);
-			typeName = metaData.getColumnTypeName(column);
+			//typeName = metaData.getColumnTypeName(column);
 			
 			switch (type)
 			{
@@ -211,11 +137,11 @@ public class Worker
 	}
 	
 	/*
-	 * Populates a prepared statement with appropiate random data for each field. Random data is get from
+	 * Populates a prepared statement with appropriate random data for each field. Random data is get from
 	 * the paramRandomValues array that was initialized by initializeRandomMapping().
 	 * This prevents us from generating too many random objects which would cause the Garbage Collector to panic.
 	 */
-	private long pupulatePreparedStatement(int parameterCount, long recordNum, String threadPrefix, PreparedStatement preparedStatement) throws SQLException
+	public static long pupulatePreparedStatement(int parameterCount, long recordNum, String threadPrefix, PreparedStatement preparedStatement) throws SQLException
 	{
 		Object randomValue = null;
 		String param1;
@@ -238,5 +164,69 @@ public class Worker
 		}
 		
 		return recordSize;
+	}
+    
+
+    
+	public void createIRISDisableJournalProc(Connection connection) throws SQLException, IOException
+	{
+		PreparedStatement statement;
+		
+		try
+		{
+		    statement = connection.prepareStatement(config.getIrisProcDisableJournalDrop());
+		    statement.execute();
+		    statement.close();
+
+		}
+		catch (SQLException exception)
+		{
+			if (exception.getErrorCode()!=362) //Method '???' does not exist in any class
+			{
+				throw exception;
+			}
+		}
+		
+	    statement = connection.prepareStatement(config.getIrisProcDisableJournal());
+	    statement.execute();
+	    statement.close();
+
+    }
+    
+	public void createTable(Connection connection) throws SQLException
+	{
+		PreparedStatement statement = connection.prepareStatement(config.getTableCreateStatement());
+	    statement.execute();
+	    statement.close();
+	}
+    
+	public void dropTable(Connection connection) throws SQLException
+	{
+		PreparedStatement statement = connection.prepareStatement(config.getTableDropStatement());
+	    statement.execute();
+	    statement.close();
+	}
+	
+	public void truncateTable(Connection connection) throws SQLException, IOException
+	{
+		PreparedStatement statement = connection.prepareStatement(config.getTableTruncateStatement());
+	    statement.execute();
+	    statement.close();
+	}
+	
+	public static void disableJournalForConnection(Connection connection, boolean disable) throws SQLException
+	{
+		CallableStatement disableJournalStatement = connection.prepareCall("{ ? = call IRISDemo.DisableJournalForConnection(?) }");
+		disableJournalStatement.registerOutParameter(1, Types.VARCHAR);
+		disableJournalStatement.setBoolean(2, disable);
+
+		disableJournalStatement.execute();
+		
+		String returnMsg = disableJournalStatement.getString(1);
+		
+		if (!returnMsg.equals("1"))
+		{
+			throw new SQLException(returnMsg);
+		}
 	}
 }

@@ -1,39 +1,57 @@
 #!/bin/bash
+# 
+# This build.sh is different from buildc.sh because it builds the projet outside
+# the containers so we can run the htap demo stand alone and point it to any
+# IRIS installation (that may not necessarily be on a container).
+#
+# It will require Maven and NodeJS installed on your system.
+#
 
-source .env
+set -e
 
-build_java_project() {
-	[[ -z "${1}" ]] && echo "Environment variable $1 not set. Need name of the java project to build." && exit 1
+STANDALONE=$PWD/standalone
+rm -f $STANDALONE/*.jar
 
-	rm ${PWD}/$1/projects/app.jar
+echo
+echo '********************************************************************************'
+echo 'Configuring IRIS Jdbc Driver on your local Maven'
+echo '********************************************************************************'
+echo
+(
+	cd ./standalone/maven-iris && \
+	./configmaven.sh
+)
 
-	echo "Starting container $1 to recompile jar..."
-	docker ps -a | grep $1 > /dev/null
-	if [ $? -eq 0 ]; then
-		# This will reuse the mavenc container that we used previously to compile the project
-		# This way, we avoid redownloading all the depedencies!
+echo
+echo '********************************************************************************'
+echo 'Building MASTER'
+echo '********************************************************************************'
+echo
 
-		docker start -i $1
-	else
-		# First tiem trying to compile a project, let's create the mavenc container
-		# It will download all the dependencies of the project
-		docker run -it \
-			-v ${PWD}/$1/projects:/usr/projects \
-			--name $1 intersystemsdc/irisdemo-base-mavenc:latest
-	fi
-}
+(
+	cd ./image-master/projects/master && \
+	mvn package install && \
+	cp ./target/*.jar $STANDALONE/master.jar
+)
 
-docker-compose stop
-docker-compose rm -f 
+echo
+echo '********************************************************************************'
+echo 'Building IRIS JDBC Ingestion Worker'
+echo '********************************************************************************'
+echo
+(
+	cd ./image-iris-jdbc-ingest-worker/projects/iris-jdbc-ingest-worker && \
+	mvn package install && \
+	cp ./target/*.jar $STANDALONE/iris-jdbc-ingest-worker.jar
+)
 
-build_java_project "image-master"
-docker build -t ${IMAGE_MASTER_NAME} ./image-master
-
-build_java_project "image-iris-jdbc-ingest-worker"
-docker build -t ${IMAGE_IRIS_JDBC_INGEST_WORKER_NAME} ./image-iris-jdbc-ingest-worker
-
-build_java_project "image-iris-jdbc-query-worker"
-docker build -t ${IMAGE_IRIS_JDBC_QUERY_WORKER_NAME} ./image-iris-jdbc-query-worker
-
-docker build -t ${IMAGE_UI_NAME} ./image-ui
-
+echo
+echo '********************************************************************************'
+echo 'Building IRIS JDBC Query Worker'
+echo '********************************************************************************'
+echo
+(
+	cd ./image-iris-jdbc-query-worker/projects/iris-jdbc-query-worker && \
+	mvn package install && \
+	cp ./target/*.jar $STANDALONE/iris-jdbc-query-worker.jar
+)

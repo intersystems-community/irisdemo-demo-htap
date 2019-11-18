@@ -44,9 +44,9 @@ public class DatabaseService implements CommandLineRunner
 		
 		try
 		{
-            createDisableJournalProc(connection);
+            //createDisableJournalProc(connection);
 
-			createTable(connection);
+			//createTable(connection);
 			
 		}
 		catch (Exception e)

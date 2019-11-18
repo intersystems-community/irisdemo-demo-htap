@@ -36,7 +36,8 @@ import org.springframework.web.client.RestTemplate;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AppController 
 {
-
+	private static boolean databaseHasBeenInitialized = false;
+	
     @Autowired
     WorkerRegistryService <IngestWorker>ingestWorkerRegistryService;
 
@@ -50,13 +51,13 @@ public class AppController
     AccumulatedQueryMetrics accumulatedQueryMetrics;
 
     @Autowired
+    RestTemplate restTemplate;
+
+    @Autowired
     Config config;
         
     @Autowired
     DatabaseService dataSource;
-
-    @Autowired
-    RestTemplate restTemplate;
     
     @Autowired
     WorkerSemaphore workerSemaphore;
@@ -73,36 +74,65 @@ public class AppController
     }
 
     @PostMapping(value = "/master/startSpeedTest")
-    public void startSpeedTest() throws Exception 
+    public synchronized void startSpeedTest() throws Exception 
     {
-    	workerSemaphore.allowThreads();
-    	
-    	logger.info("START speed test. Truncating table for new speed test...");
-    	dataSource.truncateTable();
-    	
-    	logger.info("START speed test. Notifying all workers...");
-    	
-    	ingestWorkerRegistryService.startSpeedTest();
-    	
-    	if (config.getStartConsumers())
+    	if (!workerSemaphore.green())
     	{
-    		queryWorkerRegistryService.startSpeedTest();
+    		IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
+            if (!databaseHasBeenInitialized)
+            {   
+            	logger.info("START speed test. Asking one worker to prepare the database...");
+            	String prepareURL = "http://" + ingestWorker.getHostname() +"/worker/prepare";
+            	restTemplate.postForEntity(prepareURL, null, null);
+            	databaseHasBeenInitialized=true;
+            }
+            else
+            {
+            	logger.info("START speed test. Asking one worker to truncate the table...");
+            	String truncateTableURL = "http://" + ingestWorker.getHostname() +"/worker/truncateTable";
+            	restTemplate.postForEntity(truncateTableURL, null, null);
+            }
+            
+	    	workerSemaphore.allowThreads();
+	    		    	
+	    	logger.info("START speed test. Notifying all workers...");
+	    	
+	    	// Start ingestion...
+	    	ingestWorkerRegistryService.startSpeedTest();
+	    	
+	    	// Should we start the consumers as well?
+	    	if (config.getStartConsumers())
+	    	{
+	    		queryWorkerRegistryService.startSpeedTest();
+	    	}
     	}
-
+    	else
+    	{
+    		logger.warn("Request to start the speed test received. Speed Test was already running. Nothing has been done.");
+    	}
     }
 
     @PostMapping(value = "/master/stopSpeedTest")
-    public void stopSpeedTest() throws Exception 
+    public synchronized void stopSpeedTest() throws Exception 
     {
-    	workerSemaphore.disableThreads();
-    	
-        logger.info("STOP speed test. Notifying all workers...");
-    	
-    	ingestWorkerRegistryService.stopSpeedTest();
-    	
-    	if (config.getStartConsumers())
+    	if (workerSemaphore.green())
     	{
-    		queryWorkerRegistryService.stopSpeedTest();
+	    	workerSemaphore.disableThreads();
+	    	
+	        logger.info("STOP speed test. Notifying all workers...");
+	    	
+	        // Stop ingestion...
+	    	ingestWorkerRegistryService.stopSpeedTest();
+	    	
+	    	// If we have started the consumers, we should now stop them too...
+	    	if (config.getStartConsumers())
+	    	{
+	    		queryWorkerRegistryService.stopSpeedTest();
+	    	}
+    	}
+    	else
+    	{
+    		logger.warn("Request to stop speed test received. Speed test was not running. Nothing has been done.");
     	}
     }
 
@@ -150,7 +180,7 @@ public class AppController
     {
         return new Metrics(accumulatedIngestMetrics, accumulatedQueryMetrics);
     }
-
+    
     @Scheduled(fixedRate = 1000)
     synchronized protected void getIngestionMetricsFromWorkers()
     {
@@ -208,4 +238,5 @@ public class AppController
 	    	accumulatedQueryMetrics.update(tempQueryMetrics);
     	}
     }
+
 }

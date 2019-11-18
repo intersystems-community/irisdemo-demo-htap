@@ -38,13 +38,7 @@ public class ConfigService implements CommandLineRunner
 		config.setConsumptionJDBCURL(workerConfig.config.consumptionJDBCURL);
 		config.setConsumptionJDBCUserName(workerConfig.config.consumptionJDBCUserName);
 		config.setConsumptionNumThreadsPerWorker(workerConfig.config.consumptionNumThreadsPerWorker);
-		config.setConsumptionTimeBetweenQueriesInMillis(workerConfig.config.runningTimeInSeconds);
-		config.setIngestionBatchSize(workerConfig.config.ingestionBatchSize);
-		config.setIngestionJDBCPassword(workerConfig.config.ingestionJDBCPassword);
-		config.setIngestionJDBCURL(workerConfig.config.ingestionJDBCURL);
-		config.setIngestionJDBCUserName(workerConfig.config.ingestionJDBCUserName);
-		config.setIngestionNumThreadsPerWorker(workerConfig.config.ingestionNumThreadsPerWorker);
-		config.setInsertStatement(workerConfig.config.insertStatement);
+		config.setConsumptionTimeBetweenQueriesInMillis(workerConfig.config.consumptionTimeBetweenQueriesInMillis);
 		config.setQueryStatement(workerConfig.config.queryStatement);
 		config.setQueryByIdStatement(workerConfig.config.queryByIdStatement);
 		

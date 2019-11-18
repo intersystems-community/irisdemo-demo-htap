@@ -6,7 +6,7 @@ The picture bellow shows the architecture of the HTAP Demo:
 
 ![Demo Landing Page](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/README.png?raw=true)
 
-Each This demo uses docker-compose to start four services:
+This demo uses docker-compose to start four services:
 
 * htapui - this is the Angular UI you use to run the demo.
 * htapirisdb - this is IRIS Community! So you don't need an IRIS license to run this demo. But it is bad because IRIS Community has two important limitations:
@@ -18,14 +18,12 @@ Each This demo uses docker-compose to start four services:
 
 If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it. But you are going to need an IRIS license to run it. The example is on iris-enterprise-docker-compose.xml.
 
-
 ## How to run the demo
 
 To just run the demo on your PC, make sure you have Docker installed on your machine. You can quickly get it up and running with the folloing commands:
 
 ```bash
 wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose.yml
-wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/.env
 docker-compose up
 ```
 

@@ -25,7 +25,12 @@ public class Config
 	private boolean startConsumers;
 	private boolean disableJournalForDropTable;
 	private boolean disableJournalForTruncateTable;
-
+	private String irisProcDisableJournalDrop;
+	private String irisProcDisableJournal;
+	private String tableDropStatement;
+	private String tableCreateStatement;
+	private String tableTruncateStatement;
+	
 	/* 
 	INGESTION CONFIGURATION 
 	*/
@@ -78,6 +83,56 @@ public class Config
 		{
 			logger.warn("Could not read INSERT statement from file TABLE_INSERT.sql");
 		}
+		
+		try
+		{
+			irisProcDisableJournalDrop=Util.getSingleStatementFromFile("IRIS_PROC_DISABLEJOURNAL_DROP.sql");
+			logger.info("Read statement from file IRIS_PROC_DISABLEJOURNAL_DROP.sql:" + irisProcDisableJournalDrop);
+		}
+		catch (IOException ioE)
+		{
+			logger.warn("Could not read statement from file IRIS_PROC_DISABLEJOURNAL_DROP.sql");
+		}
+		
+		try
+		{
+			irisProcDisableJournal=Util.getSingleStatementFromFile("IRIS_PROC_DISABLEJOURNAL.sql");
+			logger.info("Read statement from file IRIS_PROC_DISABLEJOURNAL.sql:" + irisProcDisableJournal);
+		}
+		catch (IOException ioE)
+		{
+			logger.warn("Could not read statement from file IRIS_PROC_DISABLEJOURNAL.sql");
+		}
+		
+		try
+		{
+			tableDropStatement=Util.getSingleStatementFromFile("TABLE_DROP.sql");
+			logger.info("Read statement from file TABLE_DROP.sql:" + tableDropStatement);
+		}
+		catch (IOException ioE)
+		{
+			logger.warn("Could not read statement from file TABLE_DROP.sql");
+		}
+		
+		try
+		{
+			tableCreateStatement=Util.getSingleStatementFromFile("TABLE_CREATE.sql");
+			logger.info("Read statement from file TABLE_CREATE.sql:" + tableCreateStatement);
+		}
+		catch (IOException ioE)
+		{
+			logger.warn("Could not read statement from file TABLE_CREATE.sql");
+		}
+		
+		try
+		{
+			tableTruncateStatement=Util.getSingleStatementFromFile("TABLE_TRUNCATE.sql");
+			logger.info("Read statement from file TABLE_TRUNCATE.sql:" + tableTruncateStatement);
+		}
+		catch (IOException ioE)
+		{
+			logger.warn("Could not read statement from file TABLE_TRUNCATE.sql");
+		}
 	}
 	
 	public int getIngestionNumThreadsPerWorker() 
@@ -111,7 +166,17 @@ public class Config
 	{
 		return insertStatement;
 	}
-	
+
+	public String getTableDropStatement()
+	{
+		return tableDropStatement;
+	}
+
+	public String getTableCreateStatement()
+	{
+		return tableCreateStatement;
+	}
+
 	@Value( "${INGESTION_THREADS_PER_WORKER:10}" )
 	public void setIngestionNumThreadsPerWorker(int value) 
 	{
@@ -237,6 +302,30 @@ public class Config
 	public void setConsumptionTimeBetweenQueriesInMillis(int consumptionTimeBetweenQueriesInMillis) {
 		logger.info("Setting CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS = " + consumptionTimeBetweenQueriesInMillis);
 		this.consumptionTimeBetweenQueriesInMillis = consumptionTimeBetweenQueriesInMillis;
+	}
+
+	public String getIrisProcDisableJournalDrop() {
+		return irisProcDisableJournalDrop;
+	}
+
+	public void setIrisProcDisableJournalDrop(String irisProcDisableJournalDrop) {
+		this.irisProcDisableJournalDrop = irisProcDisableJournalDrop;
+	}
+
+	public String getIrisProcDisableJournal() {
+		return irisProcDisableJournal;
+	}
+
+	public void setIrisProcDisableJournal(String irisProcDisableJournal) {
+		this.irisProcDisableJournal = irisProcDisableJournal;
+	}
+
+	public String getTableTruncateStatement() {
+		return tableTruncateStatement;
+	}
+
+	public void setTableTruncateStatement(String tableTruncateStatement) {
+		this.tableTruncateStatement = tableTruncateStatement;
 	}
 
 }
