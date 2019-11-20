@@ -1,4 +1,4 @@
-package com.irisdemo.htap.worker;
+package com.irisdemo.htap.workersrv;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AccumulatedMetrics 
+public class WorkerMetricsAccumulator 
 {
 	@Autowired
 	WorkerSemaphore workerSemaphore;

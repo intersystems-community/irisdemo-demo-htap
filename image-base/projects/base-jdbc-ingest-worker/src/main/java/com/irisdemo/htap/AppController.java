@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.irisdemo.htap.worker.AccumulatedMetrics;
-import com.irisdemo.htap.worker.WorkerService;
+import com.irisdemo.htap.workersrv.WorkerMetricsAccumulator;
+import com.irisdemo.htap.workersrv.WorkerService;
 
 @CrossOrigin()
 @RestController
@@ -24,7 +24,7 @@ public class AppController
     WorkerService workerService;
     
     @Autowired
-    AccumulatedMetrics accumulatedMetrics;
+    WorkerMetricsAccumulator accumulatedMetrics;
 
     /**
      * This is called by the container HEALTHCHECK
@@ -66,7 +66,7 @@ public class AppController
     }
     
     @GetMapping("/worker/getMetrics")
-    public AccumulatedMetrics getMetrics() 
+    public WorkerMetricsAccumulator getMetrics() 
     {
         return accumulatedMetrics;
     }

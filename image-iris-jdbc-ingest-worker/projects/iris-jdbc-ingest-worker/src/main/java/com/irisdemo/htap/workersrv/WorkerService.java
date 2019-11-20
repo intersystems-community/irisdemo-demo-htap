@@ -1,4 +1,4 @@
-package com.irisdemo.htap.worker;
+package com.irisdemo.htap.workersrv;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,7 +25,7 @@ public class WorkerService
     WorkerSemaphore workerSemaphore;
     
     @Autowired 
-    AccumulatedMetrics accumulatedMetrics;
+    WorkerMetricsAccumulator accumulatedMetrics;
     
     @Autowired
     Config config;
