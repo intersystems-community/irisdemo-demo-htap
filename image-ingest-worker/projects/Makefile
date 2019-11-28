@@ -10,3 +10,4 @@ build:
 	# Add a cp command here for each type of worker that has been created. 
 	# We are eliminating the version number.
 	cp /usr/projects/ingest-worker-project/iris-jdbc-ingest-worker/target/iris-jdbc-ingest-worker-*.jar /usr/projects/iris-jdbc-ingest-worker.jar
+	cp /usr/projects/ingest-worker-project/mysql-jdbc-ingest-worker/target/mysql-jdbc-ingest-worker-*.jar /usr/projects/mysql-jdbc-ingest-worker.jar

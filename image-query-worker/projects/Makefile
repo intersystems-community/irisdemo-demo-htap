@@ -10,3 +10,4 @@ build:
 	# Add a cp command here for each type of worker that has been created. 
 	# We are eliminating the version number.
 	cp /usr/projects/query-worker-project/iris-jdbc-query-worker/target/iris-jdbc-query-worker-*.jar /usr/projects/iris-jdbc-query-worker.jar
+	cp /usr/projects/query-worker-project/mysql-jdbc-query-worker/target/mysql-jdbc-query-worker-*.jar /usr/projects/mysql-jdbc-query-worker.jar
