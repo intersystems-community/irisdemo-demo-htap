@@ -7,10 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.boot.web.servlet.context.ServletWebServerInitializedEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.boot.web.server.LocalServerPort;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class Config
+public class Config 
 {
 	Logger logger = LoggerFactory.getLogger(Config.class);
 	
@@ -20,6 +23,7 @@ public class Config
 	private String masterHostName;
 	private String masterPort;
 	private String thisHostName;
+	private int thisServerPort;
 	private String workerNodePrefix;
 	
 	private boolean disableJournalForDropTable;
@@ -93,6 +97,15 @@ public class Config
 		this.thisHostName = thisHostName;
 	}
 
+	public void setThisServerPort(int thisServerPort) {
+		logger.info("This server port is " + thisServerPort);
+		this.thisServerPort = thisServerPort;
+	}
+
+	public int getThisServerPort() {
+		return this.thisServerPort;
+	}
+
 	public String getThisHostName() {
 		return thisHostName;
 	}
@@ -116,7 +129,7 @@ public class Config
 		logger.info("Setting MASTER_PORT = " + masterPort);
 		this.masterPort = masterPort;
 	}
-
+	
 	public int getIngestionNumThreadsPerWorker() 
 	{
 		return ingestionNumThreadsPerWorker;

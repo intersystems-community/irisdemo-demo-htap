@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.irisdemo.htap.worker.AccumulatedMetrics;
-import com.irisdemo.htap.worker.WorkerService;
-import com.irisdemo.htap.worker.WorkerService.ConsumersAlreadyRunningException;
+import com.irisdemo.htap.workersrv.AccumulatedMetrics;
+import com.irisdemo.htap.workersrv.WorkerService;
+import com.irisdemo.htap.workersrv.WorkerService.ConsumersAlreadyRunningException;
 
 @CrossOrigin()
 @RestController
@@ -39,7 +39,7 @@ public class AppController
     @PostMapping(value = "/worker/startSpeedTest")
     public void startSpeedTest() throws IOException, SQLException, ConsumersAlreadyRunningException 
     {
-        workerService.startConsumerProgression();
+        workerService.startConsumers();
     }
 
     @PostMapping(value = "/worker/stopSpeedTest")

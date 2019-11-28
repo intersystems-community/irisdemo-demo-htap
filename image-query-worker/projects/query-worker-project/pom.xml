@@ -36,7 +36,7 @@
   
   	<modules>
 		<module>query-controller-module</module>
-		<!-- module>iris-jdbc-query-worker</module-->
+		<module>iris-jdbc-query-worker</module>
 	</modules>
   
     <build>

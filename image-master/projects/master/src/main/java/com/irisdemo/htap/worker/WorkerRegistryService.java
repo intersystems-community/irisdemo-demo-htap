@@ -6,7 +6,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -28,9 +27,6 @@ public class WorkerRegistryService<W extends Worker>
 
     @Autowired
     RestTemplate restTemplate;
-
-    @Autowired
-    WorkerSemaphore workerSemaphore;
 
     Logger logger = LoggerFactory.getLogger(WorkerRegistryService.class);
 
@@ -59,16 +55,12 @@ public class WorkerRegistryService<W extends Worker>
     synchronized public WorkerConfig register(W worker)
     {
         int numWorkers = getNumOfWorkers()+1;
-        boolean electedToPrepareDatabase = false;
-        
-        if (numWorkers==1)
-        	electedToPrepareDatabase=true;
-        
-        logger.trace("Registering " + worker.getWorkerType() + " Worker #" + (numWorkers) + " on host name '" + worker.getHostname() + "'." + (electedToPrepareDatabase?" Elected to prepare the database.":""));
+                
+        logger.info("Registering " + worker.getWorkerType() + " Worker #" + (numWorkers) + " on host name '" + worker.getHostname() + "'.");
 
         workers.put(worker.getHostname(), worker);
 
-        return new WorkerConfig(this.config, "W"+numWorkers, electedToPrepareDatabase);
+        return new WorkerConfig(this.config, "W"+numWorkers);
     }
 
     synchronized public int getNumOfWorkers()

@@ -1,7 +1,6 @@
 package com.irisdemo.htap;
 
 import com.irisdemo.htap.worker.WorkerRegistryService;
-import com.irisdemo.htap.worker.WorkerSemaphore;
 import com.irisdemo.htap.worker.AccumulatedIngestMetrics;
 import com.irisdemo.htap.worker.AccumulatedQueryMetrics;
 import com.irisdemo.htap.worker.IngestMetrics;
@@ -10,7 +9,6 @@ import com.irisdemo.htap.worker.QueryMetrics;
 import com.irisdemo.htap.worker.QueryWorker;
 import com.irisdemo.htap.config.Config;
 import com.irisdemo.htap.config.WorkerConfig;
-import com.irisdemo.htap.db.DatabaseService;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -37,7 +35,9 @@ import org.springframework.web.client.RestTemplate;
 public class AppController 
 {
 	private static boolean databaseHasBeenInitialized = false;
-	
+    
+    private boolean speedTestRunning = false;
+
     @Autowired
     WorkerRegistryService <IngestWorker>ingestWorkerRegistryService;
 
@@ -55,13 +55,7 @@ public class AppController
 
     @Autowired
     Config config;
-        
-    @Autowired
-    DatabaseService dataSource;
-    
-    @Autowired
-    WorkerSemaphore workerSemaphore;
-
+            
     Logger logger = LoggerFactory.getLogger(AppController.class);
     
     /**
@@ -76,7 +70,7 @@ public class AppController
     @PostMapping(value = "/master/startSpeedTest")
     public synchronized void startSpeedTest() throws Exception 
     {
-    	if (!workerSemaphore.green())
+    	if (!speedTestRunning)
     	{
     		IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
             if (!databaseHasBeenInitialized)
@@ -93,7 +87,7 @@ public class AppController
             	restTemplate.postForEntity(truncateTableURL, null, null);
             }
             
-	    	workerSemaphore.allowThreads();
+	    	speedTestRunning = true;
 	    		    	
 	    	logger.info("START speed test. Notifying all workers...");
 	    	
@@ -115,10 +109,8 @@ public class AppController
     @PostMapping(value = "/master/stopSpeedTest")
     public synchronized void stopSpeedTest() throws Exception 
     {
-    	if (workerSemaphore.green())
+    	if (speedTestRunning)
     	{
-	    	workerSemaphore.disableThreads();
-	    	
 	        logger.info("STOP speed test. Notifying all workers...");
 	    	
 	        // Stop ingestion...
@@ -128,7 +120,9 @@ public class AppController
 	    	if (config.getStartConsumers())
 	    	{
 	    		queryWorkerRegistryService.stopSpeedTest();
-	    	}
+            }
+            
+            speedTestRunning = false;
     	}
     	else
     	{
@@ -184,7 +178,7 @@ public class AppController
     @Scheduled(fixedRate = 1000)
     synchronized protected void getIngestionMetricsFromWorkers()
     {
-    	if (workerSemaphore.green())
+    	if (speedTestRunning)
     	{
 	    	AccumulatedIngestMetrics tempIngestionMetrics = new AccumulatedIngestMetrics();
 	    	HashMap<String,IngestWorker> ingestWorkers = ingestWorkerRegistryService.getWorkers();
@@ -213,7 +207,7 @@ public class AppController
     @Scheduled(fixedRate = 1000)
     synchronized protected void getQueryMetricsFromWorkers()
     {
-    	if (workerSemaphore.green())
+    	if (speedTestRunning)
     	{
 	    	AccumulatedQueryMetrics tempQueryMetrics = new AccumulatedQueryMetrics();
 	    	HashMap<String,QueryWorker> QueryWorkers = queryWorkerRegistryService.getWorkers();

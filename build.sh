@@ -1,57 +1,86 @@
 #!/bin/bash
-# 
-# This build.sh is different from buildc.sh because it builds the projet outside
-# the containers so we can run the htap demo stand alone and point it to any
-# IRIS installation (that may not necessarily be on a container).
-#
-# It will require Maven and NodeJS installed on your system.
-#
+VERSION=`cat ./VERSION`
 
-set -e
+exit_if_error() {
+	if [ $(($(echo "${PIPESTATUS[@]}" | tr -s ' ' +))) -ne 0 ]; then
+		echo ""
+		echo "ERROR: $1"
+		echo ""
+		exit 1
+	fi
+}
 
-STANDALONE=$PWD/standalone
-rm -f $STANDALONE/*.jar
+build_java_project() {
 
-echo
-echo '********************************************************************************'
-echo 'Configuring IRIS Jdbc Driver on your local Maven'
-echo '********************************************************************************'
-echo
-(
-	cd ./standalone/maven-iris && \
-	./configmaven.sh
-)
+	PROJECTS_FOLDER=${PWD}/$1/projects
 
-echo
-echo '********************************************************************************'
-echo 'Building MASTER'
-echo '********************************************************************************'
-echo
+	echo ""
+	echo "---------------------------------------------------------------------------"
+	echo "BEGIN building $1..."
+	echo "---------------------------------------------------------------------------"
+	echo ""
 
-(
-	cd ./image-master/projects/master && \
-	mvn package install && \
-	cp ./target/*.jar $STANDALONE/master.jar
-)
+	[[ -z "${1}" ]] && echo "Environment variable $1 not set. Need name of the java project to build." && exit 1
 
-echo
-echo '********************************************************************************'
-echo 'Building IRIS JDBC Ingestion Worker'
-echo '********************************************************************************'
-echo
-(
-	cd ./image-iris-jdbc-ingest-worker/projects/iris-jdbc-ingest-worker && \
-	mvn package install && \
-	cp ./target/*.jar $STANDALONE/iris-jdbc-ingest-worker.jar
-)
+	# Removing existing app.jar. A new one should be produced bellow. That is what is going to be
+	# cooked inside the IMAGE_NAME
+	rm -f $PROJECTS_FOLDER/app.jar
 
-echo
-echo '********************************************************************************'
-echo 'Building IRIS JDBC Query Worker'
-echo '********************************************************************************'
-echo
-(
-	cd ./image-iris-jdbc-query-worker/projects/iris-jdbc-query-worker && \
-	mvn package install && \
-	cp ./target/*.jar $STANDALONE/iris-jdbc-query-worker.jar
-)
+	echo "Starting container $1 to recompile jar..."
+	docker ps -a | grep $1 > /dev/null
+
+	if [ $? -eq 0 ]; then
+		# This will reuse the mavenc container that we used previously to compile the project
+		# This way, we avoid redownloading all the depedencies!
+
+		docker start -i $1
+		exit_if_error "Could not start container $1"
+	else
+		# First tiem trying to compile a project, let's create the mavenc container
+		# It will download all the dependencies of the project
+		docker run -it \
+			-v ${PROJECTS_FOLDER}:/usr/projects \
+			--name $1 intersystemsdc/irisdemo-base-mavenc:latest
+		exit_if_error "Could not create and run container $1"
+	fi
+
+	# There should be one or more jar files available for us to build images with
+	# Let's build an image for each file:	
+	for JAR_FILE_WITH_PATH in $PROJECTS_FOLDER/*.jar; do 
+		echo "" 
+		echo "Building image $IMAGE_NAME..."; 
+		echo ""
+
+		JAR_FILE=${JAR_FILE_WITH_PATH##*[/]}
+		IMAGE_NAME=${JAR_FILE%*.jar}-version-${VERSION}
+
+		# We must copy the file to app.jar because that is how
+		# the Dockerfile expects it to be called to add it to the image
+		cp -f $JAR_FILE_WITH_PATH $PROJECTS_FOLDER/app.jar
+		
+		docker build --build-arg VERSION=version-${VERSION} -t intersystemsdc/irisdemo-demo-htap:${IMAGE_NAME} ./$1
+		exit_if_error "build of ${IMAGE_NAME} failed."
+
+		rm $PROJECTS_FOLDER/app.jar
+	done
+
+	echo ""
+	echo "---------------------------------------------------------------------------"
+	echo "END building image ${IMAGE_NAME}..."
+	echo "---------------------------------------------------------------------------"
+	echo ""
+}
+
+docker-compose stop
+docker-compose rm -f 
+
+build_java_project "image-master"
+
+build_java_project "image-ingest-worker"
+
+build_java_project "image-query-worker"
+
+docker build -t intersystemsdc/irisdemo-demo-htap:ui-version-${VERSION} ./image-ui
+
+#(cd ./image-ui && npm install)
+

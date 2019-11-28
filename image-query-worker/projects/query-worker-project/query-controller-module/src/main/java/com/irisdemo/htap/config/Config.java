@@ -1,9 +1,6 @@
 package com.irisdemo.htap.config;
 
 import org.springframework.stereotype.*;
-
-import com.irisdemo.htap.App;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.*;
@@ -12,7 +9,7 @@ import org.springframework.context.annotation.Scope;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class Config
+public class Config 
 {
 	Logger logger = LoggerFactory.getLogger(Config.class);
 	
@@ -22,6 +19,7 @@ public class Config
 	private String masterHostName;
 	private String masterPort;
 	private String thisHostName;
+	private int thisServerPort;
 	private String workerNodePrefix;
 	
 	/* 
@@ -121,6 +119,15 @@ public class Config
 	public void setMasterPort(String masterPort) {
 		logger.info("Setting MASTER_PORT = " + masterPort);
 		this.masterPort = masterPort;
+	}
+
+	public void setThisServerPort(int thisServerPort) {
+		logger.info("This server port is " + thisServerPort);
+		this.thisServerPort = thisServerPort;
+	}
+
+	public int getThisServerPort() {
+		return this.thisServerPort;
 	}
 
 	public int getIngestionNumThreadsPerWorker() 

@@ -5,7 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.web.servlet.context.ServletWebServerInitializedEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.client.RestTemplate;
@@ -13,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Order(value=0) //Before the DatabaseService is created (it needs these configurations from the master)
-public class ConfigService implements CommandLineRunner
+public class ConfigService implements ApplicationListener<ServletWebServerInitializedEvent>
 {
     @Autowired
     Config config;
@@ -23,9 +24,24 @@ public class ConfigService implements CommandLineRunner
     
     Logger logger = LoggerFactory.getLogger(ConfigService.class);
     
+	@Override
+	public void onApplicationEvent(final ServletWebServerInitializedEvent event)
+	{
+		config.setThisServerPort(event.getWebServer().getPort());
+		
+		try 
+		{
+			registerWithMasterAndGetConfig();
+		} 
+		catch (Exception e) {
+			logger.error(e.getMessage());
+			System.exit(1);
+		}
+	}
+	
     private void registerWithMasterAndGetConfig() throws Exception
     {
-    	String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/queryworker/register/" + config.getThisHostName() + ":" + config.getMasterPort();
+    	String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/queryworker/register/" + config.getThisHostName() + ":" + config.getThisServerPort();
     	
     	logger.info("Registering with " + registrationUrl);
     	
@@ -43,11 +59,5 @@ public class ConfigService implements CommandLineRunner
 		config.setQueryByIdStatement(workerConfig.config.queryByIdStatement);
 		
 		logger.info("Registration successful. Configuration data received and stored.");
-    }
-    
-    @Override
-    public void run(String...args) throws Exception 
-    {
-        registerWithMasterAndGetConfig();
     }
 }

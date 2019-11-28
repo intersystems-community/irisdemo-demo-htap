@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
     "proxy": "ng serve --host 0.0.0.0 --proxy-config proxy.config.json --disable-host-check",
+    "standalone": "ng serve --host 0.0.0.0 --proxy-config standalone.proxy.config.json --disable-host-check",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

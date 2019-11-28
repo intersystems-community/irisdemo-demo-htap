@@ -2,9 +2,6 @@ package com.irisdemo.htap.config;
 
 import org.springframework.stereotype.*;
 
-import com.irisdemo.htap.App;
-import com.irisdemo.htap.db.Util;
-
 import java.io.IOException;
 
 import org.slf4j.Logger;

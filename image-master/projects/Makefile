@@ -1,4 +1,6 @@
 
 build:
 	(cd /usr/projects/master && mvn package install)
-	cp /usr/projects/master/target/*.jar /usr/projects/app.jar
+
+	# We are removing the version from the file name
+	cp /usr/projects/master/target/*.jar /usr/projects/master.jar

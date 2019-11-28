@@ -10,16 +10,27 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.irisdemo.htap.config.Config;
+import com.irisdemo.htap.config.ConfigService;
 
 @EnableScheduling
 @SpringBootApplication
 @Configuration
 @EnableAsync
+//@ComponentScan({"com.irisdemo.UI", "com.irisdemo.HTAP"})
 public class App implements ApplicationRunner
 {	
 	Logger logger = LoggerFactory.getLogger(App.class);
@@ -33,8 +44,8 @@ public class App implements ApplicationRunner
 	public RestTemplate restTemplate(RestTemplateBuilder builder) 
     {
     	return builder.build();
-    }
-	
+	}
+    
 	public static void main(String[] args) throws IOException
 	{
 		SpringApplication app = new SpringApplication(App.class);

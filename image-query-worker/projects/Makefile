@@ -2,7 +2,7 @@
 # This makefile will be run by the build script or docker autobuild hooks to produce the app.jar file we need
 # for this worker. 
 build:
-	(cd /usr/projects/query-worker-project && mvn package)
+	(cd /usr/projects/query-worker-project && mvn clean package)
 
 	# This parent project has many modules. Each module is a type of worker with exceptio of app-module
 	# that has the shared code base for all workers.

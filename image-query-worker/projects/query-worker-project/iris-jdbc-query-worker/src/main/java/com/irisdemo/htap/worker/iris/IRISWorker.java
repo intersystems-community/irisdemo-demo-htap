@@ -1,4 +1,4 @@
-package com.irisdemo.htap.worker;
+package com.irisdemo.htap.worker.iris;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -21,11 +21,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import com.irisdemo.htap.config.Config;
 
-@Component
+import com.irisdemo.htap.workersrv.WorkerSemaphore;
+import com.irisdemo.htap.workersrv.AccumulatedMetrics;
+import com.irisdemo.htap.workersrv.IWorker;
+
+@Component("worker")
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class Worker 
+public class IRISWorker implements IWorker 
 {
-    Logger logger = LoggerFactory.getLogger(Worker.class);
+    Logger logger = LoggerFactory.getLogger(IRISWorker.class);
 
     @Autowired
     WorkerSemaphore workerSemaphore;

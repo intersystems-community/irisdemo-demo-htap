@@ -1,8 +1,7 @@
-package com.irisdemo.htap.worker;
+package com.irisdemo.htap.workersrv;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Scanner;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
@@ -33,7 +32,7 @@ public class WorkerService
     Config config;
     
     @Autowired
-    Worker worker;
+    IWorker worker;
     
 	// Running threads
 	private CompletableFuture<?>[] futures;
@@ -47,7 +46,7 @@ public class WorkerService
     }
 
 	@Async
-    public synchronized void startConsumerProgression() throws ConsumersAlreadyRunningException, IOException, SQLException
+    public synchronized void startConsumers() throws ConsumersAlreadyRunningException, IOException, SQLException
     {
     	if (getNumberOfConsumersRunning()>1) // The current thread is the control thread and it doesn't count.
     	{
