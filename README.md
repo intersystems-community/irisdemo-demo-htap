@@ -22,8 +22,8 @@ This demo uses docker compose to start four services:
 
 Docker Compose expects a docker-compose.yml that describes these services. This demo actually provides many docker-compose.yml files and more will be added soon:
 * docker-compose.yml - This is the default demo that runs the speed test against IRIS Community described on the bullets and picture above.
-* mysql-docker-compose.yml - This is the speed test against MySQL. You will notice that the same test shows that IRIS is 20x faster than MySQL. We have run this test against AWS Aurora (that is a fine tuned version of MySQL) and the results were the same.
-* iris-enterprise-docker-compose.yml - If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it. But you are going to need an IRIS license to run it. The example is on iris-enterprise-docker-compose.xml.
+* docker-compose-mysql.yml - This is the speed test against MySQL. You will notice that the same test shows that IRIS is 20x faster than MySQL. We have run this test against AWS Aurora (that is a fine tuned version of MySQL) and the results were the same.
+* docker-compose-enterprise-iris.yml - If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it. But you are going to need an IRIS license to run it. The example is on iris-enterprise-docker-compose.xml.
 * Other databases will be added soon.
 
 ## How to run the demo against IRIS Community
@@ -58,8 +58,8 @@ Just click on the **Run Test** button to run the HTAP Demo!
 The steps a very similar:
 
 ```bash
-wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/mysql-docker-compose.yml
-docker-compose -f ./mysql-docker-compose.yml up
+wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose-mysql.yml
+docker-compose -f ./docker-compose-mysql.yml up
 ```
 
 # Report any Issues
