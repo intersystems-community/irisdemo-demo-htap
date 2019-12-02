@@ -11,7 +11,7 @@ exit_if_error() {
 
 build_java_project() {
 
-	PROJECTS_FOLDER=${PWD}/$1/projects
+	PROJECTS_FOLDER=./$1/projects
 
 	echo ""
 	echo "---------------------------------------------------------------------------"
@@ -25,7 +25,9 @@ build_java_project() {
 	# cooked inside the IMAGE_NAME
 	rm -f $PROJECTS_FOLDER/app.jar
 
-	echo "Starting container $1 to recompile jar..."
+	echo "#" 
+	echo "# Starting container $1 to recompile jar..."
+	echo "#" 
 	docker ps -a | grep $1 > /dev/null
 
 	if [ $? -eq 0 ]; then
@@ -45,16 +47,26 @@ build_java_project() {
 
 	# There should be one or more jar files available for us to build images with
 	# Let's build an image for each file:	
+
+	echo "#" 
+	echo "# Now, let's build an image per each file found on $PROJECTS_FOLDER"; 
+	echo "#"
+
 	for JAR_FILE_WITH_PATH in $PROJECTS_FOLDER/*.jar; do 
-		echo "" 
-		echo "Building image $IMAGE_NAME..."; 
-		echo ""
 
 		JAR_FILE=${JAR_FILE_WITH_PATH##*[/]}
 		IMAGE_NAME=${JAR_FILE%*.jar}-${DOCKER_TAG}
 
+		echo "#" 
+		echo "# Found $JAR_FILE_WITH_PATH! Building image $IMAGE_NAME:"; 
+		echo "#"
+
 		# We must copy the file to app.jar because that is how
 		# the Dockerfile expects it to be called to add it to the image
+		echo "#" 
+		echo "# Copying $JAR_FILE_WITH_PATH to $PROJECTS_FOLDER/app.jar so that the image can use it..."; 
+		echo "#"
+
 		cp -f $JAR_FILE_WITH_PATH $PROJECTS_FOLDER/app.jar
 		
         IMAGE_FULL_NAME=intersystemsdc/irisdemo-demo-htap:${IMAGE_NAME}

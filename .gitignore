@@ -40,3 +40,6 @@ hs_err_pid*
 
 **/target
 
+# Others
+images_built
+
