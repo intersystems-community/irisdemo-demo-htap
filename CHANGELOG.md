@@ -1,23 +1,8 @@
-## 2.0.0 (December 02, 2019)
-  - Configuring build scripts
-  - Documentation
-  - Added support for MySQL
-  - Merge branch 'master' of https://github.com/intersystems-community/irisdemo-demo-htap
-  - Refactoring of project structure complete. Standalone works.
-  - Project structure using maven modules defined for INGESTION workers. Beggining work on query workers.
-  - Creating base for ingestion worker
-  - Database operations succesfully delegated to ingestion worker.
-  - Update README.md
-  - Fixing MBConsumed metric
-  - Fixing MBConsumed metric
-  - Documentation
-  - Initial version
-  - Initial version
-  - Initial version
-  - Initial version
-  - adding missing proxy.config.json file
-  - adding proxy functionality for all /master calls
-  - Initial version
-  - Initial version
-  - Initial version
 
+## 2.0.0 (December 02, 2019)
+  - Architecture refactored to support multiple databases and connectivity models beyond JDBC.
+  - Added support for MySQL
+  - Can now be run standalone
+
+## 1.0 
+  - Initial version
