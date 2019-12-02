@@ -11,7 +11,7 @@ exit_if_error() {
 
 build_java_project() {
 
-	PROJECTS_FOLDER=./$1/projects
+	PROJECTS_FOLDER=$PWD/$1/projects
 
 	echo ""
 	echo "---------------------------------------------------------------------------"
