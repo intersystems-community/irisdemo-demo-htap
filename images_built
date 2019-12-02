@@ -1,6 +1,0 @@
-intersystemsdc/irisdemo-demo-htap:master-version-1.0
-intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-1.0
-intersystemsdc/irisdemo-demo-htap:mysql-jdbc-ingest-worker-version-1.0
-intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-1.0
-intersystemsdc/irisdemo-demo-htap:mysql-jdbc-query-worker-version-1.0
-intersystemsdc/irisdemo-demo-htap:ui-version-1.0

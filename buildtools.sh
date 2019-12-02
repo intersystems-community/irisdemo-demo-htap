@@ -37,7 +37,7 @@ build_java_project() {
 	else
 		# First tiem trying to compile a project, let's create the mavenc container
 		# It will download all the dependencies of the project
-		docker run -it \
+		docker run -i \
 			-v ${PROJECTS_FOLDER}:/usr/projects \
 			--name $1 intersystemsdc/irisdemo-base-mavenc:latest
 		exit_if_error "Could not create and run container $1"
