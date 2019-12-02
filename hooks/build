@@ -10,47 +10,22 @@ echo "   DOCKERFILE_PATH: $DOCKERFILE_PATH"
 echo "   DOCKER_TAG     : $DOCKER_TAG"
 echo "   DOCKER_TAG     : $IMAGE_NAME"
 
-IMAGE_MASTER_NAME=${DOCKER_REPO}:master-${DOCKER_TAG}
-IMAGE_IRIS_JDBC_INGEST_WORKER_NAME=${DOCKER_REPO}:iris-jdbc-ingest-worker-${DOCKER_TAG}
-IMAGE_IRIS_JDBC_QUERY_WORKER_NAME=${DOCKER_REPO}:iris-jdbc-query-worker-${DOCKER_TAG}
-IMAGE_UI_NAME=${DOCKER_REPO}:ui-${DOCKER_TAG}
+source ./buildtools.sh
 
-build_java_project() {
-	[[ -z "${1}" ]] && echo "Environment variable $1 not set. Need name of the java project to build." && exit 1
+# funtion build_java_project will add a line with the full image name of each image built
+# But we need to start with an empty file:
+rm -f ./images_built
 
-	rm ${PWD}/$1/projects/app.jar
-
-	echo "Starting container $1 to recompile jar..."
-	docker ps -a | grep $1 > /dev/null
-	if [ $? -eq 0 ]; then
-		# This will reuse the mavenc container that we used previously to compile the project
-		# This way, we avoid redownloading all the depedencies!
-
-		docker start -i $1
-	else
-		# First tiem trying to compile a project, let's create the mavenc container
-		# It will download all the dependencies of the project
-		docker run -it \
-			-v ${PWD}/$1/projects:/usr/projects \
-			--name $1 intersystemsdc/irisdemo-base-mavenc:latest
-	fi
-}
-
-echo
-echo "### HOOK - building image-master..."
 build_java_project "image-master"
-docker build -t ${IMAGE_MASTER_NAME} ./image-master
 
-echo
-echo "### HOOK - building image-iris-jdbc-ingest-worker..."
-build_java_project "image-iris-jdbc-ingest-worker"
-docker build -t ${IMAGE_IRIS_JDBC_INGEST_WORKER_NAME} ./image-iris-jdbc-ingest-worker
+build_java_project "image-ingest-worker"
 
-echo
-echo "### HOOK - building image-iris-jdbc-query-worker..."
-build_java_project "image-iris-jdbc-query-worker"
-docker build -t ${IMAGE_IRIS_JDBC_QUERY_WORKER_NAME} ./image-iris-jdbc-query-worker
+build_java_project "image-query-worker"
 
-echo
-echo "### HOOK - building image-ui..."
-docker build -t ${IMAGE_UI_NAME} ./image-ui
+UI_IMAGE_NAME=intersystemsdc/irisdemo-demo-htap:ui-${DOCKER_TAG}
+docker build -t $UI_IMAGE_NAME ./image-ui
+echo $UI_IMAGE_NAME >> ./images_built
+# This last image was not built with the function build_java_project(). So we will
+# add the full image name ourselves:
+
+#The push script will loop on the lines of ./images_build and push them!
