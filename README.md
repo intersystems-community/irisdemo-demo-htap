@@ -84,4 +84,14 @@ This is important, specially if you are going back and forth between running the
 
 # Report any Issues
 
+We have already a long list of things to:
+* Things that are amost done:
+  * Implement an XEP (Extreme Event Processing) based version of this demo. 
+  * Add support to databases such as Postgress.
+  * Add support for running this using ICM on AWS (so we can test against Aurora)
+* Things that are going to be fixed:
+  * The label on the UI is always "IRIS Speed Test" even when we are testing against other databses. 
+  * Make every graph show one single metric instead of combined metrics. When we mix metrics on the same chart, one may be on a much bigger scale than another.
+  * Make the UI more responsive when stopping and restarting the Speed Test. We truncate the table before restarting the speed test and this may take some time and a lot of journal entries. The UI will become unresponsive for a while and there is no indication that anything is being done. We need to fix this.
+  
 Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).
