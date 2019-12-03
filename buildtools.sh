@@ -70,8 +70,6 @@ build_java_project() {
 		cp -f $JAR_FILE_WITH_PATH $PROJECTS_FOLDER/app.jar
 		exit_if_error "Could not copy file $JAR_FILE_WITH_PATH to $PROJECTS_FOLDER/app.jar"
 
-		ls -l $PROJECTS_FOLDER
-
         IMAGE_FULL_NAME=intersystemsdc/irisdemo-demo-htap:${IMAGE_NAME}
 		docker build --build-arg VERSION=${DOCKER_TAG} -t ${IMAGE_FULL_NAME} ./$1
 		exit_if_error "build of ${IMAGE_NAME} failed."
