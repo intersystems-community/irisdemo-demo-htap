@@ -82,11 +82,11 @@ docker-compose -f ./docker-compose-mysql.yml rm
 
 This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other.
 
-# How I configure this demo to run with more workers, threads, etc?
+## How I configure this demo to run with more workers, threads, etc?
 
 Look at the docker-compose.yml file and you will notice environment variables that will allow you to configure everything. The provided docker-compose yml files are just good starting points. You can copy them and change your copies to have more workers (it won't make a lot of difference if you are running on your PC), higher number of threads per worker type, change the ingestion batch size, wait time in milliseconds between queries on the consumter, etc.
 
-# Can I change the table name or structure?
+## Can I change the table name or structure?
 
 Yes, but you will have to rebuild the demo on your PC using the shellscript build.sh.
 
