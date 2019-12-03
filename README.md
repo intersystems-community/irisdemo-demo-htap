@@ -12,18 +12,18 @@ The picture bellow shows the architecture of the HTAP Demo:
 
 This demo uses docker compose to start four services:
 
-* htapui - this is the Angular UI you use to run the demo.
-* htapirisdb - this is IRIS Community! So you don't need an IRIS license to run this demo. But it is bad because IRIS Community has two important limitations:
+* **htapui** - this is the Angular UI you use to run the demo.
+* **htapirisdb** - this is IRIS Community! So you don't need an IRIS license to run this demo. But it is bad because IRIS Community has two important limitations:
  * Max of 5 connections: So we won't be able to use a high number of threads
  * Max Database size of 10Gb: So we won't be able to let the speed test run for too long
-* htapmaster - This is the HTAP Demo master. The UI talks to it and to start/stop the speed test.
-* ingest-worker1 - This is an ingestion worker. You can actually have more than one ingestion worker. Just give each one a different service name. They will try to flood the database with INSERTs.
-* query-worker1 - This is the a consumption worker. You can have more than one of these as well. 
+* **htapmaster** - This is the HTAP Demo master. The UI talks to it and to start/stop the speed test.
+* **ingest-worker1** - This is an ingestion worker. You can actually have more than one ingestion worker. Just give each one a different service name. They will try to flood the database with INSERTs.
+* **query-worker1** - This is the a consumption worker. You can have more than one of these as well. 
 
 Docker Compose expects a docker-compose.yml that describes these services. This demo actually provides many docker-compose.yml files and more will be added soon:
-* docker-compose.yml - This is the default demo that runs the speed test against IRIS Community described on the bullets and picture above.
-* docker-compose-mysql.yml - This is the speed test against MySQL. You will notice that the same test shows that IRIS is 20x faster than MySQL. We have run this test against AWS Aurora (that is a fine tuned version of MySQL) and the results were the same.
-* docker-compose-enterprise-iris.yml - If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it. But you are going to need an IRIS license to run it. The example is on iris-enterprise-docker-compose.xml.
+* **docker-compose.yml** - This is the default demo that runs the speed test against IRIS Community described on the bullets and picture above.
+* **docker-compose-mysql.yml** - This is the speed test against MySQL. You will notice that the same test shows that IRIS is 20x faster than MySQL. We have run this test against AWS Aurora (that is a fine tuned version of MySQL) and the results were the same.
+* **docker-compose-enterprise-iris.yml** - If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it. But you are going to need an IRIS license to run it. The example is on iris-enterprise-docker-compose.xml.
 * Other databases will be added soon.
 
 ## How to run the demo against IRIS Community

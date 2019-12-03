@@ -16,7 +16,7 @@ then
     docker-compose rm -f
     docker-compose up
 else
-    docker-compose -f $1-docker-compose.yml stop
-    docker-compose -f $1-docker-compose.yml rm -f
-    docker-compose -f $1-docker-compose.yml up
+    docker-compose -f docker-compose-$1.yml stop
+    docker-compose -f docker-compose-$1.yml rm -f
+    docker-compose -f docker-compose-$1.yml up
 fi
