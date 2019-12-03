@@ -88,13 +88,18 @@ Look at the docker-compose.yml file and you will notice environment variables th
 
 ## Can I change the table name or structure?
 
-Yes, but you will have to rebuild the demo on your PC using the shellscript build.sh.
+Yes, but you will have to:
+* Fork this repo on your PC
+* Change the source code
+* Rebuild the demo on your PC using the shellscript build.sh.
 
-First, you need to change the files on folder [/image-master/projects/master/src/main/resources](https://github.com/intersystems-community/irisdemo-demo-htap/tree/master/image-master/projects/master/src/main/resources).
+Changing the table structure should be simple. 
+
+After forking, you need to change the files on folder [/image-master/projects/master/src/main/resources](https://github.com/intersystems-community/irisdemo-demo-htap/tree/master/image-master/projects/master/src/main/resources).
 
 If you change the TABLE structure, make sure you use the same data types I am using on the existing table. Those are the data types supported. You can also change the name of the table. 
 
-Then, change the other scripts to match your changes. The INSERT script, the SELECT script, etc.
+Then, change the other *.sql scripts to match your changes. The INSERT script, the SELECT script, etc.
 
 Finally, just run the build.sh to rebuild the demo and you should be ready to go!
 
