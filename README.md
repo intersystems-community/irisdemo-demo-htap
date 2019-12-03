@@ -82,6 +82,22 @@ docker-compose -f ./docker-compose-mysql.yml rm
 
 This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other.
 
+# How I configure this demo to run with more workers, threads, etc?
+
+Look at the docker-compose.yml file and you will notice environment variables that will allow you to configure everything. The provided docker-compose yml files are just good starting points. You can copy them and change your copies to have more workers (it won't make a lot of difference if you are running on your PC), higher number of threads per worker type, change the ingestion batch size, wait time in milliseconds between queries on the consumter, etc.
+
+# Can I change the table name or structure?
+
+Yes, but you will have to rebuild the demo on your PC using the shellscript build.sh.
+
+First, you need to change the files on folder [/image-master/projects/master/src/main/resources](https://github.com/intersystems-community/irisdemo-demo-htap/tree/master/image-master/projects/master/src/main/resources).
+
+If you change the TABLE structure, make sure you use the same data types I am using on the existing table. Those are the data types supported. You can also change the name of the table. 
+
+Then, change the other scripts to match your changes. The INSERT script, the SELECT script, etc.
+
+Finally, just run the build.sh to rebuild the demo and you should be ready to go!
+
 # Report any Issues
 
 We have already a long list of things to:
@@ -89,6 +105,7 @@ We have already a long list of things to:
   * Implement an XEP (Extreme Event Processing) based version of this demo. 
   * Add support to databases such as Postgress.
   * Add support for running this using ICM on AWS (so we can test against Aurora)
+  * Allow configuration of the speed test through the UI instead of environment variables on the docker-compose.yml file.
 * Things that are going to be fixed:
   * The label on the UI is always "IRIS Speed Test" even when we are testing against other databses. 
   * Make every graph show one single metric instead of combined metrics. When we mix metrics on the same chart, one may be on a much bigger scale than another.
