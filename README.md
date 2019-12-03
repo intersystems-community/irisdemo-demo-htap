@@ -53,14 +53,34 @@ After all the containers have started, open the it on [http://localhost:10000](h
 
 Just click on the **Run Test** button to run the HTAP Demo!
 
-## How to run the demo against MySQL
+When you are done, go back to that terminal and enter CTRL+C. You may also want to enter with the following commands to stop containers that may still be running and remove them:
 
-The steps a very similar:
+```bash
+docker-compose stop
+docker-compose rm
+```
+
+This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other (say MySQL).
+
+## How to run the demo against other databases
+
+Let's say we want to run this demo against MySQL. The steps a very similar:
 
 ```bash
 wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose-mysql.yml
 docker-compose -f ./docker-compose-mysql.yml up
 ```
+
+Now, we are downloading a different docker-compose yml file. One that has the **mysql** suffix on it. And we must use **-f** option of the docker-compose command to say we want to use this file. As before, leave this terminal window open and open a browser at http://localhost:10000.
+
+When you are done, go back to this terminal and enter CTRL+C. You may also want to enter with the following commands to stop containers that may still be running and remove them:
+
+```bash
+docker-compose -f ./docker-compose-mysql.yml stop
+docker-compose -f ./docker-compose-mysql.yml rm
+```
+
+This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other.
 
 # Report any Issues
 
