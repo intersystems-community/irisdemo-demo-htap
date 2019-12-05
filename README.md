@@ -107,7 +107,7 @@ Finally, just run the build.sh to rebuild the demo and you should be ready to go
 
 Yes! The easiest way to get this done is to clone this repo on each server where you are planning on running the master and the ui (they run on the same server) and on each worker type (ingestion and query workers). You may have as many ingestion workers and query workers as you want! 
 
-Then, for InterSystems IRIS, look at the files on folder [./standalone_scripts/iris-jdbc/]. There is a script for every server:
+Then, for InterSystems IRIS, look at the files on folder [./standalone_scripts/iris-jdbc](https://github.com/intersystems-community/irisdemo-demo-htap/tree/master/standalone_scripts/iris-jdbc). There is a script for every server:
 * **On the Master**: start_master_and_ui.sh - This script will start both the master and the UI.
 * **On the Ingestion Workers**: start_ingestion_worker.sh - This script will start the ingestion worker which in turn will connect and register with the master.
 * **On the Query Workers**: start_query_worker.sh - This script will start the query worker which in turn will connect and register with the master.
