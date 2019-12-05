@@ -103,6 +103,25 @@ Then, change the other *.sql scripts to match your changes. The INSERT script, t
 
 Finally, just run the build.sh to rebuild the demo and you should be ready to go!
 
+# Can I run this without containers?
+
+Yes! The easiest way to get this done is to clone this repo on each server where you are planning on running the master and the ui (they run on the same server) and on each worker type (ingestion and query workers). You may have as many ingestion workers and query workers as you want! 
+
+Then, for InterSystems IRIS, look at the files on folder [./standalone_scripts/iris-jdbc/]. There is a script for every server:
+* **On the Master**: start_master_and_ui.sh - This script will start both the master and the UI.
+* **On the Ingestion Workers**: start_ingestion_worker.sh - This script will start the ingestion worker which in turn will connect and register with the master.
+* **On the Query Workers**: start_query_worker.sh - This script will start the query worker which in turn will connect and register with the master.
+
+What about IRIS? You have two choices:
+* You can use the start_iris.sh script to start an IRIS server on a docker container for a quick test.
+* You can provision your IRIS cluster by hand or using ICM. Then you could do fancy things such as:
+  * Have both the ingestion and query workers pointing to the same IRIS box
+  * Configure IRIS with ECP and have the ingestion workers pointing to the database server while having the query workers pointing to the ECP servers
+  * Configure a sharded IRIS cluster
+  * etc.
+
+Just make sure you change your start_master.sh script to configure the environment variables with the correct IRIS end points, usernames and passwords.
+
 # Report any Issues
 
 We have already a long list of things to:

@@ -42,4 +42,5 @@ hs_err_pid*
 
 # Others
 images_built
+*.pid
 
