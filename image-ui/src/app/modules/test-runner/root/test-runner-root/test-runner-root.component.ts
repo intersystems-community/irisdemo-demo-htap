@@ -47,14 +47,14 @@ export class TestRunnerRootComponent implements OnInit {
 
   dataIngestMB = [
     {
-      "name": "Ingestion Rate Mb/s",
+      "name": "Insert Rate Mb/s",
       "series": [
         
       ]
     },
   
     {
-      "name": "Avg Ingest Rate Mb/s",
+      "name": "Avg Insert Rate Mb/s",
       "series": [
         
       ]
@@ -63,13 +63,13 @@ export class TestRunnerRootComponent implements OnInit {
 
   dataIngestRecords = [
     {
-      "name": "Ingestion Rate Records/s",
+      "name": "Insert Rate Records/s",
       "series": [
         
       ]
     },
     {
-      "name": "Avg Ingestion Rate Records/s",
+      "name": "Avg Insert Rate Records/s",
       "series": [
         
       ]
@@ -78,14 +78,14 @@ export class TestRunnerRootComponent implements OnInit {
 
   dataConsumptionRecords = [
     {
-      "name": "Consumption Rate Records/s",
+      "name": "Query Rate Records/s",
       "series": [
         
       ]
     },
   
     {
-      "name": "Avg Consumption Rate Records/s",
+      "name": "Avg Query Rate Records/s",
       "series": [
         
       ]
