@@ -14,7 +14,8 @@ export class TestDirectorService {
     testConnection: "/test",
     startTest: "/startSpeedTest",
     stopTest: "/stopSpeedTest",
-    getMetrics: "/getMetrics"
+    getMetrics: "/getMetrics",
+    getTitle: "/getTitle"
   }
 
   getHostName(){
@@ -48,5 +49,9 @@ export class TestDirectorService {
 
   getMetrics(): Observable<any>{
     return this.http.get<any>(this.generateURL("getMetrics"));
+  }
+
+  getTitle(): Observable<any>{
+    return this.http.get<any>(this.generateURL("getTitle"));
   }
 }
