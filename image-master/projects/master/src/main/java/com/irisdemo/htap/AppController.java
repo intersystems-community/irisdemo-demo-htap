@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.*;
 
 @CrossOrigin()
 @RestController
@@ -137,6 +138,12 @@ public class AppController
         return activeFeeds;
     }
     
+    @GetMapping(value = "/master/getTitle")
+    public String getTitle() 
+    {
+        return config.getTitle();
+    }
+
     @GetMapping(value = "/master/ingestworker/register/{hostname}")
     public WorkerConfig registerIngestWorker(@PathVariable String hostname) 
     {

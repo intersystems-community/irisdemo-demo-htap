@@ -27,6 +27,7 @@ public class Config
 	private String tableDropStatement;
 	private String tableCreateStatement;
 	private String tableTruncateStatement;
+	private String title;
 	
 	/* 
 	INGESTION CONFIGURATION 
@@ -132,6 +133,18 @@ public class Config
 		}
 	}
 	
+	@Value( "${MASTER_SPEEDTEST_TITLE:IRIS Speed Test}" )
+	public void setTitle(String title)
+	{
+		logger.info("Setting MASTER_SPEEDTEST_TITLE = " + title);
+		this.title=title;
+	}
+
+	public String getTitle()
+	{
+		return this.title;
+	}
+
 	public int getIngestionNumThreadsPerWorker() 
 	{
 		return ingestionNumThreadsPerWorker;
