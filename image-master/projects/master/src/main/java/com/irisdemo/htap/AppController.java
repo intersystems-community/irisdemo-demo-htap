@@ -139,9 +139,9 @@ public class AppController
     }
     
     @GetMapping(value = "/master/getTitle")
-    public String getTitle() 
+    public RESTStringContainer getTitle() 
     {
-        return config.getTitle();
+        return new RESTStringContainer(config.getTitle());
     }
 
     @GetMapping(value = "/master/ingestworker/register/{hostname}")
@@ -238,6 +238,16 @@ public class AppController
 	    	
 	    	accumulatedQueryMetrics.update(tempQueryMetrics);
     	}
+    }
+
+    class RESTStringContainer
+    {
+        public String value;
+
+        public RESTStringContainer(String value)
+        {
+            this.value=value;
+        }
     }
 
 }
