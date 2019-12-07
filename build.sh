@@ -14,12 +14,12 @@ build_java_project "image-ingest-worker"
 
 build_java_project "image-query-worker"
 
-UI_IMAGE_NAME=intersystemsdc/irisdemo-demo-htap:ui-${DOCKER_TAG}
-docker build -t $UI_IMAGE_NAME ./image-ui
-echo $UI_IMAGE_NAME >> ./images_built
+# UI_IMAGE_NAME=intersystemsdc/irisdemo-demo-htap:ui-${DOCKER_TAG}
+# docker build -t $UI_IMAGE_NAME ./image-ui
+# echo $UI_IMAGE_NAME >> ./images_built
 # This last image was not built with the function build_java_project(). So we will
 # add the full image name ourselves.
 
 # It is necessary to build the application this way as well so it can be run standalone, without dockers.
-(cd ./image-ui && npm install)
+# (cd ./image-ui && npm install)
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>query-controller-module</name>
+	<name>mysql-jdbc-query-worker</name>
 	<comment></comment>
 	<projects>
 	</projects>

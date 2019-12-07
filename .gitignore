@@ -44,3 +44,6 @@ hs_err_pid*
 images_built
 *.pid
 
+# VSCode
+.metal
+.vscode

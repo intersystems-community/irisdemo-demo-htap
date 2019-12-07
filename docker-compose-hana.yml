@@ -1,0 +1,158 @@
+# Starts the SpeedTest using SAP HANA as the backend database. 
+
+version: '2.4'
+  
+services:
+#
+# SAP HANA
+# It takes about 7min to start! So be patient!
+#
+# Default username: SYSYEM
+# Default password: SAPHANAPassword1
+#
+  hana:
+    image: store/saplabs/hanaexpress:2.00.040.00.20190729.1
+    hostname: hana
+    container_name: hana
+    init: true
+    environment:
+      - LOCAL_HANA_PASSSWORD=SAPHANAPassword1
+    entrypoint:
+      - sh
+      - -c
+      - echo "{\"master_password\":\"$$LOCAL_HANA_PASSSWORD\"}" > /tmp/hana_password.json; cat /tmp/hana_password.json;/run_hana --agree-to-sap-license --passwords-url file:///tmp/hana_password.json
+    sysctls:
+      kernel.shmmax: 1073741824
+      kernel.shmmni: 524288
+      kernel.shmall: 8388608
+      # fs.file-max: 20000000
+      # fs.aio-max-nr: 18446744073709551615
+      # vm.max_map_count: 2147483647
+      
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
+    ports:
+      - "39013:39013" 
+      - "39017:39017"
+      - "39041-39045:39041-39045"
+      - "1128-1129:1128-1129" 
+      - "59013-59014:59013-59014"
+    # I don't want SAP HANA's database outside of the container
+    #  volumes:
+    #   - hana-data:/hana/mounts
+
+#
+# Speed Test Master
+#
+
+  htapmaster:
+    container_name: htapmaster
+    hostname: htapmaster
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:master-version-2.0.5
+    ports:
+      - "10002:8080" # Where Springboot Will be listening
+    environment:
+      - JAVA_OPTS=-Xmx512M
+      - MASTER_SPEEDTEST_TITLE=SpeedTest | SAP HANA Express 2.00.040.00.20190729.1
+      - START_CONSUMERS=true
+      - INGESTION_THREADS_PER_WORKER=2
+      - INGESTION_BATCH_SIZE=1000
+      - INGESTION_JDBC_URL=jdbc:sap://hana:39017/?databaseName=HXE
+      - INGESTION_JDBC_USERNAME=SYSTEM
+      - INGESTION_JDBC_PASSWORD=SAPHANAPassword1
+      - CONSUMER_JDBC_URL=jdbc:sap://hana:39017/?databaseName=HXE
+      - CONSUMER_JDBC_USERNAME=SYSTEM
+      - CONSUMER_JDBC_PASSWORD=SAPHANAPassword1
+      - CONSUMER_THREADS_PER_WORKER=1
+      - CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS=0
+
+#
+# Speed Test UI
+#
+  htapui:
+    depends_on:
+      htapmaster:
+        condition: service_healthy
+    container_name: htapui
+    hostname: htapui
+    image: intersystemsdc/irisdemo-demo-htap:ui-version-2.0.5
+    ports:
+    - "10000:4200" # Where Node Will be listening
+
+#
+# Speed Test Ingestion Worker
+#
+  ingest-worker1:
+    depends_on: 
+      htapmaster:
+        condition: service_healthy
+    container_name: ingest-worker1
+    hostname: ingest-worker1
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:hana-jdbc-ingest-worker-version-2.0.5
+    ports:
+      - "10003:8080" # Where Springboot Will be listening
+    environment:
+      - JAVA_OPTS=-Xmx512M
+      - MASTER_HOSTNAME=htapmaster
+      - MASTER_PORT=8080
+
+#
+# Speed Test Query Worker
+#
+  query-worker1:
+    depends_on: 
+      htapmaster:
+        condition: service_healthy
+    container_name: query-worker1
+    hostname: query-worker1
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:hana-jdbc-query-worker-version-2.0.5
+    ports:
+      - "10004:8080" # Where Springboot Will be listening
+    environment:
+      - JAVA_OPTS=-Xmx512M
+      - MASTER_HOSTNAME=htapmaster
+      - MASTER_PORT=8080
+
+
+#
+# SQL Pad is a tool that can allow us to look inside the database. To use it, open your browser at
+# http://localhost:3000
+#
+# Log in with admin/sys
+#
+# Then you will be able to run queries against the database
+#
+# Useful resources:
+# - https://github.com/rickbergfalk/sqlpad
+# - https://blogs.sap.com/2018/03/07/connecting-docker-hxe-and-sqlpad/
+#
+# select TO_VARCHAR(ROUND((FREE_PHYSICAL_MEMORY) /1024/1024/1024, 2)) AS FREEMEM from PUBLIC.M_HOST_RESOURCE_UTILIZATION
+  sqlpad:
+    image: intersystemsdc/irisdemo-base-sqlpad:version-1.0.1
+    hostname: 'sqlpad'
+    ports:
+      - '3000:3000'      
+
+    environment:
+      - SQLPAD_CONNECTIONS__hana__name="SAP HANNA"
+      - SQLPAD_CONNECTIONS__hana__driver=hdb
+      - SQLPAD_CONNECTIONS__hana__host=hana
+      - SQLPAD_CONNECTIONS__hana__hanaport=39017
+      - SQLPAD_CONNECTIONS__hana__username=SYSTEM
+      - SQLPAD_CONNECTIONS__hana__password=SAPHANAPassword1
+      - SQLPAD_CONNECTIONS__hana__hanadatabase=HXE
+      - SQLPAD_CONNECTIONS__hana__hanaSchema=Tenant
+    # I don't care about saving state from sqlpad
+    # volumes:
+    #   - sqlpad-volume:/var/lib/sqlpad
+
+
+# I don't want SAP HANA's databases outside of the container
+# volumes:
+#   hana-data:
+#   db-data:

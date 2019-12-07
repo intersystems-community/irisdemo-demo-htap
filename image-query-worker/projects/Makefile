@@ -11,3 +11,4 @@ build:
 	# We are eliminating the version number.
 	cp /usr/projects/query-worker-project/iris-jdbc-query-worker/target/iris-jdbc-query-worker-*.jar /usr/projects/iris-jdbc-query-worker.jar
 	cp /usr/projects/query-worker-project/mysql-jdbc-query-worker/target/mysql-jdbc-query-worker-*.jar /usr/projects/mysql-jdbc-query-worker.jar
+	cp /usr/projects/query-worker-project/hana-jdbc-query-worker/target/hana-jdbc-query-worker-*.jar /usr/projects/hana-jdbc-query-worker.jar
