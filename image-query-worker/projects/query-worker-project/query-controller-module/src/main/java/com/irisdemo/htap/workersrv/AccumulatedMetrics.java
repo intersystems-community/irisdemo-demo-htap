@@ -90,15 +90,17 @@ public class AccumulatedMetrics
 			//if we are stopping the workers and no new records have been ingested.
 			if (deltaNumberOfRowsConsumed>0) 
 			{
+				double ellapsedTimeInSeconds = timeSpentOnWorkInMillis/1000d;
+
 				previousNumberOfRowsConsumed = numberOfRowsConsumed;
 				this.setRecordsConsumedPerSec(deltaNumberOfRowsConsumed);						
 				
 				this.setMBConsumedPerSec(MBConsumed - previousMBConsumed);
 				previousMBConsumed = MBConsumed;
 				
-				setAvgRecordsConsumedPerSec(numberOfRowsConsumed / timeSpentOnWorkInMillis);
+				setAvgRecordsConsumedPerSec(numberOfRowsConsumed / ellapsedTimeInSeconds);
 				
-				setAvgMBConsumedPerSec(MBConsumed / timeSpentOnWorkInMillis);
+				setAvgMBConsumedPerSec(MBConsumed / ellapsedTimeInSeconds);
 				
 				avgQueryAndConsumptionTimeInMillis = timeSpentOnWorkInMillis/numberOfRowsConsumed;
 			}
