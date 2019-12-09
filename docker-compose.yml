@@ -7,13 +7,12 @@
 # - Max Database size of 10Gb: So we won't be able to let the speed test run for too long
 #
 # But this configuration is good for development.
-version: '2.4'
+version: '3.7'
 
 services:
   htapui:
     depends_on:
-      htapmaster:
-        condition: service_healthy
+      - htapmaster
     container_name: htapui
     hostname: htapui
     image: intersystemsdc/irisdemo-demo-htap:ui-version-2.0.5
@@ -34,8 +33,7 @@ services:
 
   htapmaster:
     depends_on: 
-      htapirisdb:
-        condition: service_healthy
+      - htapirisdb
     container_name: htapmaster
     hostname: htapmaster
     init: true
@@ -60,8 +58,7 @@ services:
 
   ingest-worker1:
     depends_on: 
-      htapmaster:
-        condition: service_healthy
+      - htapmaster
     container_name: ingest-worker1
     hostname: ingest-worker1
     init: true
@@ -74,8 +71,7 @@ services:
 
   query-worker1:
     depends_on: 
-      htapmaster:
-        condition: service_healthy
+      - htapmaster
     container_name: query-worker1
     hostname: query-worker1
     init: true
