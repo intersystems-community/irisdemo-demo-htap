@@ -28,14 +28,14 @@ Docker Compose expects a docker-compose.yml that describes these services. This 
 
 ## How to run the demo against IRIS Community
 
-To just run the demo on your PC, make sure you have Docker installed on your machine. You can quickly get it up and running with the folloing commands:
+To just run the demo on your PC, make sure you have Docker installed on your machine. You can quickly get it up and running with the following commands:
 
 ```bash
 wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose.yml
 docker-compose up
 ```
 
-You can also clone this repository to you local machine to get the entire source code. You will need git installed and you would need to be on your git folder:
+You can also clone this repository to your local machine to get the entire source code. You will need git installed and you would need to be on your git folder:
 
 ```bash
 git clone https://github.com/intersystems-community/irisdemo-demo-htap
@@ -64,7 +64,7 @@ This is important, specially if you are going back and forth between running the
 
 ## How to run the demo against other databases
 
-Let's say we want to run this demo against MySQL. The steps a very similar:
+Let's say we want to run this demo against MySQL. The steps are very similar:
 
 ```bash
 wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose-mysql.yml
