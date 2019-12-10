@@ -25,19 +25,25 @@ then
 else
     if [ "$1" == "hana" ];
     then
-        # Following instructions on https://hub.docker.com/_/sap-hana-express-edition/plans/f2dc436a-d851-4c22-a2ba-9de07db7a9ac?tab=instructions
-        # But we are setting these kernel parameters to be TEMPORARY. After a reboot, they will be
-        # reset to their original values.
-        printf "\n\n${PURPLE}SAPA HANA requires some kernel parameters to be configured so it can run properly"
-        printf "\nYou will be asked for your sudo password.\n${RESET}"
-        
-        sudo sysctl -w fs.file-max=20000000
-        sudo sysctl -w fs.aio-max-nr=262144
-        sudo sysctl -w vm.memory_failure_early_kill=1
-        sudo sysctl -w vm.max_map_count=135217728
-        sudo sysctl -w net.ipv4.ip_local_port_range="40000 60999"
+        printf "\n\n${PURPLE}SAP HANA requires some kernel parameters to be configured so it can run properly.\n"
+        if [ "$OSTYPE" == "linux-gnu" ]; 
+        then
+            # Following instructions on https://hub.docker.com/_/sap-hana-express-edition/plans/f2dc436a-d851-4c22-a2ba-9de07db7a9ac?tab=instructions
+            # But we are setting these kernel parameters to be TEMPORARY. After a reboot, they will be
+            # reset to their original values.
+            
+            printf "\nYou will be asked for your sudo password.\n${RESET}"
+            
+            sudo sysctl -w fs.file-max=20000000
+            sudo sysctl -w fs.aio-max-nr=262144
+            sudo sysctl -w vm.memory_failure_early_kill=1
+            sudo sysctl -w vm.max_map_count=135217728
+            sudo sysctl -w net.ipv4.ip_local_port_range="40000 60999"
 
-        printf "\n${PURPLE}Kernel variables set.\n\n${RESET}"
+            printf "\n${PURPLE}Kernel variables set.\n\n${RESET}"
+        else
+            printf "\n\n${PURPLE}SAP HANA for Docekrs is only supported in native Linux. It may not work correctly on Docker for Mac or Windows.${RESET}"
+        fi
     fi
     docker-compose -f docker-compose-$1.yml stop
     docker-compose -f docker-compose-$1.yml rm -f
