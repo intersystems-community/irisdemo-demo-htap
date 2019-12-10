@@ -60,8 +60,6 @@ public class WorkerDBUtils
 	        Properties connectionProperties = new Properties();
 	        connectionProperties.setProperty("user", config.getIngestionJDBCUserName());
 	        connectionProperties.setProperty("password", config.getIngestionJDBCPassword());
-			//connectionProperties.setProperty("serverTimezone", "UTC");
-        	//connectionProperties.setProperty("createDatabaseIfNotExist", "true");
 
 	        dataSourceCache = new DriverManagerDataSource(config.getIngestionJDBCURL(), connectionProperties);
 		}
@@ -203,9 +201,10 @@ public class WorkerDBUtils
 		
 		try
 		{
-			PreparedStatement statement = connection.prepareStatement("create schema " + schemaName);
+			PreparedStatement statement = connection.prepareStatement("create schema " + schemaName + " owned by " + config.getIngestionJDBCUserName());
 		    statement.execute();
 		    statement.close();
+			
 		}
 		catch (JDBCDriverException e)
 		{
