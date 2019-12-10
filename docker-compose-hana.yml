@@ -74,8 +74,7 @@ services:
 #
   htapui:
     depends_on:
-      htapmaster:
-        condition: service_healthy
+      - htapmaster
     container_name: htapui
     hostname: htapui
     image: intersystemsdc/irisdemo-demo-htap:ui-version-2.0.5
@@ -87,8 +86,7 @@ services:
 #
   ingest-worker1:
     depends_on: 
-      htapmaster:
-        condition: service_healthy
+      - htapmaster
     container_name: ingest-worker1
     hostname: ingest-worker1
     init: true
@@ -105,8 +103,7 @@ services:
 #
   query-worker1:
     depends_on: 
-      htapmaster:
-        condition: service_healthy
+      - htapmaster
     container_name: query-worker1
     hostname: query-worker1
     init: true

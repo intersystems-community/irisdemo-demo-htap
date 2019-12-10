@@ -42,3 +42,4 @@ else
     docker-compose -f docker-compose-$1.yml stop
     docker-compose -f docker-compose-$1.yml rm -f
     docker-compose -f docker-compose-$1.yml up
+fi
