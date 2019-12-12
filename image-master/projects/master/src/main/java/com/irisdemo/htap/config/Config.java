@@ -337,5 +337,4 @@ public class Config
 	public void setTableTruncateStatement(String tableTruncateStatement) {
 		this.tableTruncateStatement = tableTruncateStatement;
 	}
-
 }

@@ -37,7 +37,7 @@ public class AppController
     }
 
     @PostMapping(value = "/worker/startSpeedTest")
-    public void startSpeedTest() throws IOException, SQLException, ConsumersAlreadyRunningException 
+    public void startSpeedTest() throws Exception, IOException, SQLException, ConsumersAlreadyRunningException 
     {
         workerService.startConsumers();
     }
