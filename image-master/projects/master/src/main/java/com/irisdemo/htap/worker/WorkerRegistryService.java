@@ -13,6 +13,7 @@ import com.irisdemo.htap.config.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,40 +31,48 @@ public class WorkerRegistryService<W extends Worker>
 
     Logger logger = LoggerFactory.getLogger(WorkerRegistryService.class);
 
-    private HashMap<String, W> workers;
+    private ConcurrentHashMap<String, W> workers;
 
     WorkerRegistryService()
     {
-        this.workers = new HashMap<String, W>();
+        this.workers = new ConcurrentHashMap<String, W>();
     }
     
-    synchronized public HashMap<String, W>getWorkers()
+    public ConcurrentHashMap<String, W>getWorkers()
     {
     	return workers;
     }
     
-    synchronized public W getOneWorker()
+    public W getOneWorker()
     {
-    	Iterator it = workers.keySet().iterator();
-    	return workers.get(it.next());
+        synchronized(this){
+            Iterator it = workers.keySet().iterator();
+            return workers.get(it.next());
+        }
     }
     
     /*
      * This method is called by a REST service implementation on class WorkerController. That
      * service is called by Workers to register with this master.
      */
-    synchronized public WorkerConfig register(W worker)
+    public WorkerConfig register(W worker)
     {
-        int numWorkers = getNumOfWorkers()+1;
-                
-        logger.info("Registering " + worker.getWorkerType() + " Worker #" + (numWorkers) + " on host name '" + worker.getHostname() + "'.");
+        int numWorkers = getNumOfWorkers();
 
-        workers.put(worker.getHostname(), worker);
+        if(!workers.containsKey(worker.getHostname())){
+            synchronized(this){
+                numWorkers = getNumOfWorkers() + 1;
+                logger.info("Registering " + worker.getWorkerType() + " Worker #" + (numWorkers) + " on host name '" + worker.getHostname() + "'.");
+                workers.put(worker.getHostname(), worker);
+            }
+        }else{
+            logger.info(worker.getHostname() + " Already Registered, Syncing the Config Only");
+        }
 
         return new WorkerConfig(this.config, "W"+numWorkers);
     }
 
-    synchronized public int getNumOfWorkers()
+    public int getNumOfWorkers()
     {
         return workers.size();
     }
@@ -118,7 +127,7 @@ public class WorkerRegistryService<W extends Worker>
     @Scheduled(fixedRate = 1000)
     synchronized protected void purgeWorkers()
     {
-    	HashMap<String, W> remainingWorkers = new HashMap<String, W>();
+    	ConcurrentHashMap<String, W> remainingWorkers = new ConcurrentHashMap<String, W>();
     	
     	workers.forEach((hostname, worker) -> {
     		if (worker.isAvailable())

@@ -8,10 +8,15 @@ import { Component, OnInit, Input } from '@angular/core';
 export class TopNavComponent implements OnInit {
 
   @Input() title: string;
+  @Input() action: any;
    
   constructor() { }
 
   ngOnInit() {
   }
+
+  performAction(): void{
+    this.action();
+  } 
 
 }

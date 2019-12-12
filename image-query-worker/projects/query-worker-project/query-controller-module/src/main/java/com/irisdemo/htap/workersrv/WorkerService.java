@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.irisdemo.htap.config.Config;
+import com.irisdemo.htap.config.ConfigService;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -29,7 +30,10 @@ public class WorkerService
     AccumulatedMetrics accumulatedMetrics;
     
     @Autowired
-    Config config;
+	Config config;
+	
+	@Autowired
+    ConfigService configService;
     
     @Autowired
     IWorker worker;
@@ -46,8 +50,10 @@ public class WorkerService
     }
 
 	@Async
-    public synchronized void startConsumers() throws ConsumersAlreadyRunningException, IOException, SQLException
+    public synchronized void startConsumers() throws ConsumersAlreadyRunningException, IOException, SQLException, Exception
     {
+		resyncConfig();
+
     	if (getNumberOfConsumersRunning()>1) // The current thread is the control thread and it doesn't count.
     	{
     		throw new ConsumersAlreadyRunningException();
@@ -87,6 +93,15 @@ public class WorkerService
 		{
 			//Ignore CancellationException
 		}
+	}
+	
+	/**
+	 * Called from com.irisdemo.htap.AppController
+	 * @throws Exception
+	 */
+    public void resyncConfig() throws Exception 
+    {
+        configService.registerWithMasterAndGetConfig();
     }
     
 	public class ConsumersAlreadyRunningException extends Exception

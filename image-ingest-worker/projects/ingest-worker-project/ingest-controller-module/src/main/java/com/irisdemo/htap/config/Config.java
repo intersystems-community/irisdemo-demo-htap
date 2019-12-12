@@ -239,5 +239,4 @@ public class Config
 		logger.info("Got table truncate statement.");
 		this.tableTruncateStatement = tableTruncateStatement;
 	}
-
 }

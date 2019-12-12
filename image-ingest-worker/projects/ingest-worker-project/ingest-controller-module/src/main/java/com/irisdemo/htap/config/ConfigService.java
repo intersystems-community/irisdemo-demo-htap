@@ -10,6 +10,7 @@ import org.springframework.boot.web.servlet.context.ServletWebServerInitializedE
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -39,33 +40,40 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 		}
 	}
 
-    private void registerWithMasterAndGetConfig() throws Exception
+    public void registerWithMasterAndGetConfig() throws Exception
     {
     	String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/ingestworker/register/" + config.getThisHostName() + ":" + config.getThisServerPort();
     	
-    	logger.info("Registering with " + registrationUrl);
-    	
-    	RESTWorkerConfig workerConfig = restTemplate.getForObject(
-				registrationUrl
-				, RESTWorkerConfig.class);
-    	
-		config.setWorkerNodePrefix(workerConfig.workerNodePrefix);
-		config.setIngestionBatchSize(workerConfig.config.ingestionBatchSize);
-		config.setIngestionJDBCPassword(workerConfig.config.ingestionJDBCPassword);
-		config.setIngestionJDBCURL(workerConfig.config.ingestionJDBCURL);
-		config.setIngestionJDBCUserName(workerConfig.config.ingestionJDBCUserName);
-		config.setIngestionNumThreadsPerWorker(workerConfig.config.ingestionNumThreadsPerWorker);
+		logger.info("Registering with " + registrationUrl);
 		
-		config.setInsertStatement(workerConfig.config.insertStatement);
-		config.setQueryStatement(workerConfig.config.queryStatement);
-		config.setQueryByIdStatement(workerConfig.config.queryByIdStatement);
-		config.setTableCreateStatement(workerConfig.config.tableCreateStatement);
-		config.setTableDropStatement(workerConfig.config.tableDropStatement);
-		config.setTableTruncateStatement(workerConfig.config.tableTruncateStatement);
-		config.setIrisProcDisableJournal(workerConfig.config.irisProcDisableJournal);
-		config.setIrisProcDisableJournalDrop(workerConfig.config.irisProcDisableJournalDrop);
-		
-		logger.info("Registration successful. Configuration data received and stored.");
-    }
-    
+		try
+		{    			
+			RESTWorkerConfig workerConfig = restTemplate.getForObject(registrationUrl, RESTWorkerConfig.class);
+
+				config.setWorkerNodePrefix(workerConfig.workerNodePrefix);
+				config.setIngestionBatchSize(workerConfig.config.ingestionBatchSize);
+				config.setIngestionJDBCPassword(workerConfig.config.ingestionJDBCPassword);
+				config.setIngestionJDBCURL(workerConfig.config.ingestionJDBCURL);
+				config.setIngestionJDBCUserName(workerConfig.config.ingestionJDBCUserName);
+				config.setIngestionNumThreadsPerWorker(workerConfig.config.ingestionNumThreadsPerWorker);
+
+				logger.info("IN CONFIGSERVICE, THE VALUE FOR INGESTION THREADS IS: " + workerConfig.config.ingestionNumThreadsPerWorker);
+				
+				config.setInsertStatement(workerConfig.config.insertStatement);
+				config.setQueryStatement(workerConfig.config.queryStatement);
+				config.setQueryByIdStatement(workerConfig.config.queryByIdStatement);
+				config.setTableCreateStatement(workerConfig.config.tableCreateStatement);
+				config.setTableDropStatement(workerConfig.config.tableDropStatement);
+				config.setTableTruncateStatement(workerConfig.config.tableTruncateStatement);
+				config.setIrisProcDisableJournal(workerConfig.config.irisProcDisableJournal);
+				config.setIrisProcDisableJournalDrop(workerConfig.config.irisProcDisableJournalDrop);
+				
+				logger.info("Registration successful. Configuration data received and stored.");
+		}
+		catch (RestClientException restException)
+		{
+			logger.info("Worker on " + config.getThisHostName() + " is not responding. Marking worker as unavailablebecause of: " + restException.getMessage());
+		}
+    	
+	} 
 }

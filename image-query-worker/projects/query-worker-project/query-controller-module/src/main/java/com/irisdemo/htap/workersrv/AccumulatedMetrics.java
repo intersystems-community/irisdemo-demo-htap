@@ -18,6 +18,7 @@ public class AccumulatedMetrics
 	WorkerSemaphore workerSemaphore;
 	
 	private double timeSpentOnWorkInMillis;
+	private double startTimeInMillis;
 	
 	private double numberOfRowsConsumed;
 	private double recordsConsumedPerSec; 
@@ -48,7 +49,9 @@ public class AccumulatedMetrics
      */
     public void reset()
     {
-    	timeSpentOnWorkInMillis=0;
+		timeSpentOnWorkInMillis=0;
+
+		startTimeInMillis=System.currentTimeMillis();
     	
     	setNumberOfRowsConsumed(0);
     	setRecordsConsumedPerSec(0); 
@@ -90,7 +93,8 @@ public class AccumulatedMetrics
 			//if we are stopping the workers and no new records have been ingested.
 			if (deltaNumberOfRowsConsumed>0) 
 			{
-				double ellapsedTimeInSeconds = timeSpentOnWorkInMillis/1000d;
+				double ellapsedTimeInMillis = (System.currentTimeMillis() - startTimeInMillis);
+				double ellapsedTimeInSeconds = ellapsedTimeInMillis/1000d;
 
 				previousNumberOfRowsConsumed = numberOfRowsConsumed;
 				this.setRecordsConsumedPerSec(deltaNumberOfRowsConsumed);						
@@ -102,7 +106,7 @@ public class AccumulatedMetrics
 				
 				setAvgMBConsumedPerSec(MBConsumed / ellapsedTimeInSeconds);
 				
-				avgQueryAndConsumptionTimeInMillis = timeSpentOnWorkInMillis/numberOfRowsConsumed;
+				avgQueryAndConsumptionTimeInMillis = ellapsedTimeInMillis/numberOfRowsConsumed;
 			}
     	}
     }

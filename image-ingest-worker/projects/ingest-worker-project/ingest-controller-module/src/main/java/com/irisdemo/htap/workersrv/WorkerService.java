@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.irisdemo.htap.config.Config;
+import com.irisdemo.htap.config.ConfigService;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -28,7 +29,10 @@ public class WorkerService
     WorkerMetricsAccumulator accumulatedMetrics;
     
     @Autowired
-    Config config;
+	Config config;
+	
+	@Autowired
+    ConfigService configService;
     
     @Autowired
     @Qualifier("worker")
@@ -61,8 +65,10 @@ public class WorkerService
 	 * Called from com.irisdemo.htap.AppController
 	 * @throws Exception
 	 */
-    public void startSpeedTest() throws IOException, SQLException 
+    public void startSpeedTest() throws IOException, SQLException, Exception 
     {
+		resyncConfig();
+
     	int confNumIngestionThreads = config.getIngestionNumThreadsPerWorker();
         logger.info("Master requested to START the speed test.");
         
@@ -113,5 +119,14 @@ public class WorkerService
     public int getNumberOfActiveFeeds() 
     {
         return numberOfRunningFeeds;
+	}
+	
+	/**
+	 * Called from com.irisdemo.htap.AppController
+	 * @throws Exception
+	 */
+    public void resyncConfig() throws Exception 
+    {
+        configService.registerWithMasterAndGetConfig();
     }
 }

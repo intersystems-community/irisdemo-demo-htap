@@ -9,6 +9,7 @@ import org.springframework.boot.web.servlet.context.ServletWebServerInitializedE
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -39,25 +40,32 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 		}
 	}
 	
-    private void registerWithMasterAndGetConfig() throws Exception
+    public void registerWithMasterAndGetConfig() throws Exception
     {
     	String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/queryworker/register/" + config.getThisHostName() + ":" + config.getThisServerPort();
     	
-    	logger.info("Registering with " + registrationUrl);
-    	
-    	RESTWorkerConfig workerConfig = restTemplate.getForObject(
+		logger.info("Registering with " + registrationUrl);
+		
+		try
+		{    			
+			RESTWorkerConfig workerConfig = restTemplate.getForObject(
 				registrationUrl
 				, RESTWorkerConfig.class);
-    	
-		config.setWorkerNodePrefix(workerConfig.workerNodePrefix);
-    	config.setConsumptionJDBCPassword(workerConfig.config.consumptionJDBCPassword);
-		config.setConsumptionJDBCURL(workerConfig.config.consumptionJDBCURL);
-		config.setConsumptionJDBCUserName(workerConfig.config.consumptionJDBCUserName);
-		config.setConsumptionNumThreadsPerWorker(workerConfig.config.consumptionNumThreadsPerWorker);
-		config.setConsumptionTimeBetweenQueriesInMillis(workerConfig.config.consumptionTimeBetweenQueriesInMillis);
-		config.setQueryStatement(workerConfig.config.queryStatement);
-		config.setQueryByIdStatement(workerConfig.config.queryByIdStatement);
-		
-		logger.info("Registration successful. Configuration data received and stored.");
+
+			config.setWorkerNodePrefix(workerConfig.workerNodePrefix);
+			config.setConsumptionJDBCPassword(workerConfig.config.consumptionJDBCPassword);
+			config.setConsumptionJDBCURL(workerConfig.config.consumptionJDBCURL);
+			config.setConsumptionJDBCUserName(workerConfig.config.consumptionJDBCUserName);
+			config.setConsumptionNumThreadsPerWorker(workerConfig.config.consumptionNumThreadsPerWorker);
+			config.setConsumptionTimeBetweenQueriesInMillis(workerConfig.config.consumptionTimeBetweenQueriesInMillis);
+			config.setQueryStatement(workerConfig.config.queryStatement);
+			config.setQueryByIdStatement(workerConfig.config.queryByIdStatement);
+			
+			logger.info("Registration successful. Configuration data received and stored.");
+		}
+		catch (RestClientException restException)
+		{
+			logger.info("Worker on " + config.getThisHostName() + " is not responding. Marking worker as unavailablebecause of: " + restException.getMessage());
+		}
     }
 }

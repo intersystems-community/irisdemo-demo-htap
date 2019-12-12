@@ -1,0 +1,63 @@
+<div>
+    <div class="app-config-section-wrapper">
+        <div>
+            <h2 class="config-title-text">Data Insertion</h2>
+        </div>
+    
+        <div>
+            <h2 class="config-title-text">Data Querying</h2>
+        </div>
+    </div>
+
+    <div class="app-config-section-wrapper">
+        <form class="config-form-wrapper" [formGroup]="configFormGroup">
+            <mat-form-field class="form-element">
+                <input matInput placeholder="JDBC URL" formControlName="ingestionJDBCURL">
+            </mat-form-field> 
+            <mat-form-field class="form-element">
+                <input matInput placeholder="JDBC UserName" formControlName="ingestionJDBCUserName">
+            </mat-form-field>
+            <mat-form-field class="form-element">
+                <input matInput placeholder="JDBC Password" [type]="hideIngestPassword ? 'password' : 'text'" formControlName="ingestionJDBCPassword">
+                <button mat-icon-button matSuffix (click)="hideIngestPassword = !hideIngestPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideIngestPassword">
+                    <mat-icon>{{hideIngestPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button> 
+            </mat-form-field>
+            <mat-form-field class="form-element">
+                <input matInput type="number" placeholder="Ingestion Batch Size" formControlName="ingestionBatchSize">
+            </mat-form-field>
+            <mat-form-field class="form-element">
+                <input matInput type="number"placeholder="Threads Per Worker" formControlName="ingestionNumThreadsPerWorker">
+            </mat-form-field>                
+        </form>
+
+        <form class="config-form-wrapper" [formGroup]="configFormGroup">
+            <mat-form-field class="form-element">
+                <input matInput placeholder="JDBC URL" formControlName="consumptionJDBCURL">
+            </mat-form-field> 
+            <mat-form-field class="form-element">
+                <input matInput placeholder="JDBC UserName" formControlName="consumptionJDBCUserName">
+            </mat-form-field>
+            <mat-form-field class="form-element">
+                <input matInput placeholder="JDBC Password" [type]="hideConsumptionPassword ? 'password' : 'text'" formControlName="consumptionJDBCPassword">
+                <button mat-icon-button matSuffix (click)="hideConsumptionPassword = !hideConsumptionPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConsumptionPassword">
+                    <mat-icon>{{hideConsumptionPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>  
+            </mat-form-field>
+            <mat-form-field class="form-element">
+                <input matInput type="number" placeholder="Wait Time Betwwen Queries (ms)" formControlName="consumptionTimeBetweenQueriesInMillis">
+            </mat-form-field>
+            <mat-form-field class="form-element">
+                <input matInput type="number"placeholder="Threads Per Worker" formControlName="consumptionNumThreadsPerWorker">
+            </mat-form-field>                
+        </form>
+    </div>
+    <div class="dialog-button-wrapper">
+        <div class="button-padder">
+            <button class="app-button" mat-raised-button color="primary" (click)="onNoClick()">Cancel</button>
+        </div>
+        <div class="button-padder">
+            <button [disabled]="!allowConfigUpdate" [class.spinner]="loading" class="app-button" mat-raised-button color="primary" (click)="updateApplicationConfig()">Update Configuration</button>
+        </div>
+    </div>
+</div>

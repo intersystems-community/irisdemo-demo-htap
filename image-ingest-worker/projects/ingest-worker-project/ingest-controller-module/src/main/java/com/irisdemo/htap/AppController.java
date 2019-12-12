@@ -48,7 +48,7 @@ public class AppController
     }
 
     @PostMapping(value = "/worker/startSpeedTest")
-    public void startSpeedTest() throws IOException, SQLException 
+    public void startSpeedTest() throws Exception, IOException, SQLException 
     {
         workerService.startSpeedTest();
     }

@@ -108,7 +108,6 @@ public class WorkerMetricsAccumulator
 	    		double ellapsedTimeInMillis = (System.currentTimeMillis() - startTimeInMillis);
 				double ellapsedTimeInSeconds = ellapsedTimeInMillis/1000d;
 						
-				
 				this.MBIngestedPerSec = MBIngested - previousMBIngested;
 				previousMBIngested = MBIngested;
 				
