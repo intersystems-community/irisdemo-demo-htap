@@ -6,12 +6,16 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { TestDirectorService } from '../../providers/test-director.service'
 
+/*Importing Angualr Material Modules*/
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   declarations: [TestRunnerRootComponent],
   imports: [
     CommonModule,
-    NgxChartsModule
+    NgxChartsModule,
+    MatButtonModule
   ],
   providers: [
     TestDirectorService

@@ -1,0 +1,48 @@
+.app-config-section-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.config-title-text{
+    color: #333695;
+    text-decoration: underline;
+    text-decoration-color: #333695;
+}
+
+.config-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-width: 35%;
+}
+
+.dialog-button-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.button-padder{
+   padding: 10px;
+}
+
+/*Button Spinner Specific Code*/
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+ 
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  border-top-color: #000000;
+  animation: spinner .8s linear infinite;
+}

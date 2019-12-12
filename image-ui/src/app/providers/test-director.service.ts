@@ -9,13 +9,16 @@ export class TestDirectorService {
 
   constructor(private http: HttpClient) { }
 
-  baseURL: string = "http://" + window.location.host + "/master"
+  /*baseURL: string = "http://" + "window.location.host" + "/master"*/
+  baseURL: string = "http://" + "localhost:10002" + "/master"
   apiConfig: any = {
     testConnection: "/test",
     startTest: "/startSpeedTest",
     stopTest: "/stopSpeedTest",
     getMetrics: "/getMetrics",
-    getTitle: "/getTitle"
+    getTitle: "/getTitle",
+    getApplicationConfig: "/getApplicationConfig",
+    updateApplicationConfig: "/updateApplicationConfig"
   }
 
   getHostName(){
@@ -53,5 +56,13 @@ export class TestDirectorService {
 
   getTitle(): Observable<any>{
     return this.http.get<any>(this.generateURL("getTitle"));
+  }
+
+  getApplicationConfig(): Observable<any>{
+    return this.http.get<any>(this.generateURL("getApplicationConfig"));
+  }
+
+  updateApplicationConfig(newApplicationConfig: any): Observable<any>{
+    return this.http.post<any>(this.generateURL("updateApplicationConfig"), newApplicationConfig);
   }
 }
