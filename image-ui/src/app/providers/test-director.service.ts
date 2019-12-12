@@ -9,8 +9,7 @@ export class TestDirectorService {
 
   constructor(private http: HttpClient) { }
 
-  /*baseURL: string = "http://" + "window.location.host" + "/master"*/
-  baseURL: string = "http://" + "localhost:10002" + "/master"
+  baseURL: string = "http://" + "window.location.host" + "/master"
   apiConfig: any = {
     testConnection: "/test",
     startTest: "/startSpeedTest",
