@@ -9,7 +9,7 @@ export class TestDirectorService {
 
   constructor(private http: HttpClient) { }
 
-  baseURL: string = "http://" + "window.location.host" + "/master"
+  baseURL: string = "http://" + window.location.host + "/master"
   apiConfig: any = {
     testConnection: "/test",
     startTest: "/startSpeedTest",
@@ -21,16 +21,18 @@ export class TestDirectorService {
   }
 
   getHostName(){
-    let hostName:  string  = window.location.hostname
+    // let hostName:  string  = window.location.hostname
 
-    if(hostName.includes("CN-IRISSpeedTest-0001")){
-      hostName = hostName.replace("htapui", "htapmaster");
-      hostName = hostName.replace("0001", "0002")
-    }else{
-      hostName = this.baseURL
-    }
+    // if(hostName.includes("CN-IRISSpeedTest-0001")){
+    //   hostName = hostName.replace("htapui", "htapmaster");
+    //   hostName = hostName.replace("0001", "0002")
+    // }else{
+    //   hostName = this.baseURL
+    // }
 
-    return hostName;
+    // return hostName;
+
+    return this.baseURL;
   }
 
   generateURL(apiEndpoint: string): string {

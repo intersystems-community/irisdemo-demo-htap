@@ -1,24 +1,9 @@
-#!/bin/sh
-
 export SSH_DIR=/ICMDurable/keys
 export TLS_DIR=/ICMDurable/keys
-
 export ICM_LABEL=asamary
-
-export MASTER_HOSTNAME=htapmaster-${ICM_LABEL}-CN-IRISSpeedTest-0002.weave.local
-export MASTER_PORT=8080
-
-export IRIS_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local
-export IRIS_PORT=51773
-
-export IRIS_ECP_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local
-export IRIS_ECP_PORT=51773
-
-export INGESTION_THREADS_PER_WORKER=30
-export INGESTION_BATCH_SIZE=1000
-
-export CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS=0
-export CONSUMER_PROGRESSION=10
-
-# m5.xlarge has 16Gb of RAM. We are giving Java 12Gb
-export JAVA_XMX=12228M  
+export MASTER_1_HOSTNAME=htapmaster-asamary-CN-IRISSpeedTest-0001.weave.local
+export MASTER_1_PORT=8080
+export MASTER_2_HOSTNAME=htapmaster-asamary-CN-IRISSpeedTest-0002.weave.local
+export MASTER_2_PORT=8080
+export HTAP_INGESTION_WORKERS=2
+export HTAP_QUERY_WORKERS=2

@@ -41,7 +41,7 @@ build_java_project() {
 		# It will download all the dependencies of the project
 		docker run -i \
 			-v ${PROJECTS_FOLDER}:/usr/projects \
-			--name $1 intersystemsdc/irisdemo-base-mavenc:latest
+			--name $1 intersystemsdc/irisdemo-base-mavenc:version-1.0.4
 		exit_if_error "Could not create and run container $1"
 	fi
 

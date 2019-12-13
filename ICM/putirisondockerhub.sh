@@ -1,10 +1,6 @@
 #!/bin/bash
 
-#
-# Parameters
-#
-TAG=2019.2.0-released
-QUAYTAG=2019.2.0-released
+source ./ICMDurable/iris_env.sh
 
 #
 # CONSTANTS
@@ -131,18 +127,27 @@ dockerLogin docker.iscinternal.com
 
 printfY "\n\nPulling images...\n"
 
-docker pull docker.iscinternal.com/intersystems/iris:$QUAYTAG
-checkError "Pull failed." "Pull successful!"
+docker pull docker.iscinternal.com/intersystems/iris:$IRIS_TAG
+checkError "IRIS Pull failed." "Pull successful!"
 
-printfY "\n\Tagging images...\n"
+docker pull docker.iscinternal.com/intersystems/icm:$IRIS_TAG
+checkError "ICM Pull failed." "Pull successful!"
 
-docker tag docker.iscinternal.com/intersystems/iris:$QUAYTAG amirsamary/irisdemo:iris.$TAG
-checkError "Tagging failed." "Tagging successful!"
+printfY "\nTagging images...\n"
+
+docker tag docker.iscinternal.com/intersystems/iris:$IRIS_TAG $IRIS_PRIVATE_REPO:iris.$IRIS_TAG
+checkError "IRIS Tagging failed." "IRIS Tagging successful!"
+
+docker tag docker.iscinternal.com/intersystems/icm:$IRIS_TAG $IRIS_PRIVATE_REPO:icm.$IRIS_TAG
+checkError "ICM Tagging failed." "ICM Tagging successful!"
 
 printfY "\n\nLoggin into Docker Hub:\n"
 dockerLogin
 
-printfY "\n\Uploading images...\n"
+printfY "\nUploading images...\n"
 
-docker push amirsamary/irisdemo:iris.$TAG
-checkError "Upload failed." "Upload successful!"
+docker push $IRIS_PRIVATE_REPO:iris.$IRIS_TAG
+checkError "IRIS Upload failed." "IRIS Upload successful!"
+
+docker push $IRIS_PRIVATE_REPO:icm.$IRIS_TAG
+checkError "ICM Upload failed." "ICM Upload successful!"

@@ -35,6 +35,8 @@ hs_err_pid*
 **/credentials.ADFS-PowerUsers
 *.log
 *.err
+.CNcount
+env.sh
 
 #Java
 

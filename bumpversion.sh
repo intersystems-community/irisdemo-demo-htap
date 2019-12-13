@@ -67,6 +67,7 @@ if [ -f VERSION ]; then
         sed -E -i '' "s;(intersystemsdc/irisdemo-demo-htap:.+)-version-[0-9][0-9.]*;\1-version-$INPUT_STRING;g" $filename
     done
     #sed -E -i '' "s;(intersystemsdc/irisdemo-demo-htap:.+)-version-[0-9][0-9.]*;\1-version-$INPUT_STRING;g" ./README.md
+    sed -E -i '' "s;(intersystemsdc/irisdemo-demo-htap:.+)-version-[0-9][0-9.]*;\1-version-$INPUT_STRING;g" ./ICM/ICMDurable/base_env.sh
 
     echo "## $INPUT_STRING ($NOW)" > tmpfile
     git log --pretty=format:"  - %s" "v$BASE_STRING"...HEAD >> tmpfile
@@ -81,7 +82,7 @@ if [ -f VERSION ]; then
     #
     # Add files that were changed by the bumpversion.sh:
     #
-    git add CHANGELOG.md VERSION 
+    git add CHANGELOG.md VERSION ./ICM/ICMDurable/base_env.sh
     for filename in ./docker-compose*.yml; do
         git add $filename
     done

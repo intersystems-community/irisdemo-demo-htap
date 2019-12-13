@@ -24,7 +24,8 @@ services:
     # So we are going to use our irisdemo-base-db image.
     #image: store/intersystems/iris-community:2019.3.0.309.0
     # version-1.2 is based on IRIS Community 2019.3
-    image: intersystemsdc/irisdemo-base-irisdb-community:version-1.2 
+    # version-1.4 is based on IRIS Community 2019.4
+    image: intersystemsdc/irisdemo-base-irisdb-community:version-1.4 
     hostname: htapirisdb
     init: true
     container_name: htapirisdb
@@ -41,7 +42,7 @@ services:
     ports:
       - "10002:8080" # Where Springboot Will be listening
     environment:
-      - MASTER_SPEEDTEST_TITLE=SpeedTest | IRIS 2019.3.0.309.0
+      - MASTER_SPEEDTEST_TITLE=SpeedTest | IRIS 2019.4
       - START_CONSUMERS=true
       - DISABLE_JOURNAL_FOR_DROP_TABLE=true
       - DISABLE_JOURNAL_FOR_TRUNCATE_TABLE=true

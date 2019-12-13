@@ -17,6 +17,23 @@ CYAN="\033[1;36m"
 WHITE="\033[1;37m"
 RESET="\033[0m"
 
+cleanup()
+{
+    printf "\n\n${PURPLE}CTRL+C detected. Removing containters...${RESET}\n"
+    if [ -z "$1" ];
+    then
+        docker-compose stop
+        docker-compose rm -f
+    else
+        docker-compose -f docker-compose-$1.yml stop
+        docker-compose -f docker-compose-$1.yml rm -f
+    fi
+
+    printf "\n\n${PURPLE}Cleaning up complete.${RESET}\n"
+    trap - INT
+}
+trap cleanup INT
+
 if [ -z "$1" ];
 then
     docker-compose stop
