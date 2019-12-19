@@ -92,7 +92,7 @@ This is important, specially if you are going back and forth between running the
 ### SAP Hana
 
 To run the speed test against SAP HANA on your PC you will need:
-* A VM with Ubuntu 18 VM, docker and docker-compose - Because SAP HANA requires some changes to the Linux Kernel parameters that I otherwise couldn't do using Docker for Mac or Docker for Windows. Also, SAP HANA requires a linux Kernel version 4 or superior.
+* A VM with Ubuntu 18 VM, docker and docker-compose - Because SAP HANA requires some changes to the Linux Kernel parameters that we otherwise couldn't do using Docker for Mac or Docker for Windows. Also, SAP HANA requires a linux Kernel version 4 or superior.
 * Give at least 9Gb of RAM to this VM otherwise it wouldn't even start! It would crash with an unhelpful error message.
 
 To run this demo against SAP Hana:
