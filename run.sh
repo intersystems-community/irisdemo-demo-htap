@@ -38,7 +38,7 @@ if [ -z "$1" ];
 then
     docker-compose stop
     docker-compose rm -f
-    docker-compose up
+    docker-compose up --remove-orphans
 else
     if [ "$1" == "hana" ];
     then
@@ -64,5 +64,5 @@ else
     fi
     docker-compose -f docker-compose-$1.yml stop
     docker-compose -f docker-compose-$1.yml rm -f
-    docker-compose -f docker-compose-$1.yml up
+    docker-compose -f docker-compose-$1.yml up --remove-orphans
 fi

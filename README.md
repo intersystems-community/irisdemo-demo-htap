@@ -91,12 +91,21 @@ This is important, specially if you are going back and forth between running the
 
 ### SAP Hana
 
+To run the speed test against SAP HANA on your PC you will need:
+* A VM with Ubuntu 18 VM, docker and docker-compose - Because SAP HANA requires some changes to the Linux Kernel parameters that I otherwise couldn't do using Docker for Mac or Docker for Windows. Also, SAP HANA requires a linux Kernel version 4 or superior.
+* Give at least 9Gb of RAM to this VM otherwise it wouldn't even start! It would crash with an unhelpful error message.
+
 To run this demo against SAP Hana:
 
 ```bash
-wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose-hana.yml
-docker-compose -f ./docker-compose-hana.yml up
+git clone https://github.com/intersystems-community/irisdemo-demo-htap
+cd ./irisdemo-demo-htap
+run.sh hana
 ```
+
+Wait for the images to download and for the containers to start. You will know when everything is up once docker-compose stops writing to the screen. But be patient! SAP HANA takes about 6 minutes to start! So, your screen will freeze for a minute or so and then you will see SAP HANA writing more stuff. Then it will repeat this for about 6 mint... Once you see the sentence "Startup finished!" you should be good to go. If it crashes with an error, it is probably because you need to give it more memory. 
+
+As you can see, it is not just a matter of running docker-compose up as it is with IRIS and MySQL. SAP HANA requires some configurations to the Linux Kernel. The run.sh will do these configurations for you.
 
 ## Can I run this Speed Test on AWS?
 
