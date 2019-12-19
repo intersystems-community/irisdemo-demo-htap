@@ -11,13 +11,17 @@ cd /ICMDurable
 ```
 
 Then, there will be the following scripts available:
-* setup.sh - Use this script to set ICM up. It will ask you about things such as:
+* **setup.sh** - Use this script to set ICM up. It will ask you about things such as:
   * A label for the machines that ICM will create on AWS so that you can quickly find them by filtering by this label
   * If you want IRIS with Mirroring or not
   * How many Speed Test masters do you want. If you are testing only IRIS, you will need just one master. But if you are testing against other databases such as SAP HANA, you may ask for 2 masters (one for IRIS and another for SAP HANA)
   * How many ingestion workers per master
   * How many query workers per master
   * What are your docker hub credentials
+* **provision.sh** - Provision the infrastructure for IRIS, IRIS Speed Test, and Other database Speed Test (if more than one master is entered). We are still working on making it possible running the Speed Test against SAP HANA and other databases on AWS.
+* **deployiris.sh** - Deploy IRIS to the provisioned infrastructure.
+* **deployspeedtest.sh** - Deploy the speed test for IRIS and other supported databases.
+* **unprovision.sh** - Unprovision the entire infrastructure on AWS.
 
 ## Setup
 
@@ -40,7 +44,7 @@ Run the provision.sh script. It will create the machines on AWS.
 
 Run the deployiris.sh script. It deploy InterSystems IRIS for you.
 
-You will notice that ICM will write on the screen the URL for the management portal. Save that. You will be able to open the management portal using the user SuperUser and the password sys. Notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run.
+You will notice that ICM will write on the screen the URL for the management portal. Save that. You will be able to open the management portal using the user **SuperUser** and the password **sys**. Notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run.
 
 ## Deploy the Speed Test
 
