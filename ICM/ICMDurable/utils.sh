@@ -10,9 +10,25 @@ WHITE="\033[1;37m"
 RESET="\033[0m"
 
 exit_if_error() {
-	if [ $(($(echo "${PIPESTATUS[@]}" | tr -s ' ' +))) -ne 0 ]; then
+
+	if [ $? -ne 0 ];
+	then
 		printf "\n\n${RED}"
 		echo "ERROR: $1"
+		printf "\n\n${RESET}"
+		exit 1
+	fi
+}
+
+exit_if_terraform_error() {
+
+	if [ $? -ne 0 ];
+	then
+		printf "\n\n${RED}"
+		echo "ERROR: $1"
+		printf "\n${YELLOW}"
+		cat */*/terraform.err
+
 		printf "\n\n${RESET}"
 		exit 1
 	fi

@@ -30,9 +30,10 @@ hs_err_pid*
 **/State
 **/.terraform/
 **/keys
-**/license
+**/license/*.key
 **/instances.json
-**/credentials.ADFS-PowerUsers
+**/*.credentials
+**/.provisionHasBeenRun
 *.log
 *.err
 .CNcount

@@ -1,6 +1,6 @@
 {
     "Provider": "AWS",
-    "Label": "<Label>",
+    "Label": "asamary",
     "Tag": "IRISSpeedTest",
     "DataVolumeSize": "1024",
     "DataVolumeType": "io1",
@@ -16,8 +16,8 @@
     "SSHPublicKey": "/ICMDurable/keys/insecure-ssh2.pub",
     "SSHPrivateKey": "/ICMDurable/keys/insecure",
     "DockerImage": "amirsamary/irisdemo:iris.2019.4.0.383.0",
-    "DockerUsername": "<DockerUsername>",
-    "DockerPassword": "<DockerPassword>",
+    "DockerUsername": "amirsamary",
+    "DockerPassword": "zajxom-Jyrso1-sufwaz",
     "TLSKeyDir": "/ICMDurable/keys/",
     "LicenseDir": "/ICMDurable/license/",
     "Region": "us-east-1",
@@ -29,7 +29,7 @@
     "SystemMode": "TEST",
     "ISCPassword": "sys",
     "Namespace": "SPEEDTEST",
-    "Mirror": "true",
+    "Mirror": "false",
     "ISCglobals": "0,0,12288,0,0,0",
     "ISCroutines": "512",
     "ISCgmheap": "1048576"

@@ -1,0 +1,12 @@
+
+[
+    {
+	"Role": "DM",
+	"Count": "1",
+	"LicenseKey": "iris.key"
+	},
+	{
+		"Role": "CN",
+		"Count": "5"
+	}
+]

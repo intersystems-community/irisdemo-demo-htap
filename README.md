@@ -64,7 +64,14 @@ This is important, specially if you are going back and forth between running the
 
 ## How to run the demo against other databases
 
-Let's say we want to run this demo against MySQL. The steps are very similar:
+You can run this speed test against other database such as:
+* MySql
+* Hana
+* Others will be coming
+
+### MySQL
+
+To run this demo against MySQL:
 
 ```bash
 wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose-mysql.yml
@@ -82,7 +89,20 @@ docker-compose -f ./docker-compose-mysql.yml rm
 
 This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other.
 
-## How I configure this demo to run with more workers, threads, etc?
+### SAP Hana
+
+To run this demo against SAP Hana:
+
+```bash
+wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose-hana.yml
+docker-compose -f ./docker-compose-hana.yml up
+```
+
+## Can I run this Speed Test on AWS?
+
+Yes. Follow instructions [here](./ICM/README.md).
+
+## How do I configure this demo to run with more workers, threads, etc?
 
 Look at the docker-compose.yml file and you will notice environment variables that will allow you to configure everything. The provided docker-compose yml files are just good starting points. You can copy them and change your copies to have more workers (it won't make a lot of difference if you are running on your PC), higher number of threads per worker type, change the ingestion batch size, wait time in milliseconds between queries on the consumter, etc.
 
