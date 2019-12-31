@@ -67,7 +67,7 @@ if [ -f VERSION ]; then
         sed -E -i '' "s;(intersystemsdc/irisdemo-demo-htap:.+)-version-[0-9][0-9.]*;\1-version-$INPUT_STRING;g" $filename
     done
     #sed -E -i '' "s;(intersystemsdc/irisdemo-demo-htap:.+)-version-[0-9][0-9.]*;\1-version-$INPUT_STRING;g" ./README.md
-    sed -E -i '' "s;(.+)-version-[0-9][0-9.]*;\1-version-$INPUT_STRING;g" ./ICM/ICMDurable/base_env.sh
+    sed -E -i '' "s;version-[0-9][0-9.]*;version-$INPUT_STRING;g" ./ICM/ICMDurable/base_env.sh
 
     echo "## $INPUT_STRING ($NOW)" > tmpfile
     git log --pretty=format:"  - %s" "v$BASE_STRING"...HEAD >> tmpfile
