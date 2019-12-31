@@ -1,3 +1,7 @@
+## 2.2.0 (December 31, 2019)
+  - Adding support to SAP HANA for ICM
+  - Documentation
+
 ## 2.1.0 (December 19, 2019)
   - Adding support for ICM. Fixing UI bugs. Allowing configuration of the Speed TEst from the UI
   - Adding support for SAP HANA
