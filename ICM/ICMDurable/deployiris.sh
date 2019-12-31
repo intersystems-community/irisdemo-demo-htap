@@ -7,7 +7,7 @@
 source /ICMDurable/env.sh
 source /ICMDurable/utils.sh
 
-icm run -stateDir /ICMDurable/State
+icm run -stateDir /ICMDurable/State -options "--cap-add IPC_LOCK"
 exit_if_error "Deploying IRIS failed."
 
 printf "\n\n${YELLOW}You can run ./deployspeedtest.sh to deploy the Speed Test to the provisioned infrastructure now.\n\n${RESET}"

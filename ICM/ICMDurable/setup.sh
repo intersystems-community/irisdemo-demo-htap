@@ -117,10 +117,6 @@ exit_if_empty $DOCKER_PASSWORD
 sed -E -i  "s;<DockerUsername>;$DOCKER_USERNAME;g" ./defaults.json
 sed -E -i  "s;<DockerPassword>;$DOCKER_PASSWORD;g" ./defaults.json
 
-#
-# Recreating definitions.json file
-#
-
 printf "\n\n${GREEN}Do you want IRIS with Mirroring (answer yes or something else)?: ${RESET}"
 read irisWithMirroringAnswer
 exit_if_empty $irisWithMirroringAnswer
@@ -128,11 +124,24 @@ exit_if_empty $irisWithMirroringAnswer
 if [ "$irisWithMirroringAnswer" == "yes" ];
 then
     DM_COUNT=2
+    ZONE="us-east-1a,us-east-1b"
 else
     DM_COUNT=1
     sed -E -i  "s;\"Mirror\": \"true\";\"Mirror\": \"false\";g" ./defaults.json
     
+    ZONE="us-east-1a"
 fi
+sed -E -i  "s;<Zone>;$ZONE;g" ./defaults.json
+
+printf "\n\n${GREEN}Please enter with the AWS instance type (ex.: m4.2xlarge, m5.xlarge, etc.) ?: ${RESET}"
+read instanceType
+exit_if_empty $instanceType
+
+sed -E -i  "s;<InstanceType>;$instanceType;g" ./defaults.json
+
+#
+# Recreating definitions.json file
+#
 
 echo "
 [
