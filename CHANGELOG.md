@@ -1,4 +1,4 @@
-## 2.2.0 (December 31, 2019)
+## 2.2.1 (December 31, 2019)
   - Adding support to SAP HANA for ICM
   - Documentation
 
