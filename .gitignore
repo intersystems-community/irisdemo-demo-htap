@@ -31,7 +31,8 @@ hs_err_pid*
 **/.terraform/
 **/keys
 **/license/*.key
-**/instances.json
+**/ICM/ICMDurable/*.json
+**/ICM/ICMDurable/merge.cpf
 **/*.credentials
 **/.provisionHasBeenRun
 *.log

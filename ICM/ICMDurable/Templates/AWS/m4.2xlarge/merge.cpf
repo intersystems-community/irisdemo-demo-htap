@@ -1,0 +1,9 @@
+[config]
+globals=0,0,25000,0,0,0
+gmheap=1048576
+routines=512
+locksiz=16777216
+bbsiz=262144
+memlock=0
+asyncwij=8
+wduseasyncio=1
