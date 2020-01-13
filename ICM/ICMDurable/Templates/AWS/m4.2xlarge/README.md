@@ -83,3 +83,10 @@ So, let's give the same to IRIS! Here is our final configuration:
 Please notice that we have configured our Data Volume with an EBS volume type of io1 as well. 
 
 Silly Question: Why does SAP HANA needs a fast disk if it is an in-memory database? :))
+
+Things we can do to improve performance even further:
+- Use XEP 
+- User an ICM containerless deployment
+- Disable encryption on the Weave Network
+- Verify impact of asynch WIJ 
+- Work with Mark Bolinsky. :)
