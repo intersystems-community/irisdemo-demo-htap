@@ -100,7 +100,7 @@ To run this demo against SAP Hana:
 ```bash
 git clone https://github.com/intersystems-community/irisdemo-demo-htap
 cd ./irisdemo-demo-htap
-run.sh hana
+./run.sh hana
 ```
 
 Wait for the images to download and for the containers to start. You will know when everything is up once docker-compose stops writing to the screen. But be patient! SAP HANA takes about 6 minutes to start! So, your screen will freeze for a minute or so and then you will see SAP HANA writing more stuff. Then it will repeat this for about 6 mint... Once you see the sentence "Startup finished!" you should be good to go. If it crashes with an error, it is probably because you need to give it more memory. 
