@@ -14,8 +14,8 @@ This demo uses docker compose to start five services:
 
 * **htapui** - this is the Angular UI you use to run the demo.
 * **htapirisdb** - since the demo is running on IRIS Community, you don't need an IRIS license to run it. But be aware that IRIS Community has two important limitations:
- * Max of 5 connections
- * Max Database size of 10Gb
+  * Max of 5 connections
+  * Max Database size of 10Gb
 * **htapmaster** - This is the HTAP Demo master. The UI talks to it and it talks to the workers to start/stop the speed test and collect metrics.
 * **ingest-worker1** - This is an ingestion worker. You can actually have more than one ingestion worker; just give each one a different service name. They will try to INSERT records into the database as fast as possible.
 * **query-worker1** - This is the consumption worker. You can have more than one of these as well. They will try to read records out of the database as fast as possible.
