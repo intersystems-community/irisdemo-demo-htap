@@ -11,18 +11,7 @@ cd /ICMDurable
 ```
 
 Then, there will be the following scripts available:
-* **setup.sh** - Use this script to set ICM up. It will ask you many questions:
- * Confirm that you want to run the script by typing "yes" and ENTER. 
- * Then enter with a label for all your machines (please, pick something different from asamary!).
- * When asked about how many masters, enter with:
-   - 1 if you are running a speed test against IRIS only
-   - 2 if you are running a speed test against IRIS and another database (such as SAP HANA)
- * When asked about how many ingestion workers, enter with a number greater than 1. Start with 1 if this is your first speed test.
- * When asked about how many query workers, enter with 1. Start with 1 if this is your first speed test.
- * When asked about the AWS instance, enter with 1 (m4-2xlarge)
- * Enter with your docker hub user name (so ICM will be able to download the HTAP Demo images and the IRIS images from docker hub).
- * Enter with your docker hub password.
- * When asked if you want IRIS with mirroring, answer "no" and ENTER. SAP HANA Express doesn't have replication.
+* **setup.sh** - Use this script to set ICM up. 
 * **provision.sh** - Provision the infrastructure for IRIS, IRIS Speed Test, and Other database Speed Test (if more than one master is entered). We are still working on making it possible running the Speed Test against SAP HANA and other databases on AWS.
 * **deployiris.sh** - Deploy IRIS to the provisioned infrastructure.
 * **deployspeedtest.sh** - Deploy the speed test for IRIS and other supported databases.
@@ -30,7 +19,22 @@ Then, there will be the following scripts available:
 
 ## Setup
 
-Run the setup.sh script and answer the questions. It will generate:
+Run the setup.sh script and answer the questions. 
+ * Confirm that you want to run the script by typing "yes" and ENTER. 
+ * Then enter with a label for all your machines (please, pick something different from asamary!
+ * You will be asked about how many masters do you want. These are not "IRIS Data Masters". The HTAP Demo has a master that coordinates the work with the workers. The UI talks to the Master and the Master talks to the workers. So, if you are running the speed test against IRIS, you need one Master. If you are running the speed test against IRIS and another database, you need two masters. So, answer accordingly:
+   - 1 - if you are running a speed test against IRIS only
+   - 2 - if you are running a speed test against IRIS and another database (such as SAP HANA)
+ * When asked about how many ingestion workers, enter with a number greater than 1. Start with 1 if this is your first speed test. If you have more than one master and you have asked for 1 ingestion worker, you will end up with 1 ingestion worker per master (2 ingestion workers).
+ * When asked about how many query workers, enter with 1. Start with 1 if this is your first speed test.
+ * When asked about the AWS instance, enter with:
+   - 1: for comparing against SAP HANA Express 32Gb (m4-2xlarge)
+   - 2: for a bigger m5 box
+ * Enter with your docker hub user name (so ICM will be able to download the HTAP Demo images and the IRIS images from docker hub).
+ * Enter with your docker hub password.
+ * When asked if you want IRIS with mirroring, answer "no" and ENTER. SAP HANA Express doesn't have replication.
+
+It will generate:
 * defaults.json - This includes everything about IRIS and your docker hub credentials
 * definitions.json - This includes the infrastructure configuration we want
 * merge.cpf - This will include instance configurations such as global buffers, memory heap, etc.
@@ -79,6 +83,16 @@ You will notice that ICM will write on the screen the URL for the management por
 
 Notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run.
 
+### ICM Deploy IRIS Troubleshooting
+
+You may get the following error when trying to deploy IRIS:
+
+```bash
+Thread exited with value 137
+````
+
+If you get this error, it is because there was a problem with the initial setup of "IRIS Durable %SYS" and this problem is hard to fix. Trying to redeploy IRIS will not fix it. I fixed it by simply unprovisioning the infrastructure, cleaning up and provisioning it again.
+
 ## Deploy the Speed Test
 
 Run the **deployspeedtest.sh** script. It will present you a menu asking which speed test you want to deploy. The choices right now are only "iris" and "hana". Choose the database you want to test. It will deploy the speed test for that.
@@ -92,3 +106,5 @@ You will see the **Run Test** button. Click on it to start the speed test.
 ## Unprovision
 
 Run the unprovision.sh script. It will destroy all the machines, storage and network configurations provisioned.
+
+If you plan on running ./provision.sh again with the same configuration, run a ./clean.sh first. It will remove the old State directory and make sure you start "clean" again.

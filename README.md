@@ -107,6 +107,56 @@ Wait for the images to download and for the containers to start. You will know w
 
 As you can see, it is not just a matter of running docker-compose up as it is with IRIS and MySQL. SAP HANA requires some configurations to the Linux Kernel. The run.sh will do these configurations for you.
 
+# How does this benchmark compare against standard benchmarks such as YCSB or TPC-H?
+
+The open-source Yahoo Cloud Serving Benchmark ([YCSB](https://en.wikipedia.org/wiki/YCSB)) project aims to develop a framework and common set of workloads for evaluating the performance of different “key-value” and “cloud” serving stores. 
+
+Although there are workloads on YCSB that could be described as HTAP, YCSB doesn't necessarily rely on SQL to do it. This benchmark does.
+
+TPC-H is focused on decision support systems (DSS) and that is not the use case we are exploring. 
+
+This benchmark is about **ingestion rate** versus **query response time**. We have a single table with many columns of different data types. We want to measure how fast a database can ingest the records while, at the same time, allowing for responsive queries.
+
+This is not a simple problem. Many industries such as Financial Services and IoT have to ingest thousands of records per second. At very high ingestion rates, memory is consumed very quickly. Traditional Databases need to write to disk to keep ingesting while In Memory Databases will also be forced to constantly write to disk as well. At the end of the day, the most efficient SQL database wins.
+
+# Can I see the table?
+
+Here is the the statement we send to all databases we support:
+
+```SQL
+CREATE TABLE SpeedTest.Account
+(
+    account_id VARCHAR(36) PRIMARY KEY,
+    brokerageaccountnum VARCHAR(16),
+    org VARCHAR(50),
+    status VARCHAR(10),
+    tradingflag VARCHAR(10),
+    entityaccountnum VARCHAR(16),
+    clientaccountnum VARCHAR(16),
+    active_date DATETIME,
+    topaccountnum VARCHAR(10),
+    repteamno VARCHAR(8),
+    repteamname VARCHAR(50),
+    office_name VARCHAR(50),
+    region VARCHAR(50),
+    basecurr VARCHAR(50),
+    createdby VARCHAR(50),
+    createdts DATETIME,
+    group_id VARCHAR(50),
+    load_version_no BIGINT  
+)
+```
+
+The Ingestion Worker will send as many INSERTs as possible as measure the number of records/sec inserted as well as the number of Megabytes/sec. 
+
+The Query Worker will SELECT from this table by account_id and try to select as many records as possible measuring it as records/sec selected as well as Megabytes/sec select to test the **end-to-end performance** and to provide **proof of work**.
+
+End-to-end performance has to do with the fact that some JDBC drivers have optmizations. If you just execute the query, the JDBC driver may not fetch the record from the server until you actually request for a value of a column. 
+
+To proove that we are actually reading the columns we are SELECTing, we sum up the bytes of all the filds reeturned as **proof of work**.
+
+# Customizations
+
 ## Can I run this Speed Test on AWS?
 
 Yes. Follow instructions [here](./ICM/README.md).
@@ -132,7 +182,7 @@ Then, change the other *.sql scripts to match your changes. The INSERT script, t
 
 Finally, just run the build.sh to rebuild the demo and you should be ready to go!
 
-# Can I run this without containers?
+## Can I run this without containers?
 
 Yes! The easiest way to get this done is to clone this repo on each server where you are planning on running the master and the ui (they run on the same server) and on each worker type (ingestion and query workers). You may have as many ingestion workers and query workers as you want! 
 
@@ -151,21 +201,6 @@ What about IRIS? You have two choices:
 
 Just make sure you change your start_master.sh script to configure the environment variables with the correct IRIS end points, usernames and passwords.
 
-# Report any Issues
-
-We have already a long list of things to:
-* Things that are amost done:
-  * Implement an XEP (Extreme Event Processing) based version of this demo. 
-  * Add support to databases such as Postgress.
-  * Add support for running this using ICM on AWS (so we can test against Aurora)
-  * Allow configuration of the speed test through the UI instead of environment variables on the docker-compose.yml file.
-* Things that are going to be fixed:
-  * The label on the UI is always "IRIS Speed Test" even when we are testing against other databses. 
-  * Make every graph show one single metric instead of combined metrics. When we mix metrics on the same chart, one may be on a much bigger scale than another.
-  * Make the UI more responsive when stopping and restarting the Speed Test. We truncate the table before restarting the speed test and this may take some time and a lot of journal entries. The UI will become unresponsive for a while and there is no indication that anything is being done. We need to fix this.
-  
-Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).
-
 # Other demo applications
 
 There are other IRIS demo applications that touch different subjects such as NLP, ML, Integration with AWS services, Twitter services, performance benchmarks etc. Here are some of them:
@@ -173,3 +208,7 @@ There are other IRIS demo applications that touch different subjects such as NLP
 * [Fraud Prevention](https://github.com/intersystems-community/irisdemo-demo-fraudprevention) - Apply Machine Learning and Business Rules to prevent frauds in financial services transactions using IRIS.
 * [Twitter Sentiment Analysis](https://github.com/intersystems-community/irisdemo-demo-twittersentiment) - Shows how IRIS can be used to consume Tweets in realtime and use its NLP (natural language processing) and business rules capabilities to evaluate the tweet's sentiment and the metadata to make decisions on when to contact someone to offer support.
 * [HL7 Appointments and SMS (text messages) application](https://github.com/intersystems-community/irisdemo-demo-appointmentsms) -  Shows how IRIS for Health can be used to parse HL7 appointment messages to send SMS (text messages) appointment reminders to patients. It also shows real time dashboards based on appointments data stored in a normalized data lake.
+
+# Report any Issues
+  
+Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).
