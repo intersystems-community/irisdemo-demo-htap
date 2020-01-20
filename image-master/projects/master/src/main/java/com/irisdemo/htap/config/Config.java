@@ -24,6 +24,7 @@ public class Config
 	private boolean disableJournalForTruncateTable;
 	private String irisProcDisableJournalDrop;
 	private String irisProcDisableJournal;
+	private String irisProcEnableCallInService;
 	private String tableDropStatement;
 	private String tableCreateStatement;
 	private String tableTruncateStatement;
@@ -130,6 +131,16 @@ public class Config
 		catch (IOException ioE)
 		{
 			logger.warn("Could not read statement from file TABLE_TRUNCATE.sql");
+		}
+
+		try
+		{
+			irisProcEnableCallInService=Util.getSingleStatementFromFile("IRIS_PROC_ENABLE_CALLIN.sql");
+			logger.info("Read statement from file IRIS_PROC_ENABLE_CALLIN.sql:" + irisProcEnableCallInService);
+		}
+		catch (IOException ioE)
+		{
+			logger.warn("Could not read statement from file IRIS_PROC_ENABLE_CALLIN.sql");
 		}
 	}
 	
@@ -312,6 +323,14 @@ public class Config
 	public void setConsumptionTimeBetweenQueriesInMillis(int consumptionTimeBetweenQueriesInMillis) {
 		logger.info("Setting CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS = " + consumptionTimeBetweenQueriesInMillis);
 		this.consumptionTimeBetweenQueriesInMillis = consumptionTimeBetweenQueriesInMillis;
+	}
+
+	public String getIrisProcEnableCallInService() {
+		return irisProcEnableCallInService;
+	}
+
+	public void setIrisProcEnableCallInService(String irisProcEnableCallInService) {
+		this.irisProcEnableCallInService = irisProcEnableCallInService;
 	}
 
 	public String getIrisProcDisableJournalDrop() {

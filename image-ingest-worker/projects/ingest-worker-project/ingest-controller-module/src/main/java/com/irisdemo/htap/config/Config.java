@@ -44,6 +44,7 @@ public class Config
 	private String queryStatement;
 	private String irisProcDisableJournalDrop;
 	private String irisProcDisableJournal;
+	private String irisProcEnableCallInService;
 	private String tableDropStatement;
 	private String tableCreateStatement;
 	private String tableTruncateStatement;
@@ -202,6 +203,15 @@ public class Config
 	public void setIrisProcDisableJournal(String irisProcDisableJournal) {
 		logger.info("Got disable journal create procedure for IRIS.");
 		this.irisProcDisableJournal = irisProcDisableJournal;
+	}
+
+	public String getIrisProcEnableCallInService() {
+		return irisProcEnableCallInService;
+	}
+
+	public void setIrisProcEnableCallInService(String irisProcEnableCallInService) {
+		logger.info("Got IRIS procedure for enabling CallIn Service for XEP.");
+		this.irisProcEnableCallInService = irisProcEnableCallInService;
 	}
 
 	public String getTableDropStatement() {

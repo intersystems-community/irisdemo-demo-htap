@@ -67,6 +67,7 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 				config.setTableTruncateStatement(workerConfig.config.tableTruncateStatement);
 				config.setIrisProcDisableJournal(workerConfig.config.irisProcDisableJournal);
 				config.setIrisProcDisableJournalDrop(workerConfig.config.irisProcDisableJournalDrop);
+				config.setIrisProcEnableCallInService(workerConfig.config.irisProcEnableCallInService);
 				
 				logger.info("Registration successful. Configuration data received and stored.");
 		}

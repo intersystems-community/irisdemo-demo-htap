@@ -24,6 +24,7 @@ public class RESTMasterConfig
 	public String queryByIdStatement;
 	public String irisProcDisableJournalDrop;
 	public String irisProcDisableJournal;
+	public String irisProcEnableCallInService;
 	public String tableDropStatement;
 	public String tableCreateStatement;
 	public String tableTruncateStatement;
