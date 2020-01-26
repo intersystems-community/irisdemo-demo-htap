@@ -17,10 +17,10 @@
     "SSHUser": "ubuntu",
     "SSHPublicKey": "/ICMDurable/keys/insecure-ssh2.pub",
     "SSHPrivateKey": "/ICMDurable/keys/insecure",
+    "TLSKeyDir": "/ICMDurable/keys/",
     "DockerImage": "<IRISDockerImage>",
     "DockerUsername": "<DockerUsername>",
     "DockerPassword": "<DockerPassword>",
-    "TLSKeyDir": "/ICMDurable/keys/",
     "LicenseDir": "/ICMDurable/license/",
     "Region": "us-east-1",
     "Zone": "<Zone>",
@@ -32,5 +32,6 @@
     "ISCPassword": "sys",
     "Namespace": "SPEEDTEST",
     "Mirror": "<Mirror>",
-    "UserCPF": "/ICMDurable/merge.cpf"
+    "UserCPF": "/ICMDurable/merge.cpf",
+    "Containerless": "<Containerless>"
 }

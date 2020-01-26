@@ -53,6 +53,21 @@ echo "export ICM_LABEL=$ICM_LABEL" >> /ICMDurable/env.sh
 echo "export IRIS_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local" >> /ICMDurable/env.sh
 echo "export IRIS_ECP_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local" >> /ICMDurable/env.sh
 
+printf "\n\n${GREEN}Do you want IRIS with Mirroring (answer yes or something else if not)?: ${RESET}"
+read irisWithMirroringAnswer
+exit_if_empty $irisWithMirroringAnswer
+
+if [ "$irisWithMirroringAnswer" == "yes" ];
+then
+    DM_COUNT=2
+    ZONE="us-east-1a,us-east-1b"
+    MIRROR="true"
+else
+    DM_COUNT=1
+    ZONE="us-east-1a"
+    MIRROR="false"
+fi
+
 #
 # Configuring additional machines with enough non-IRIS containers for the number
 # of HTAP UI/Master and Workers we need
@@ -118,66 +133,100 @@ case $instanceTypeNumber in
         ;;
 esac
 
-cp ./Templates/AWS/$INSTANCE_TYPE/defaults.json .
-cp ./Templates/AWS/$INSTANCE_TYPE/merge.cpf .
-
 #
-# Making changes to the template accordingly to user choices
+# Is this a container based deployment of IRIS or is it containerless?
 #
 
-sed -E -i  "s;<Label>;$ICM_LABEL;g" ./defaults.json
+# We don't support the HTAP demo with containerless IRIS. ICM will not
+# allow us to deploy our HTAP application containers with a containerless IRIS on
+# the same ICM deployment. :((
+containerBased=yes
+CONTAINERLESS=false
+# printf "\n\n${GREEN}Is this going to be a container based installation of IRIS (answer yes or something else if not)?: ${RESET}"
+# read containerBased
+# exit_if_empty $containerBased
 
+printf "\n\n${YELLOW}Please enter with your docker credentials so we can pull the images.${RESET}\n"
 printf "\n\n${GREEN}Docker Hub username?: ${RESET}"
 read DOCKER_USERNAME
 exit_if_empty $DOCKER_USERNAME
 
 printf "\n\n${GREEN}Docker Hub password?: ${RESET}"
-read DOCKER_PASSWORD
+read -s DOCKER_PASSWORD
 exit_if_empty $DOCKER_PASSWORD
 
-sed -E -i  "s;<DockerUsername>;$DOCKER_USERNAME;g" ./defaults.json
-sed -E -i  "s;<DockerPassword>;$DOCKER_PASSWORD;g" ./defaults.json
-
-printf "\n\n${YELLOW}Will be deploying IRIS Docker Image ${IRIS_DOCKER_IMAGE} on $INSTANCE_TYPE machines on AWS.\n\n"
-sed -E -i  "s;<IRISDockerImage>;$IRIS_DOCKER_IMAGE;g" ./defaults.json
-
-printf "\n\n${GREEN}Do you want IRIS with Mirroring (answer yes or something else)?: ${RESET}"
-read irisWithMirroringAnswer
-exit_if_empty $irisWithMirroringAnswer
-
-if [ "$irisWithMirroringAnswer" == "yes" ];
+IRIS_KIT=$(ls ./IRISKit/*.tar.gz) 
+if [ ! -z "$IRIS_KIT" ];
 then
-    DM_COUNT=2
-    ZONE="us-east-1a,us-east-1b"
-    sed -E -i  "s;<Mirror>;true;g" ./defaults.json
-else
-    DM_COUNT=1
-    ZONE="us-east-1a"
-    sed -E -i  "s;<Mirror>;false;g" ./defaults.json
+    # for usage on deployiris.sh
+    echo "export IRIS_KIT_LOCAL_PATH=$IRIS_KIT" >> /ICMDurable/env.sh
+
+    IRIS_KIT=$(echo $IRIS_KIT | cut -c11-) # removing ./IRISKit from the beggining
+
+    # for usage on deployiris.sh
+    echo "export IRIS_KIT_REMOTE_PATH=/tmp/$IRIS_KIT" >> /ICMDurable/env.sh
+
+    # for usage on definitions.json file
+    IRIS_KIT=file://tmp/$IRIS_KIT
+    echo "export IRIS_KIT=$IRIS_KIT" >> /ICMDurable/env.sh
+
+    printf "\n\n${YELLOW}ICM configured to provision $INSTANCE_TYPE machines on AWS.\n\n"
 fi
 
+echo "export CONTAINERLESS=$CONTAINERLESS" >> /ICMDurable/env.sh
+
+#
+# Making changes to the template accordingly to user choices
+#
+
+cp ./Templates/AWS/$INSTANCE_TYPE/defaults.json .
+cp ./Templates/AWS/$INSTANCE_TYPE/merge.cpf .
+
+sed -E -i  "s;<Label>;$ICM_LABEL;g" ./defaults.json
+sed -E -i  "s;<Mirror>;$MIRROR;g" ./defaults.json
 sed -E -i  "s;<Zone>;$ZONE;g" ./defaults.json
+sed -E -i  "s;<Containerless>;$CONTAINERLESS;g" ./defaults.json
+sed -E -i  "s;<DockerUsername>;$DOCKER_USERNAME;g" ./defaults.json
+sed -E -i  "s;<DockerPassword>;$DOCKER_PASSWORD;g" ./defaults.json
+sed -E -i  "s;<IRISDockerImage>;$IRIS_DOCKER_IMAGE;g" ./defaults.json
+
+globalBuffers8kMb=$(cat ./merge.cpf | awk -F, '/^globals=/{ print $3 }')
+routineBuffersMb=$(cat ./merge.cpf | awk -F= '/^routines=/{ print $2 }')
+buffersMb=$(($globalBuffers8kMb + $routineBuffersMb))
+NR_HUGE_PAGES=$(($buffersMb + $buffersMb / 5)) # Adding 5% 
+echo "export NR_HUGE_PAGES=$NR_HUGE_PAGES" >> /ICMDurable/env.sh
 
 #
 # Creating definitions.json file
 #
+    echo "
+    [
+        {
+        \"Role\": \"DM\",
+        \"Count\": \"${DM_COUNT}\",
+        \"LicenseKey\": \"iris.key\"" >> ./definitions.json
 
-echo "
-[
-    {
-	\"Role\": \"DM\",
-	\"Count\": \"${DM_COUNT}\",
-	\"LicenseKey\": \"iris.key\"
-	},
-	{
-		\"Role\": \"CN\",
-		\"Count\": \"${MAX_CN}\",
-		\"DataVolumeType\": \"io1\",
-		\"DataVolumeSize\": \"30\",
-        \"DataVolumeIOPS\": \"100\",
-        \"InstanceType\": \"c5.xlarge\"
-	}
-]" >> ./definitions.json
+if [ "$CONTAINERLESS" == "true" ];
+then
+    echo ",
+        \"KitURL\": \"$IRIS_KIT\"" >> ./definitions.json
+fi
+
+echo "    }" >> ./definitions.json
+
+if [ $MAX_CN -gt 0 ];
+then
+    echo ",
+        {
+            \"Role\": \"CN\",
+            \"Count\": \"${MAX_CN}\",
+            \"DataVolumeType\": \"io1\",
+            \"DataVolumeSize\": \"30\",
+            \"DataVolumeIOPS\": \"100\",
+            \"InstanceType\": \"c5.xlarge\"
+        }" >> ./definitions.json
+fi
+echo "]" >> ./definitions.json
 
 rm -f ./defaults.json.bak
 

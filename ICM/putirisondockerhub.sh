@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./ICMDurable/iris_env.sh
+source ./ICMDurable/base_env.sh
 
 #
 # CONSTANTS

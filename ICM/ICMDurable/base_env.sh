@@ -5,7 +5,8 @@
 ######################################################################
 
 # These two are used on the script putirisondockerhub.sh 
-export IRIS_TAG=2019.4.0.383.0
+#export IRIS_TAG=2019.4.0.383.0 # This version has a problem with the WIJ that causes IRIS not to start
+export IRIS_TAG=2019.3.0.309.0
 export IRIS_PRIVATE_REPO=amirsamary/irisdemo
 
 # This one is what is used to replace <IRISDockerImage> on defaults.json template files:

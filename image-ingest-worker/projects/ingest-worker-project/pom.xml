@@ -37,6 +37,7 @@
   	<modules>
 		<module>ingest-controller-module</module>
 		<module>iris-jdbc-ingest-worker</module>
+		<module>iris-xep-ingest-worker</module>
 		<module>mysql-jdbc-ingest-worker</module>
 		<module>hana-jdbc-ingest-worker</module>
 	</modules>

@@ -50,5 +50,5 @@ images_built
 *.pid
 
 # VSCode
-.metal
+.metals
 .vscode

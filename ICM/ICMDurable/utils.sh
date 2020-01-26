@@ -49,7 +49,14 @@ deploy()
     
     if [ "$IMAGE_PREFIX" = "iris" ];
     then
-        IRIS_HOSTNAME="iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local"
+        IRIS_DM_MACHINE_NAME="${ICM_LABEL}-DM-IRISSpeedTest-0001"
+        if [ $CONTAINERLESS == "true" ];
+        then
+            IRIS_HOSTNAME=$(icm inventory | awk "/$IRIS_DM_MACHINE_NAME/{ print \$3 }")
+        else
+            IRIS_HOSTNAME="iris-${IRIS_DM_MACHINE_NAME}.weave.local"
+        fi
+
         INGESTION_JDBC_URL=jdbc:IRIS://${IRIS_HOSTNAME}:${IRIS_PORT}/SPEEDTEST
 
         # I do not support ECP just yet. Walking into that direction...
@@ -100,7 +107,7 @@ deploy()
         --image intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION} \
         --options "-e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_SPEEDTEST_TITLE=\"${MASTER_SPEEDTEST_TITLE}\" -e INGESTION_JDBC_URL=${INGESTION_JDBC_URL} -e CONSUMER_JDBC_URL=${CONSUMER_JDBC_URL} -e INGESTION_JDBC_USERNAME=${JDBC_USERNAME} -e INGESTION_JDBC_PASSWORD=${JDBC_PASSWORD} -e CONSUMER_JDBC_USERNAME=${JDBC_USERNAME} -e CONSUMER_JDBC_PASSWORD=${JDBC_PASSWORD}"
 
-    exit_if_error "Deploying HTAP Demo Master for SAP failed."
+    exit_if_error "Deploying HTAP Demo Master for ${MASTER_SPEEDTEST_TITLE} failed."
 
     icm exec --container htapmaster --machine ${MASTER_MACHINE_NAME} --command "cat /etc/hosts | grep htapmaster"
     HTAP_MASTER_IP=$(cat ./State/${CN_MACHINE_GROUP}/${MASTER_MACHINE_NAME}/docker.out | awk '{print $1}')
