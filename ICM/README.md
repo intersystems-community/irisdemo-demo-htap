@@ -47,7 +47,7 @@ The next step are:
 Finally, look inside the file **base_env.sh**. You will see two lines like this:
 
 ```bash
-export IRIS_TAG=2019.4.0.383.0
+export IRIS_TAG=2019.3.0.309.0
 export IRIS_PRIVATE_REPO=amirsamary/irisdemo
 ```
 
