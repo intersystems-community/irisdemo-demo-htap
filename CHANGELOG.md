@@ -1,3 +1,11 @@
+## 2.3.0 (January 31, 2020)
+  - IRIS Speed Test is now based on IRIS Community 2020.1.0.197.0
+  - Adding reference to the readmission demo to the "other demos" section
+  - Reverting to IRIS 2019.3. 
+  - Adding Enable CallIn Procedure to Master to support XEP
+  - Removing env.sh
+  - Multiple ICM instance types now supported. Adding support for merge.cpf
+
 ## 2.2.1 (December 31, 2019)
   - Adding support to SAP HANA for ICM
   - Documentation
