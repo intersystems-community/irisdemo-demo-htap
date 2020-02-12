@@ -33,6 +33,7 @@ hs_err_pid*
 **/license/*.key
 **/ICM/ICMDurable/*.json
 **/ICM/ICMDurable/merge.cpf
+**/ICM/ICMDurable/errored.tfstate
 **/*.credentials
 **/.provisionHasBeenRun
 *.log

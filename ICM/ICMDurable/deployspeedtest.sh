@@ -16,6 +16,8 @@ printf "\n\n${GREEN}Please, specify which speedtest you want to deploy. Availabl
 printf "\n\n\t ${YELLOW}iris${RESET}  - InterSystems IRIS"
 # printf "\n\n\t ${YELLOW}mysql${RESET} - MySQL/AWSAurora (not implemented)"
 printf "\n\n\t ${YELLOW}hana${RESET}  - SAP HANA"
+printf "\n\n\t ${YELLOW}aurora${RESET}  - AWS Aurora"
+
 printf "\n\n${RESET}"
 
 read SPEED_TEST_TO_DEPLOY
@@ -40,6 +42,28 @@ case $SPEED_TEST_TO_DEPLOY in
         JDBC_PASSWORD=SAPHANAPassword1
 
         deploy "hana" "SpeedTest | SAP HANA Express" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$JDBC_USERNAME" "$JDBC_PASSWORD"
+        break
+        ;;
+    aurora)
+        printf "\n\n${GREEN}You must provision AWS Aurora manually and get its Endpoint."
+
+        printf "\nEnter with AWS Aurora's end point:${RESET}\n"
+        read AWSAURORA_HOSTNAME
+        exit_if_empty $AWSAURORA_HOSTNAME
+
+        printf "\nEnter with AWS Aurora's username:${RESET}\n"
+        read JDBC_USERNAME
+        exit_if_empty $JDBC_USERNAME
+
+        printf "\nEnter with AWS Aurora's password:${RESET}\n"
+        read -s JDBC_PASSWORD
+        exit_if_empty $JDBC_PASSWORD
+
+        INGESTION_JDBC_URL="jdbc:mysql://$AWSAURORA_HOSTNAME:3306/SpeedTest"
+        CONSUMER_JDBC_URL="jdbc:mysql://$AWSAURORA_HOSTNAME:3306/SpeedTest"
+
+        # AWS Aurora is MySQL, so we are using mysql prefix here
+        deploy "mysql" "SpeedTest | AWS Aurora" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$JDBC_USERNAME" "$JDBC_PASSWORD"
         break
         ;;
     mysql)

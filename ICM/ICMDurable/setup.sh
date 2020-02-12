@@ -78,6 +78,8 @@ printf "\n${GREEN}How many Masters?: ${RESET}"
 read HTAP_MASTERS
 exit_if_empty $HTAP_MASTERS
 
+echo "export HTAP_MASTERS=$HTAP_MASTERS" >> /ICMDurable/env.sh
+
 printf "\n\n${GREEN}How many Ingestion Workers per Master?: ${RESET}"
 read HTAP_INGESTION_WORKERS
 exit_if_empty $HTAP_INGESTION_WORKERS
