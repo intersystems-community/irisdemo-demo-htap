@@ -188,3 +188,22 @@ deploy()
     UI_MACHINE_IP=$(icm inventory | grep ${UI_MACHINE_NAME} | awk '/.*/{ print $2 }')
     printf "\n\n\thttp://${UI_MACHINE_IP}"
 }   
+
+
+# $1 is the machine name
+# $2 is the container name
+bounce_container_at_machine() {
+
+    printf "\n${YELLOW}Bouncing container $1 at $2...\n${RESET}"
+    
+    icm stop -stateDir /ICMDurable/State \
+        --machine $2 \
+        --container $1
+    exit_if_error "Failed to stop container $2 at machine $1."
+
+    icm start -stateDir /ICMDurable/State \
+        --machine $2 \
+        --container $1
+    exit_if_error "Failed to start container $2 at machine $1."
+
+}
