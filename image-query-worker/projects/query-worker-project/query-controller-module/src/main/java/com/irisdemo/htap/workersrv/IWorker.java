@@ -9,5 +9,5 @@ import org.springframework.scheduling.annotation.Async;
 public interface IWorker 
 {
 	@Async
-    public CompletableFuture<Long> startOneConsumer(int threadNum) throws IOException, SQLException;
+    public CompletableFuture<Long> startOneConsumer(int threadNum) throws IOException, SQLException, ClassNotFoundException;
 }

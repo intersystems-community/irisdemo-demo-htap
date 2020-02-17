@@ -13,4 +13,5 @@ build:
 	cp /usr/projects/ingest-worker-project/iris-xep-ingest-worker/target/iris-xep-ingest-worker-*.jar /usr/projects/iris-xep-ingest-worker.jar
 	cp /usr/projects/ingest-worker-project/mysql-jdbc-ingest-worker/target/mysql-jdbc-ingest-worker-*.jar /usr/projects/mysql-jdbc-ingest-worker.jar
 	cp /usr/projects/ingest-worker-project/hana-jdbc-ingest-worker/target/hana-jdbc-ingest-worker-*.jar /usr/projects/hana-jdbc-ingest-worker.jar
+	cp /usr/projects/ingest-worker-project/mssqlserver-jdbc-ingest-worker/target/mssqlserver-jdbc-ingest-worker-*.jar /usr/projects/mssqlserver-jdbc-ingest-worker.jar
 	

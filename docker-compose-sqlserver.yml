@@ -1,0 +1,80 @@
+# Starts the SpeedTest using IRIS Community. 
+#
+# This is good because it doesn't require an IRIS license to run.
+#
+# This is bad because IRIS Community has two important limitations:
+# - Max of 5 connections: So we won't be able to use a high number of threads
+# - Max Database size of 10Gb: So we won't be able to let the speed test run for too long
+#
+# But this configuration is good for development.
+version: '3.7'
+
+services:
+  htapui:
+    depends_on:
+      - htapmaster
+    container_name: htapui
+    hostname: htapui
+    image: intersystemsdc/irisdemo-demo-htap:ui-version-2.3.0
+    ports:
+    - "10000:4200" # Where Node Will be listening
+
+  mssqlserver: 
+    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    hostname: mssqlserver
+    init: true
+    container_name: mssqlserver
+    environment:
+    - ACCEPT_EULA='Y'
+    - MSSQL_SA_PASSWORD=ALongPasswordWith1
+    ports:
+    - 1433:1433
+
+  htapmaster:
+    depends_on: 
+      - mssqlserver
+    container_name: htapmaster
+    hostname: htapmaster
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:master-version-2.3.0
+    ports:
+      - "10002:8080" # Where Springboot Will be listening
+    environment:
+      - MASTER_SPEEDTEST_TITLE=SpeedTest | MS SQL Server 2019-GA-ubuntu-16.04
+      - START_CONSUMERS=true
+      - INGESTION_THREADS_PER_WORKER=2
+      - INGESTION_BATCH_SIZE=1000
+      - INGESTION_JDBC_URL=jdbc:sqlserver://mssqlserver:1433;DatabaseName=model
+      - INGESTION_JDBC_USERNAME=sa
+      - INGESTION_JDBC_PASSWORD=ALongPasswordWith1
+      - CONSUMER_JDBC_URL=jdbc:sqlserver://mssqlserver:1433;DatabaseName=model
+      - CONSUMER_JDBC_USERNAME=sa
+      - CONSUMER_JDBC_PASSWORD=ALongPasswordWith1
+      - CONSUMER_THREADS_PER_WORKER=1
+      - CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS=0
+
+  ingest-worker1:
+    depends_on: 
+      - htapmaster
+    container_name: ingest-worker1
+    hostname: ingest-worker1
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:mssqlserver-jdbc-ingest-worker-version-2.3.0
+    ports:
+      - "10003:8080" # Where Springboot Will be listening
+    environment:
+      - MASTER_HOSTNAME=htapmaster
+      - MASTER_PORT=8080
+
+  query-worker1:
+    depends_on: 
+      - htapmaster
+    container_name: query-worker1
+    hostname: query-worker1
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:mssqlserver-jdbc-query-worker-version-2.3.0
+    ports:
+      - "10004:8080" # Where Springboot Will be listening
+    environment:
+      - MASTER_HOSTNAME=htapmaster
+      - MASTER_PORT=8080

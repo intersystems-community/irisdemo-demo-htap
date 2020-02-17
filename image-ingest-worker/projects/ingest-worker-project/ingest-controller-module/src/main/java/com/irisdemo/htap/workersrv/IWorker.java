@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public interface IWorker 
 {
 	@Async
-	public CompletableFuture<Long> startOneFeed(String nodePrefix, int threadNum) throws IOException, SQLException;
+	public CompletableFuture<Long> startOneFeed(String nodePrefix, int threadNum) throws IOException, SQLException, ClassNotFoundException;
 	
 	public void prepareDatabaseForSpeedTest() throws Exception;
 	
