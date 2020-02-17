@@ -22,4 +22,4 @@ export IRIS_PORT=51773
 export IRIS_ECP_PORT=51773
 
 # this is going to be automatically update every time we bump a version on git
-export HTAP_DEMO_VERSION=version-2.3.0
+export HTAP_DEMO_VERSION=version-2.4.0

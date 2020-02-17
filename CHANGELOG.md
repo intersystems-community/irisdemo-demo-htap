@@ -1,3 +1,8 @@
+## 2.4.0 (February 17, 2020)
+  - Support for SQL Server
+  - Adding bouncespeedtest.sh script. When using an ICM deployment, it will restart all CN containers for us.
+  - Adding support for AWS Aurora to ICM scripts
+
 ## 2.3.0 (January 31, 2020)
   - IRIS Speed Test is now based on IRIS Community 2020.1.0.197.0
   - Adding reference to the readmission demo to the "other demos" section
