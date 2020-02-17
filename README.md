@@ -87,6 +87,19 @@ This is important, specially if you are going back and forth between running the
 
 In our tests, we found IRIS to ingest data 25X faster than MySQL and Amazon Aurora.
 
+### SQL Server 2019-GA-ubuntu-16.04
+
+To run this demo against SQL Server:
+
+```bash
+wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose-sqlserver.yml
+docker-compose -f ./docker-compose-sqlserver.yml up
+```
+
+As before, leave this terminal window open and open a browser at http://localhost:10000.
+
+In our tests running on a local PC, we found IRIS to ingest data 2.5X faster than SQL Server while query rates were 400X faster! We will test it against AWS RDS SQL Server and report.
+
 ### SAP Hana
 
 To run the speed test with SAP HANA on your PC you will need:
