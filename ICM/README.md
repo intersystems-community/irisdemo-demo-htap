@@ -14,7 +14,7 @@ Finally, you can use ICM to deploy your own application as Docker images! This H
 
 Here is how it will work:
 
-![Deployment Diagram on AWS](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/aws_speedtest_deployment.png?raw=true)
+![Deployment Diagram on AWS](/ICM/aws_speedtest_deployment.png?raw=true)
 
 On step 1, you use the provided scripts to:
 * Provision the infrastructure on AWS
@@ -101,6 +101,6 @@ aws_session_token = A_VERY_LARGE_STRING_ENDED_WITH==
 Al right! You are ready to go! :)
 
 Proceed with one of the comparisons bellow:
-* [InterSystems IRIS x SAP HANA](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md)
+* [InterSystems IRIS x SAP HANA](/ICM/DOC/IRIS_x_SAPHANA.md)
 * InterSystems IRIS x AWS Aurora (soon)
 * InterSystems IRIS x SQLServer (soon)
