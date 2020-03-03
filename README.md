@@ -4,7 +4,7 @@ The capability to ingest thousands or millions of records per second while allow
 
 This demo shows how InterSystems IRIS can ingest thousands of records per second while allowing for simultaneous queries on the data on the same cluster with very high performance for both ingestion and querying, and with low resource utilization. The demo works on a single IRIS instance or on an IRIS cluster on the cloud.
 
-The same demo can be run on SAP HANA, MySQL, and Amazon Aurora MySQL to compare performance and resource utilization in “apples-to-apples” comparisons.
+The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to compare performance and resource utilization in “apples-to-apples” comparisons.
 
 The architecture of the HTAP demo is shown below:
 
@@ -25,7 +25,7 @@ When running the demo on our PCs, we use Docker and Docker Compose. Docker Compo
 * **docker-compose-mysql.yml** - This is the speed test against MySQL. You will notice that the same test shows that IRIS is 25x faster than MySQL. Running this test against Amazon Aurora MySQL (that is a fine tuned version of MySQL) produced the same results.
 * **docker-compose-enterprise-iris.yml** - If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it.
 
-## How to run the demo against IRIS Community
+## How to run the demo against IRIS Community on your PC
 
 To run the demo on your PC, make sure you have Docker installed on your machine. You can quickly get it up and running with the following commands on your Mac or Linux PC:
 
@@ -61,11 +61,11 @@ docker-compose rm
 
 This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other (say MySQL).
 
-## How to run the demo against other databases
+## How to run the demo against other databases on your PC
 
-You can currently run this demo with MySQL and SAP HANA.
+You can currently run this demo with MySQL, SqlServer and SAP HANA.
 
-### MySQL
+### MySQL on your PC
 
 To run this demo against MySQL:
 
@@ -87,7 +87,7 @@ This is important, specially if you are going back and forth between running the
 
 In our tests, we found IRIS to ingest data 25X faster than MySQL and Amazon Aurora.
 
-### SQL Server 2019-GA-ubuntu-16.04
+### SQL Server 2019-GA-ubuntu-16.04 on your PC
 
 To run this demo against SQL Server:
 
@@ -100,7 +100,7 @@ As before, leave this terminal window open and open a browser at http://localhos
 
 In our tests running on a local PC, we found IRIS to ingest data 2.5X faster than SQL Server while query rates were 400X faster! We will test it against AWS RDS SQL Server and report.
 
-### SAP Hana
+### SAP Hana on your PC
 
 To run the speed test with SAP HANA on your PC you will need:
 * A VM with Ubuntu 18 VM, docker and docker-compose - because SAP HANA requires some changes to the Linux Kernel parameters that we otherwise couldn't do using Docker for Mac or Docker for Windows. Also, SAP HANA requires a Linux Kernel version 4 or superior.
@@ -119,6 +119,12 @@ Wait for the images to download and for the containers to start. You will know w
 As you can see, it is not just a matter of running docker-compose up as it is with IRIS and MySQL. SAP HANA requires some configurations to the Linux Kernel. The run.sh will do these configurations for you.
 
 In our tests running the Speed Test on a VM, we found IRIS to be 1.3X faster than SAP HANA for ingesting data, and 20X faster for querying data, and uses a fraction of the memory. 
+
+## Running the Speed Test on AWS
+
+You can run this demo against the following databases on AWS:
+* [SAP HANA](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md).
+
 
 # Resources
 
@@ -173,10 +179,6 @@ End-to-end performance has to do with the fact that some JDBC drivers have optmi
 To proove that we are actually reading the columns we are SELECTing, we sum up the bytes of all the filds reeturned as **proof of work**.
 
 # Customizations
-
-## Can I run this Speed Test on AWS?
-
-Yes. Follow instructions [here](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/README.md).
 
 ## How do I configure this demo to run with more workers, threads, etc?
 

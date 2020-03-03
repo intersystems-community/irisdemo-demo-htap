@@ -30,6 +30,7 @@ hs_err_pid*
 **/State
 **/.terraform/
 **/keys
+**/Deployments
 **/license/*.key
 **/ICM/ICMDurable/*.json
 **/ICM/ICMDurable/merge.cpf
