@@ -1,10 +1,6 @@
 # InterSystems IRIS x SAP HANA on AWS
 
-Read this first. It will explain to you what ICM is. We have writen some scripts that rely on InterSystems ICM to help you to automatically provision most of the infrastructure for the Ingestion Test on AWS. The only thing you will have to provision manually is the other database you are comparing IRIS with.
-
-
-
-## Setting up the Infrastructure
+If you haven't done so yet, please follow instructions here to get 
 
 First, you open a terminal and run the icm.sh script to start the icm container.
 
@@ -103,3 +99,32 @@ You will see the **Run Test** button. Click on it to start the speed test.
 Run the unprovision.sh script. It will destroy all the machines, storage and network configurations provisioned.
 
 If you plan on running ./provision.sh again with the same configuration, run a ./clean.sh first. It will remove the old State directory and make sure you start "clean" again.
+
+
+
+
+
+
+
+
+# What is
+
+To start exploring, clone this repository to your local PC. 
+
+Look at the folder ICM. You will see there are two simple scripts there to start ICM:
+* **icm.sh** - If you are running on Mac or Linux
+* **icm.ps1** - If you are running on Windows (Power Shell)
+
+Don't bother to start ICM right nowl Let's just keep exploring. When you use one of these scripts to start ICM, it will map the folder ICMDurable as a volume inside the ICM container. So, when running ICM, you will be able to **cd /ICMDurable** and see the ICMDurable folder. 
+
+Let's take a look at what is inside the ICM/ICMDurable folder:
+* **IRISKit** - You should put the copy of your IRIS for Ubuntu tar.gz file here.
+* **setup.sh** - We are going to use this script, from inside ICM, to configure ICM to provision the machines for IRIS and the Speed Test application on AWS.
+* 
+
+* **provision.sh** - Provision the infrastructure for InterSystems IRIS Database, and the HTAP Speed Test application images. We are actually provisioning a group of {Speed Test Master, Ingestion Worker and Query Worker} for each database we are testing. So, when asked for how many masters, answer 2 (IRIS and the other database). A new VPC will be created and we will be using this VPC later on to deploy the other database we are comparing IRIS with. They have to be on the same VPC! Don't worry, we will guide you.
+* **deployiris.sh** - Deploy InterSystems IRIS Database to the provisioned infrastructure. Just wait and relax while we do all the work for you!
+* **deployspeedtest.sh** - You will use this script twice:
+  * You will run it once, to deploy the speed test for IRIS. You can do this immediately after the previous step and, when done, we will give you an URL to open the HTAP speed test for IRIS! 
+  * You will run it for a second time, to deploy the speed test for the other database you are comparing IRIS with. But before running it for the second time, you will follow instructions to go to AWS and deploy that database (SAP HANA, Aurora, etc.) on the same VPC and Subnet where we have provisioned our cluster. Once that second database is deployed, you can take its Endpoint, Username and Password and run this script to deploy the Speed Test application pointing to it.
+* **unprovision.sh** - Unprovision the entire infrastructure on AWS. You will have to unprovision the third party database manually though.

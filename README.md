@@ -122,9 +122,7 @@ In our tests running the Speed Test on a VM, we found IRIS to be 1.3X faster tha
 
 ## Running the Speed Test on AWS
 
-You can run this demo against the following databases on AWS:
-* [SAP HANA](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md).
-
+Follow [this link](/ICM/README.md) to see instructions on how to run this Speed Test on AWS comparing IRIS with other databases such as SAP HANA and AWS Aurora.
 
 # Resources
 
