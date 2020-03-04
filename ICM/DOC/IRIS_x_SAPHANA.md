@@ -390,7 +390,7 @@ After ICM is done, make sure you:
 ## 10 - Screenshots
 
 Here is the end result of SAP HANA's test:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA2.png?raw=true)
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA2.png?raw=true)
 
 Here is the end result of InterSystems IRIS test:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA1.png?raw=true)
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA1.png?raw=true)
