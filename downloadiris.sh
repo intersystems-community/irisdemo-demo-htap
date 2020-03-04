@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # I am using this script to download IRIS from our internal docker-registry and push
-# it to a private Docker Repo so I ICM can pull it when deploying to AWS
+# it to a private Docker Repo so ICM can pull it when deploying to AWS
 #
 # Wew also need the compatible version of ICM for this IRIS version. So this script 
 # will download it for us as well.

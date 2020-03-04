@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source /ICMDurable/base_env.sh
+
 RED="\033[1;31m"
 GREEN="\033[0;32m"
 YELLOW="\033[1;33m"
@@ -42,6 +44,73 @@ exit_if_empty() {
     fi
 }
 
+terraform_aws_open_ports() {
+    if [ -z "$(cat /ICM/etc/Terraform/AWS/Instance/infrastructure.tf | grep "39013 \# SAP" )" ];
+    then
+        printf "\n\n${GREEN}Configuring Terraform for opening TCP ports 8080 and 39013...\n\n${RESET}"
+        
+        # for HTAP Workers to be able to talk to master and vice versa
+        ingress8080='ingress \{\n from_port=8080 \# HTAP \n to_port=8080 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
+
+        # for SAP HANA
+        ingress39013='ingress \{\n from_port=39013 \# HTAP \n to_port=39013 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
+
+        # for AWS Aurora
+        ingress3306='ingress \{\n from_port=3306 \# HTAP \n to_port=3306 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
+
+        # /a is used for appending after the pattern
+        sed -E -i  "/ *vpc_id *= *var.aws_vpc_default_id *$/a $ingress8080 \n $ingress39013 \n $ingress3306" /ICM/etc/Terraform/AWS/Instance/infrastructure.tf
+         
+    fi
+}
+
+# $1 must be machine name
+# $2 must be container name
+containerless_docker_rm() {
+    if [ ! -z "$(icm ssh --machine $1 --command "docker ps" | grep $2)" ];
+    then
+        printf "\n\n${YELLOW}Removing container $2 at machine $1...\n\n${RESET}"
+        icm ssh  \
+            --machine $1 --command "docker rm -f $2"
+    fi
+}
+
+# $1 must be machine name
+# $2 must be image name
+containerless_docker_pull() {
+    printf "\n${YELLOW}Pulling image $2 on machine $1...\n${RESET}"
+    icm ssh  \
+        --machine $1 \
+        --command "docker pull $2"
+    exit_if_error "Could not pull image $2 at machine $1."
+}
+
+# $1 must be machine name
+# Return on variable INTERNAL_IP
+containerless_internal_ip() {
+    MACHINE_GROUP=$(echo "$1" | egrep -o '[a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+')
+
+    # The following command will return something like ip-10-0-1-11
+    icm ssh --machine $1 --command hostname
+    # The following command will take ip-10-0-1-11, transform - into . and return from character 4 onward
+    INTERNAL_IP=$(cat ./State/${MACHINE_GROUP}/$1/ssh.out | sed -e 's/-/./g' - | cut -b 4-)
+}
+
+# $1 must be machine name
+# $2 must be container name
+# $3 must be image name
+# $4 must be docker options
+containerless_docker_run() {
+    printf "\n\n${YELLOW}Creating container $2 at machine $1...\n\n${RESET}"
+    
+    containerless_internal_ip $1
+
+    icm ssh  \
+        --machine $1 \
+        --command "docker run -d --name $2 -e HOSTNAME=$INTERNAL_IP $4 $3"
+    exit_if_error "Error when creating container $2 at machine $1 with image $3"
+}
+
 deploy()
 {
     IMAGE_PREFIX=$1
@@ -52,7 +121,9 @@ deploy()
         IRIS_DM_MACHINE_NAME="${ICM_LABEL}-DM-IRISSpeedTest-0001"
         if [ $CONTAINERLESS == "true" ];
         then
-            IRIS_HOSTNAME=$(icm inventory | awk "/$IRIS_DM_MACHINE_NAME/{ print \$3 }")
+            #IRIS_HOSTNAME=$(icm inventory | awk "/$IRIS_DM_MACHINE_NAME/{ print \$3 }")
+            containerless_internal_ip $IRIS_DM_MACHINE_NAME
+            IRIS_HOSTNAME=$INTERNAL_IP        
         else
             IRIS_HOSTNAME="iris-${IRIS_DM_MACHINE_NAME}.weave.local"
         fi
@@ -100,17 +171,29 @@ deploy()
     # That is also why we are adding to the HTAP UI's /etc/hosts file an entry that maps htapmaster hostname
     # to its real address (see icm run above).
 
-    printf "\n\n${YELLOW}Deploying HTAP Demo MASTER for ${MASTER_SPEEDTEST_TITLE}...\n\n${RESET}"
-    icm run -stateDir /ICMDurable/State \
-        --machine ${MASTER_MACHINE_NAME} \
-        --container htapmaster \
-        --image intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION} \
-        --options "-e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_SPEEDTEST_TITLE=\"${MASTER_SPEEDTEST_TITLE}\" -e INGESTION_JDBC_URL=${INGESTION_JDBC_URL} -e CONSUMER_JDBC_URL=${CONSUMER_JDBC_URL} -e INGESTION_JDBC_USERNAME=${JDBC_USERNAME} -e INGESTION_JDBC_PASSWORD=${JDBC_PASSWORD} -e CONSUMER_JDBC_USERNAME=${JDBC_USERNAME} -e CONSUMER_JDBC_PASSWORD=${JDBC_PASSWORD}"
+    printf "\n\n${GREEN}Deploying HTAP Demo MASTER for ${MASTER_SPEEDTEST_TITLE}...\n\n${RESET}"
+    if [ "$CONTAINERLESS" == "true" ];
+    then
+        containerless_docker_rm ${UI_MACHINE_NAME} htapmaster
+        
+        containerless_docker_pull ${UI_MACHINE_NAME} intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION}
 
-    exit_if_error "Deploying HTAP Demo Master for ${MASTER_SPEEDTEST_TITLE} failed."
+        containerless_docker_run ${UI_MACHINE_NAME} htapmaster intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION} "-p 8080:8080 -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_SPEEDTEST_TITLE=\"${MASTER_SPEEDTEST_TITLE}\" -e INGESTION_JDBC_URL=${INGESTION_JDBC_URL} -e CONSUMER_JDBC_URL=${CONSUMER_JDBC_URL} -e INGESTION_JDBC_USERNAME=${JDBC_USERNAME} -e INGESTION_JDBC_PASSWORD=${JDBC_PASSWORD} -e CONSUMER_JDBC_USERNAME=${JDBC_USERNAME} -e CONSUMER_JDBC_PASSWORD=${JDBC_PASSWORD}"
 
-    icm exec --container htapmaster --machine ${MASTER_MACHINE_NAME} --command "cat /etc/hosts | grep htapmaster"
-    HTAP_MASTER_IP=$(cat ./State/${CN_MACHINE_GROUP}/${MASTER_MACHINE_NAME}/docker.out | awk '{print $1}')
+        containerless_internal_ip $MASTER_MACHINE_NAME
+        HTAP_MASTER_IP=$INTERNAL_IP        
+    else    
+        icm run  \
+            --machine ${MASTER_MACHINE_NAME} \
+            --container htapmaster \
+            --image intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION} \
+            --options "-e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_SPEEDTEST_TITLE=\"${MASTER_SPEEDTEST_TITLE}\" -e INGESTION_JDBC_URL=${INGESTION_JDBC_URL} -e CONSUMER_JDBC_URL=${CONSUMER_JDBC_URL} -e INGESTION_JDBC_USERNAME=${JDBC_USERNAME} -e INGESTION_JDBC_PASSWORD=${JDBC_PASSWORD} -e CONSUMER_JDBC_USERNAME=${JDBC_USERNAME} -e CONSUMER_JDBC_PASSWORD=${JDBC_PASSWORD}"
+
+        exit_if_error "Deploying HTAP Demo Master for ${MASTER_SPEEDTEST_TITLE} failed."
+
+        icm exec --container htapmaster --machine ${MASTER_MACHINE_NAME} --command "cat /etc/hosts | grep htapmaster"
+        HTAP_MASTER_IP=$(cat ./State/${CN_MACHINE_GROUP}/${MASTER_MACHINE_NAME}/docker.out | awk '{print $1}')
+    fi
 
     if [ -z "$HTAP_MASTER_IP" ];
     then
@@ -121,21 +204,39 @@ deploy()
     fi
 
     printf "\n\n${YELLOW}Waiting htapmaster to be healthy."
-    while [ ! "$(icm  ps --machine ${MASTER_MACHINE_NAME} | grep htapmaster | awk '{print $5}')" == "healthy" ];
-    do
-        sleep 1
-        printf "."
-    done
-
-    # HTAP Demo UI will be available on port 80 that is already open on the firewall for us.
-    printf "\n\n${YELLOW}Deploying HTAP Demo UI for ${MASTER_SPEEDTEST_TITLE}...\n\n${RESET}"
-    icm run -stateDir /ICMDurable/State \
-        --machine ${UI_MACHINE_NAME} \
-        --container htapui \
-        --image intersystemsdc/irisdemo-demo-htap:ui-${HTAP_DEMO_VERSION} \
-        --options "-p 80:4200 --add-host htapmaster:$HTAP_MASTER_IP"
+    if [ "$CONTAINERLESS" == "true" ];
+    then
+        while [ -z "$(icm ssh --machine ${MASTER_MACHINE_NAME} --command "docker ps" | grep htapmaster | grep \(healthy\))" ];
+        do
+            sleep 1
+            printf "."
+        done
+    else
+        while [ ! "$(icm ps --machine ${MASTER_MACHINE_NAME} | grep htapmaster | awk '{print $5}')" == "healthy" ];
+        do
+            sleep 1
+            printf "."
+        done
+    fi
     
-    exit_if_error "Deploying HTAP Demo UI for ${MASTER_SPEEDTEST_TITLE} failed."
+    # HTAP Demo UI will be available on port 80 that is already open on the firewall for us.
+    printf "\n\n${GREEN}Deploying HTAP Demo UI for ${MASTER_SPEEDTEST_TITLE}...\n\n${RESET}"
+    if [ "$CONTAINERLESS" == "true" ];
+    then
+        containerless_docker_rm ${UI_MACHINE_NAME} htapui
+        
+        containerless_docker_pull ${UI_MACHINE_NAME} intersystemsdc/irisdemo-demo-htap:ui-${HTAP_DEMO_VERSION}
+
+        containerless_docker_run ${UI_MACHINE_NAME} htapui intersystemsdc/irisdemo-demo-htap:ui-${HTAP_DEMO_VERSION} "-p 80:4200 --add-host htapmaster:$HTAP_MASTER_IP"
+    else
+        icm run  \
+            --machine ${UI_MACHINE_NAME} \
+            --container htapui \
+            --image intersystemsdc/irisdemo-demo-htap:ui-${HTAP_DEMO_VERSION} \
+            --options "-p 80:4200 --add-host htapmaster:$HTAP_MASTER_IP"
+        
+        exit_if_error "Deploying HTAP Demo UI for ${MASTER_SPEEDTEST_TITLE} failed."
+    fi
 
     #
     # Configuring Ingestion Workers for IRIS
@@ -147,16 +248,27 @@ deploy()
         iIW=`expr $iIW + 1`
         CNi=`expr $CNi + 1`
 
-        UI_INGESTION_WORKER_MACHINE=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $CNi)
+        INGESTION_WORKER_MACHINE=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $CNi)        
 
-        printf "\n\n${YELLOW}Deploying ${MASTER_SPEEDTEST_TITLE} Ingestion Worker #${iIW}...\n\n${RESET}"
-        icm run -stateDir /ICMDurable/State \
-            --machine ${UI_INGESTION_WORKER_MACHINE} \
-            --container htapIngestionWorker \
-            --image intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-ingest-worker-${HTAP_DEMO_VERSION} \
-            --options "-p 80:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
-        
-        exit_if_error "Deploying ${MASTER_SPEEDTEST_TITLE} Ingestion Worker failed."
+        printf "\n\n${GREEN}Deploying ${MASTER_SPEEDTEST_TITLE} Ingestion Worker #${iIW}...\n\n${RESET}"
+        if [ "$CONTAINERLESS" == "true" ];
+        then
+            INGESTION_WORKER_MACHINE_DNS=$(icm inventory | awk "/$INGESTION_WORKER_MACHINE/{ print \$3 }")    
+
+            containerless_docker_rm ${INGESTION_WORKER_MACHINE} htapIngestionWorker
+            
+            containerless_docker_pull ${INGESTION_WORKER_MACHINE} intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-ingest-worker-${HTAP_DEMO_VERSION}
+
+            containerless_docker_run ${INGESTION_WORKER_MACHINE} htapIngestionWorker intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-ingest-worker-${HTAP_DEMO_VERSION} "-p 8080:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
+        else
+            icm run  \
+                --machine ${INGESTION_WORKER_MACHINE} \
+                --container htapIngestionWorker \
+                --image intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-ingest-worker-${HTAP_DEMO_VERSION} \
+                --options "-p 80:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
+            
+            exit_if_error "Deploying ${MASTER_SPEEDTEST_TITLE} Ingestion Worker failed."
+        fi
     done
 
     #
@@ -169,16 +281,27 @@ deploy()
         iQW=`expr $iQW + 1`
         CNi=`expr $CNi + 1`
 
-        UI_QUERY_WORKER_MACHINE=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $CNi)
+        QUERY_WORKER_MACHINE=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $CNi)
 
-        printf "\n\n${YELLOW}Deploying ${MASTER_SPEEDTEST_TITLE} Query Worker #${iQW}...\n\n${RESET}"
-        icm run -stateDir /ICMDurable/State \
-            --machine ${UI_QUERY_WORKER_MACHINE} \
+        printf "\n\n${GREEN}Deploying ${MASTER_SPEEDTEST_TITLE} Query Worker #${iQW}...\n\n${RESET}"
+        if [ "$CONTAINERLESS" == "true" ];
+        then
+            QUERY_WORKER_MACHINE_DNS=$(icm inventory | awk "/$QUERY_WORKER_MACHINE/{ print \$3 }")    
+
+            containerless_docker_rm ${QUERY_WORKER_MACHINE} htapQueryWorker
+
+            containerless_docker_pull ${QUERY_WORKER_MACHINE} intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-query-worker-${HTAP_DEMO_VERSION}
+
+            containerless_docker_run ${QUERY_WORKER_MACHINE} htapQueryWorker intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-query-worker-${HTAP_DEMO_VERSION} "-p 8080:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
+        else
+        icm run  \
+            --machine ${QUERY_WORKER_MACHINE} \
             --container htapQueryWorker \
             --image intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-query-worker-${HTAP_DEMO_VERSION} \
             --options "-p 80:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
 
         exit_if_error "Deploying ${MASTER_SPEEDTEST_TITLE} Query Worker failed."
+        fi
     done
 
     rm -f ./.CNcount
@@ -196,14 +319,53 @@ bounce_container_at_machine() {
 
     printf "\n${YELLOW}Bouncing container $1 at $2...\n${RESET}"
     
-    icm stop -stateDir /ICMDurable/State \
-        --machine $2 \
-        --container $1
-    exit_if_error "Failed to stop container $2 at machine $1."
+    if [ "$CONTAINERLESS" == "true" ];
+    then
+        icm ssh  \
+            --machine $2 \
+            --command "docker restart $1"
+        exit_if_error "Failed to restart container $2 at machine $1."
+    else
+        icm stop  \
+            --machine $1 \
+            --container $2
+        exit_if_error "Failed to stop container $2 at machine $1."
 
-    icm start -stateDir /ICMDurable/State \
-        --machine $2 \
-        --container $1
-    exit_if_error "Failed to start container $2 at machine $1."
+        icm start  \
+            --machine $1 \
+            --container $2
+        exit_if_error "Failed to start container $2 at machine $1."
+    fi
+}
 
+#
+# $1 - Database's name
+# $2 - Default username
+read_endpoint_and_credentials() {
+
+    printf "\nEnter with $1's end point:${RESET}\n"
+    read DB_HOSTNAME
+    exit_if_empty $DB_HOSTNAME
+
+    if [ -z "$2" ];
+    then
+        printf "\nEnter with $1's username:${RESET}\n"
+        read DB_JDBC_USERNAME
+        exit_if_empty $DB_JDBC_USERNAME
+    else
+        printf "\nEnter with $1's username ($2):${RESET}\n"
+        read DB_JDBC_USERNAME
+        if [ -z "$DB_JDBC_USERNAME" ];
+        then
+            DB_JDBC_USERNAME=$2
+        fi
+    fi
+
+    printf "\nEnter with $1's password:${RESET}\n"
+    read -s DB_JDBC_PASSWORD
+    exit_if_empty $DB_JDBC_PASSWORD
+
+    export DB_HOSTNAME
+    export DB_JDBC_USERNAME
+    export DB_JDBC_PASSWORD
 }

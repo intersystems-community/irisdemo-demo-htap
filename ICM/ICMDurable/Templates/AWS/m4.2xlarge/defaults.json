@@ -32,6 +32,8 @@
     "ISCPassword": "sys",
     "Namespace": "SPEEDTEST",
     "Mirror": "<Mirror>",
-    "UserCPF": "/ICMDurable/merge.cpf",
-    "Containerless": "<Containerless>"
+    "UserCPF": "<UserCPF>",
+    "Containerless": "<Containerless>",
+    "ISCglobals": "0,0,23552,0,0,0",
+    "KitURL": "<KitURL>"
 }

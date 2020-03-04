@@ -1,8 +1,9 @@
-#!/bin/bash
+$IRIS_TAG = Get-Content ./ICMDurable/CONF_IRISVERSION -Raw
+$IRIS_PRIVATE_REPO = Get-Content ./ICMDurable/CONF_DOCKERHUB_REPOSITORY -Raw
 
 cls
 
-docker run --name icm -it -v $PWD/ICMDurable:/ICMDurable --cap-add SYS_TIME docker.iscinternal.com/intersystems/icm:2019.4.0.383.0
+docker run --name icm --rm -it -v $PWD\ICMDurable:/ICMDurable --cap-add SYS_TIME $IRIS_PRIVATE_REPO:icm.$IRIS_TAG
+
 Write-Host "`nExited icm container"
 Write-Host "`nRemoving icm container...\nContainer removed: "
-docker rm icm

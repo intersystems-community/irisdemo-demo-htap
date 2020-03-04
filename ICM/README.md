@@ -2,7 +2,7 @@
 
 We are using [InterSystems Cloud Manager (ICM)](https://docs.intersystems.com/irislatest/csp/docbook/Doc.View.cls?KEY=GICM_oview) to help us to provision the infrastructure for these Ingestion tests on AWS. 
 
-ICM is built on top of Terraform and allows you to declare your infrastructure as code (a very simple JASON file) and to provision it. ICM also allows you to deploy InterSystems IRIS in this infrastructure in a variety of configurations:
+ICM is built on top of Terraform and allows you to declare your infrastructure as code (a very simple JSON file) and to provision it. ICM also allows you to deploy InterSystems IRIS in this infrastructure in a variety of configurations:
 * A simple IRIS database server
 * An IRIS database server with a replica (mirror) on a second availability zone (data center)
 * A full blown IRIS database server with shards and compute nodes
@@ -17,16 +17,18 @@ Here is how it will work:
 ![Deployment Diagram on AWS](/ICM/aws_speedtest_deployment.png?raw=true)
 
 On step 1, you use the provided scripts to:
-* Provision the infrastructure on AWS
-* Deploy InterSystems IRIS on AWS
-* Deploy The Speed Test for IRIS on AWS
-* Deploy The Speed Test for the other database you are comparing IRIS with on AWS
+* Provision the infrastructure on AWS which will also create a VPC for us there.
+* Deploy InterSystems IRIS on AWS on this VPC
+* Deploy The Speed Test for IRIS on AWS on this VPC
+* Deploy The Speed Test for the other database you are comparing IRIS with on AWS on this same VPC
 
-Then, on step 2, you need to manually deploy the other database you are comparing IRIS with manually. Don't worry! We will guide you all the way!
+Then, on step 2, you need to manually deploy the other database you are comparing IRIS with on that same VPC ICM created for us. Don't worry! We will guide you all the way!
 
 # Pre-Requisites
 
 To run the HTAP Speed Test with IRIS on AWS, you will need:
+* Basic understanding of AWS EC2 
+* An AWS account
 * Git installed on your machine so you can clone this repository on your local PC
 * Docker installed on your machine so you can run ICM
 * An **IRIS 2020 License for Ubuntu**. Careful: This must not be a docker based license. We are using ICM to deploy a containerless installation of IRIS on AWS.

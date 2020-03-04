@@ -3,55 +3,42 @@
 source /ICMDurable/utils.sh
 source /ICMDurable/base_env.sh
 
-printf "\n\n${RED}WARNING: If you continue, this script will regenerate all your SSH/TLS keys and reset your defaults.json and definition.json files."
-printf "\n\n${RESET}Do you want to continue? Type yes if you do: "
-read answer
-
-if [ "$answer" != 'yes' ];
-then
-    printf "\n\n${PURPLE}Exiting.${RESET}\n\n"
-    exit 0
-fi
-
-rm -f ./.provisionHasBeenRun
-rm -f /ICMDurable/env.sh
-rm -f ./*.json
-
-rm -f ./.provisionHasBeenRun
-rm -rf /ICMDurable/State
-mkdir /ICMDurable/State
-rm -f /ICMDurable/*.log
-rm -rf /ICMDurable/.terraform
-
-#
-# Setting up SSH and TLS
-# 
-
 export SSH_DIR=/ICMDurable/keys
 export TLS_DIR=/ICMDurable/keys
-echo "export SSH_DIR=${SSH_DIR}" >> /ICMDurable/env.sh
-echo "export TLS_DIR=${TLS_DIR}" >> /ICMDurable/env.sh
 
-rm -rf ${SSH_DIR}
-rm -rf ${TLS_DIR}
+if [ ! -d ./keys ];
+then
+    printf "\n\n${GREEN}Generating SSH keys on $SSH_DIR:\n${RESET}"
+    /ICM/bin/keygenSSH.sh $SSH_DIR
 
-printf "\n\n${GREEN}Generating SSH keys on $SSH_DIR:\n${RESET}"
-/ICM/bin/keygenSSH.sh $SSH_DIR
-
-printf "\n\n${GREEN}Generating TLS keys on $TLS_DIR:\n${RESET}"
-/ICM/bin/keygenTLS.sh $TLS_DIR
+    printf "\n\n${GREEN}Generating TLS keys on $TLS_DIR:\n${RESET}"
+    /ICM/bin/keygenTLS.sh $TLS_DIR
+fi
 
 #
 # Setting up LABEL for our machines
 #
 
-printf "\n\n${GREEN}Please enter with the label for your ICM machines (ex: asamary): ${RESET}"
+printf "\n\n${GREEN}Please enter with the label for your ICM machines (ex: asamaryTest1): ${RESET}"
 read ICM_LABEL
 exit_if_empty $ICM_LABEL
 
-echo "export ICM_LABEL=$ICM_LABEL" >> /ICMDurable/env.sh
-echo "export IRIS_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local" >> /ICMDurable/env.sh
-echo "export IRIS_ECP_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local" >> /ICMDurable/env.sh
+if [ ! -d /ICMDurable/Deployments ];
+then
+    mkdir /ICMDurable/Deployments
+fi
+
+DEPLOYMENT_FOLDER=/ICMDurable/Deployments/$ICM_LABEL
+
+rm -rf $DEPLOYMENT_FOLDER
+mkdir $DEPLOYMENT_FOLDER
+
+echo "export DEPLOYMENT_FOLDER=${DEPLOYMENT_FOLDER}" >> $DEPLOYMENT_FOLDER/env.sh
+echo "export SSH_DIR=${SSH_DIR}" >> $DEPLOYMENT_FOLDER/env.sh
+echo "export TLS_DIR=${TLS_DIR}" >> $DEPLOYMENT_FOLDER/env.sh
+echo "export ICM_LABEL=$ICM_LABEL" >> $DEPLOYMENT_FOLDER/env.sh
+echo "export IRIS_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local" >> $DEPLOYMENT_FOLDER/env.sh
+echo "export IRIS_ECP_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local" >> $DEPLOYMENT_FOLDER/env.sh
 
 printf "\n\n${GREEN}Do you want IRIS with Mirroring (answer yes or something else if not)?: ${RESET}"
 read irisWithMirroringAnswer
@@ -73,40 +60,39 @@ fi
 # of HTAP UI/Master and Workers we need
 #
 
-printf "\n\n${GREEN}If you are testing IRIS gainst another database, you may want more than one master."
-printf "\n${GREEN}How many Masters?: ${RESET}"
+printf "\n${GREEN}How many Speed Test Masters do you want?: ${RESET}"
 read HTAP_MASTERS
 exit_if_empty $HTAP_MASTERS
 
-echo "export HTAP_MASTERS=$HTAP_MASTERS" >> /ICMDurable/env.sh
+echo "export HTAP_MASTERS=$HTAP_MASTERS" >> $DEPLOYMENT_FOLDER/env.sh
 
 printf "\n\n${GREEN}How many Ingestion Workers per Master?: ${RESET}"
 read HTAP_INGESTION_WORKERS
 exit_if_empty $HTAP_INGESTION_WORKERS
 
-echo "export HTAP_INGESTION_WORKERS=$HTAP_INGESTION_WORKERS" >> /ICMDurable/env.sh
+echo "export HTAP_INGESTION_WORKERS=$HTAP_INGESTION_WORKERS" >> $DEPLOYMENT_FOLDER/env.sh
 
 printf "\n\n${GREEN}How many Query Workers per Master?: ${RESET}"
 read HTAP_QUERY_WORKERS
 exit_if_empty $HTAP_QUERY_WORKERS
 
-echo "export HTAP_QUERY_WORKERS=$HTAP_QUERY_WORKERS" >> /ICMDurable/env.sh
+echo "export HTAP_QUERY_WORKERS=$HTAP_QUERY_WORKERS" >> $DEPLOYMENT_FOLDER/env.sh
 
-# Doing basic math in shell script sucks...
+# Doing basic math in shell script sucks... But I have learned that "let" is better and will come back to change this
 tmpW=`expr $HTAP_MASTERS \* $HTAP_INGESTION_WORKERS`
 tmpQ=`expr $HTAP_MASTERS \* $HTAP_QUERY_WORKERS`
 tmpW=`expr $tmpW + $tmpQ`
 MAX_CN=`expr $HTAP_MASTERS + $tmpW`
 
-echo "export MAX_CN=$MAX_CN" >> /ICMDurable/env.sh
+echo "export MAX_CN=$MAX_CN" >> $DEPLOYMENT_FOLDER/env.sh
 
 # .CNcount will start with zero. The script deployspeedtest.sh will increment it 
 # as new images are deployed so we can deploy, say, 3 images for the IRIS Speed Test (one
 # for the UI/Master, one for the ingestion worker and another for the query worker) and then
 # provision additional 3 images for the SAP HANA Speed Test. They will all be given consecutive
 # numbers (0001, 0002, 0003, 0004, etc...)
-rm -f ./.CNcount
-echo 0 >> .CNcount
+rm -f $DEPLOYMENT_FOLDER/.CNcount
+echo 0 >> $DEPLOYMENT_FOLDER/.CNcount
 
 #
 # Recreating defaults.json file based on template chosen by user
@@ -115,6 +101,7 @@ echo 0 >> .CNcount
 printf "\n\n${GREEN}Please enter with the AWS instance type: ${RESET}"
 printf "\n\n\t ${YELLOW}1${RESET} - m4.2xlarge"
 printf "\n\t ${YELLOW}2${RESET} - m5.xlarge"
+printf "\n\t ${YELLOW}3${RESET} - i3.xlarge"
 printf "\n\n"
 
 read instanceTypeNumber
@@ -129,6 +116,11 @@ case $instanceTypeNumber in
         INSTANCE_TYPE=m5.xlarge
         break
         ;;
+    3)
+        printf " ${GREEN}i3.xlarge...${RESET}\n\n"
+        INSTANCE_TYPE=i3.xlarge
+        break
+        ;;
     *)
         printf "\n\n${PURPLE}Invalid option. Exiting.${RESET}\n\n"
         exit 0
@@ -139,64 +131,80 @@ esac
 # Is this a container based deployment of IRIS or is it containerless?
 #
 
-# We don't support the HTAP demo with containerless IRIS. ICM will not
-# allow us to deploy our HTAP application containers with a containerless IRIS on
-# the same ICM deployment. :((
-containerBased=yes
 CONTAINERLESS=false
-# printf "\n\n${GREEN}Is this going to be a container based installation of IRIS (answer yes or something else if not)?: ${RESET}"
-# read containerBased
-# exit_if_empty $containerBased
+printf "\n\n${GREEN}Is this going to be a containerless installation of IRIS (answer yes or something else if not)?: ${RESET}"
+read containerLessInstall
+exit_if_empty $containerLessInstall
 
-printf "\n\n${YELLOW}Please enter with your docker credentials so we can pull the images.${RESET}\n"
-printf "\n\n${GREEN}Docker Hub username?: ${RESET}"
-read DOCKER_USERNAME
-exit_if_empty $DOCKER_USERNAME
-
-printf "\n\n${GREEN}Docker Hub password?: ${RESET}"
-read -s DOCKER_PASSWORD
-exit_if_empty $DOCKER_PASSWORD
-
-IRIS_KIT=$(ls ./IRISKit/*.tar.gz) 
-if [ ! -z "$IRIS_KIT" ];
+if [ "$containerLessInstall" == "yes" ];
 then
-    # for usage on deployiris.sh
-    echo "export IRIS_KIT_LOCAL_PATH=$IRIS_KIT" >> /ICMDurable/env.sh
+    CONTAINERLESS=true
 
-    IRIS_KIT=$(echo $IRIS_KIT | cut -c11-) # removing ./IRISKit from the beggining
+    terraform_aws_open_ports
+    
+    IRIS_KIT=$(ls /ICMDurable/IRISKit/*.tar.gz) 
+    if [ ! -z "$IRIS_KIT" ];
+    then
+        # for usage on deployiris.sh
+        echo "export IRIS_KIT_LOCAL_PATH=$IRIS_KIT" >> $DEPLOYMENT_FOLDER/env.sh
 
-    # for usage on deployiris.sh
-    echo "export IRIS_KIT_REMOTE_PATH=/tmp/$IRIS_KIT" >> /ICMDurable/env.sh
+        IRIS_KIT=$(echo $IRIS_KIT | cut -c21-) # removing ./IRISKit from the beggining
 
-    # for usage on definitions.json file
-    IRIS_KIT=file://tmp/$IRIS_KIT
-    echo "export IRIS_KIT=$IRIS_KIT" >> /ICMDurable/env.sh
+        # for usage on deployiris.sh
+        echo "export IRIS_KIT_REMOTE_PATH=/tmp/$IRIS_KIT" >> $DEPLOYMENT_FOLDER/env.sh
 
-    printf "\n\n${YELLOW}ICM configured to provision $INSTANCE_TYPE machines on AWS.\n\n"
+        # for usage on definitions.json file
+        IRIS_KIT=file://tmp/$IRIS_KIT
+        echo "export IRIS_KIT=$IRIS_KIT" >> $DEPLOYMENT_FOLDER/env.sh
+
+        printf "\n\n${YELLOW}ICM configured to provision $INSTANCE_TYPE machines on AWS.\n\n"
+    fi
+else
+    printf "\n\n${YELLOW}Please enter with your docker credentials so we can pull the IRIS image from your private docker hub repository.${RESET}\n"
+    printf "\n\n${GREEN}Docker Hub username?: ${RESET}"
+    read DOCKER_USERNAME
+    exit_if_empty $DOCKER_USERNAME
+
+    printf "\n\n${GREEN}Docker Hub password?: ${RESET}"
+    read -s DOCKER_PASSWORD
+    exit_if_empty $DOCKER_PASSWORD
+
+    echo "export DOCKER_USERNAME=$DOCKER_USERNAME" >> $DEPLOYMENT_FOLDER/env.sh
+    echo "export DOCKER_PASSWORD=$DOCKER_PASSWORD" >> $DEPLOYMENT_FOLDER/env.sh
 fi
 
-echo "export CONTAINERLESS=$CONTAINERLESS" >> /ICMDurable/env.sh
+echo "export CONTAINERLESS=$CONTAINERLESS" >> $DEPLOYMENT_FOLDER/env.sh
 
 #
 # Making changes to the template accordingly to user choices
 #
 
-cp ./Templates/AWS/$INSTANCE_TYPE/defaults.json .
-cp ./Templates/AWS/$INSTANCE_TYPE/merge.cpf .
+cp ./Templates/AWS/$INSTANCE_TYPE/defaults.json $DEPLOYMENT_FOLDER/
+cp ./Templates/AWS/$INSTANCE_TYPE/merge.cpf $DEPLOYMENT_FOLDER/
 
-sed -E -i  "s;<Label>;$ICM_LABEL;g" ./defaults.json
-sed -E -i  "s;<Mirror>;$MIRROR;g" ./defaults.json
-sed -E -i  "s;<Zone>;$ZONE;g" ./defaults.json
-sed -E -i  "s;<Containerless>;$CONTAINERLESS;g" ./defaults.json
-sed -E -i  "s;<DockerUsername>;$DOCKER_USERNAME;g" ./defaults.json
-sed -E -i  "s;<DockerPassword>;$DOCKER_PASSWORD;g" ./defaults.json
-sed -E -i  "s;<IRISDockerImage>;$IRIS_DOCKER_IMAGE;g" ./defaults.json
+sed -E -i  "s;<Label>;$ICM_LABEL;g" $DEPLOYMENT_FOLDER/defaults.json
+sed -E -i  "s;<Mirror>;$MIRROR;g" $DEPLOYMENT_FOLDER/defaults.json
+sed -E -i  "s;<Zone>;$ZONE;g" $DEPLOYMENT_FOLDER/defaults.json
+sed -E -i  "s;<Containerless>;$CONTAINERLESS;g" $DEPLOYMENT_FOLDER/defaults.json
+sed -E -i  "s;<DockerUsername>;$DOCKER_USERNAME;g" $DEPLOYMENT_FOLDER/defaults.json
+sed -E -i  "s;<DockerPassword>;$DOCKER_PASSWORD;g" $DEPLOYMENT_FOLDER/defaults.json
+sed -E -i  "s;<IRISDockerImage>;$IRIS_DOCKER_IMAGE;g" $DEPLOYMENT_FOLDER/defaults.json
+sed -E -i  "s;<UserCPF>;$DEPLOYMENT_FOLDER/merge.cpf;g" $DEPLOYMENT_FOLDER/defaults.json
 
-globalBuffers8kMb=$(cat ./merge.cpf | awk -F, '/^globals=/{ print $3 }')
-routineBuffersMb=$(cat ./merge.cpf | awk -F= '/^routines=/{ print $2 }')
+if [ "$CONTAINERLESS" == "true" ];
+then
+    sed -E -i  "s;<KitURL>;$IRIS_KIT;g" $DEPLOYMENT_FOLDER/defaults.json
+fi
+
+#
+# Configuring Terraform to open port 8080 on default security group
+#
+
+globalBuffers8kMb=$(cat $DEPLOYMENT_FOLDER/merge.cpf | awk -F, '/^globals=/{ print $3 }')
+routineBuffersMb=$(cat $DEPLOYMENT_FOLDER/merge.cpf | awk -F= '/^routines=/{ print $2 }')
 buffersMb=$(($globalBuffers8kMb + $routineBuffersMb))
 NR_HUGE_PAGES=$(($buffersMb + $buffersMb / 5)) # Adding 5% 
-echo "export NR_HUGE_PAGES=$NR_HUGE_PAGES" >> /ICMDurable/env.sh
+echo "export NR_HUGE_PAGES=$NR_HUGE_PAGES" >> $DEPLOYMENT_FOLDER/env.sh
 
 #
 # Creating definitions.json file
@@ -206,15 +214,8 @@ echo "export NR_HUGE_PAGES=$NR_HUGE_PAGES" >> /ICMDurable/env.sh
         {
         \"Role\": \"DM\",
         \"Count\": \"${DM_COUNT}\",
-        \"LicenseKey\": \"iris.key\"" >> ./definitions.json
-
-if [ "$CONTAINERLESS" == "true" ];
-then
-    echo ",
-        \"KitURL\": \"$IRIS_KIT\"" >> ./definitions.json
-fi
-
-echo "    }" >> ./definitions.json
+        \"LicenseKey\": \"iris.key\"
+        } ">> $DEPLOYMENT_FOLDER/definitions.json
 
 if [ $MAX_CN -gt 0 ];
 then
@@ -226,11 +227,32 @@ then
             \"DataVolumeSize\": \"30\",
             \"DataVolumeIOPS\": \"100\",
             \"InstanceType\": \"c5.xlarge\"
-        }" >> ./definitions.json
+        }" >> $DEPLOYMENT_FOLDER/definitions.json
 fi
-echo "]" >> ./definitions.json
+echo "]" >> $DEPLOYMENT_FOLDER/definitions.json
 
-rm -f ./defaults.json.bak
+rm -f $DEPLOYMENT_FOLDER/defaults.json.bak
+
+#
+# Copying additional scripts and making them executable
+#
+cp ./Templates/template_provision.sh $DEPLOYMENT_FOLDER/provision.sh
+chmod +x $DEPLOYMENT_FOLDER/provision.sh
+
+cp ./Templates/template_deployspeedtest.sh $DEPLOYMENT_FOLDER/deployspeedtest.sh
+chmod +x $DEPLOYMENT_FOLDER/deployspeedtest.sh
+
+cp ./Templates/template_deployiris.sh $DEPLOYMENT_FOLDER/deployiris.sh
+chmod +x $DEPLOYMENT_FOLDER/deployiris.sh
+
+cp ./Templates/template_bouncespeedtest.sh $DEPLOYMENT_FOLDER/bouncespeedtest.sh
+chmod +x $DEPLOYMENT_FOLDER/bouncespeedtest.sh
+
+cp ./Templates/template_uninstall_iris.sh $DEPLOYMENT_FOLDER/uninstall_iris.sh
+chmod +x $DEPLOYMENT_FOLDER/uninstall_iris.sh
+
+cp ./Templates/template_unprovision.sh $DEPLOYMENT_FOLDER/unprovision.sh
+chmod +x $DEPLOYMENT_FOLDER/unprovision.sh
 
 #
 # Reminding user of the requirement for AWS credential files
@@ -245,4 +267,4 @@ then
     echo "aws_session_token = <your aws session token>" >> ./aws.credentials
 fi
 
-printf "\n\n${YELLOW}You can run ./provision.sh to provision the infrastructure on AWS now.\n\n${RESET}"
+printf "\n\n${YELLOW}You can now change to $DEPLOYMENT_FOLDER and run ./provision.sh to provision the infrastructure on AWS.\n\n${RESET}"

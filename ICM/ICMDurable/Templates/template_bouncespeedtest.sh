@@ -1,7 +1,7 @@
 #!/bin/sh
 
 source ./env.sh
-source ./utils.sh
+source /ICMDurable/utils.sh
 
 printf "${GREEN}Bouncing master and worker containers...${RESET}"
 

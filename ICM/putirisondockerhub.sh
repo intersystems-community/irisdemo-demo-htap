@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source ./ICMDurable/base_env.sh
+export IRIS_TAG=$(cat ./ICMDurable/CONF_IRISVERSION) 
+export IRIS_PRIVATE_REPO=$(cat ./ICMDurable/CONF_DOCKERHUB_REPOSITORY)
 
 #
 # CONSTANTS
@@ -10,55 +11,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
-#
-# UTILITY FUNCTIONS
-#
-function showError() {
-    red
-    printf "\nERROR: $1\n"
-    nocolor
-}
-
-function showMessage() {
-    green
-    printf "\n$1\n"
-    nocolor
-}
-
-function printfY() {
-    yellow
-    printf "$1"
-    nocolor
-}
-
-function printfR() {
-    red
-    printf "$1"
-    nocolor
-}
-
-function printfG() {
-    green
-    printf "$1"
-    nocolor
-}
-
-function nocolor() {
-    printf "${NC}"
-}
-
-function yellow() {
-    printf "${YELLOW}"
-}
-
-function red() {
-    printf "${RED}"
-}
-
-function green() {
-    printf "${GREEN}"
-}
-
 # checkError(errorMsg, successMsg)
 # 
 # If last command terminated with an error, prints errorMsg and exits with error returned.
@@ -66,12 +18,12 @@ function green() {
 function checkError() {
     if [ ! $? -eq 0 ]
     then 
-        printfR "\n$1\n"
+        printf "${RED}\n$1\n${NC}"
         exit $?
     else
         if [ ! -z "$2" ]
         then
-            printfG "\n$2\n"
+            printf "\n${GREEN}$2${NC}\n"
         fi
     fi
 }
@@ -96,23 +48,23 @@ function dockerLogin() {
 
     if [ -z "$dockerUsername" ]
     then
-        printfR "\n\nABORTING: Docker username is required.\n\n"
+        printf "\n\n${RED}ABORTING: Docker username is required.${NC}\n\n"
         exit 1
     fi
 
     if [ -z "$dockerPassword" ]
     then
-        printfR "\n\nABORTING: Docker password is required\n\n"
+        printf "\n\n${RED}ABORTING: Docker password is required${NC}\n\n"
         exit 1
     fi
 
-    printfY "\n\nLogging in...\n"
+    printf "\n\n${YELLOW}Logging in...${NC}\n"
     if [ -z "$1" ]
     then
-        printfY "\n\nTrying to log in on docker hub...\n"
+        printf "\n\n${YELLOW}Trying to log in on docker hub...${NC}\n"
         docker login -u $dockerUsername -p $dockerPassword
     else
-        printfY "\n\nTrying to log in on $1...\n"
+        printfY "\n\n${YELLOW}Trying to log in on $1...${NC}\n"
         docker login -u $dockerUsername -p $dockerPassword $1
     fi
     checkError "Login failed." "Login successful!"
@@ -122,10 +74,10 @@ function dockerLogin() {
 # MAIN
 #
 
-printfY "\n\nLoggin into docker.iscinternal.com (VPN Required!) to download newer images...\n"
+printf "\n\n${YELLOW}Loggin into docker.iscinternal.com (VPN Required!) to download newer images...${NC}\n"
 dockerLogin docker.iscinternal.com
 
-printfY "\n\nPulling images...\n"
+printf "\n\n${YELLOW}Pulling images...${NC}\n"
 
 docker pull docker.iscinternal.com/intersystems/iris:$IRIS_TAG
 checkError "IRIS Pull failed." "Pull successful!"
@@ -133,7 +85,7 @@ checkError "IRIS Pull failed." "Pull successful!"
 docker pull docker.iscinternal.com/intersystems/icm:$IRIS_TAG
 checkError "ICM Pull failed." "Pull successful!"
 
-printfY "\nTagging images...\n"
+printf "\n${YELLOW}Tagging images...${NC}\n"
 
 docker tag docker.iscinternal.com/intersystems/iris:$IRIS_TAG $IRIS_PRIVATE_REPO:iris.$IRIS_TAG
 checkError "IRIS Tagging failed." "IRIS Tagging successful!"
@@ -141,10 +93,10 @@ checkError "IRIS Tagging failed." "IRIS Tagging successful!"
 docker tag docker.iscinternal.com/intersystems/icm:$IRIS_TAG $IRIS_PRIVATE_REPO:icm.$IRIS_TAG
 checkError "ICM Tagging failed." "ICM Tagging successful!"
 
-printfY "\n\nLoggin into Docker Hub:\n"
+printf "\n\n${YELLOW}Loggin into Docker Hub:${NC}\n"
 dockerLogin
 
-printfY "\nUploading images...\n"
+printf "\n${YELLOW}Uploading images...${NC}\n"
 
 docker push $IRIS_PRIVATE_REPO:iris.$IRIS_TAG
 checkError "IRIS Upload failed." "IRIS Upload successful!"

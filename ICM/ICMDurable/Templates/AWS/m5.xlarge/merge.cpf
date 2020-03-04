@@ -7,3 +7,4 @@ bbsiz=262144
 memlock=0
 asyncwij=8
 wduseasyncio=1
+jrnbufs=128

@@ -4,7 +4,7 @@
 #
 # You should run this AFTER running ./provision.sh
 #
-source /ICMDurable/env.sh
+source ./env.sh
 source /ICMDurable/utils.sh
 
 if [ "$CONTAINERLESS" == "true" ];
@@ -19,7 +19,7 @@ else
     # icm ssh --role DM -command "sudo reboot"
     # exit_if_error "Rebooting servers after huge page configuration failed."
 
-    icm run -stateDir /ICMDurable/State -options "--cap-add IPC_LOCK"
+    icm run -options "--cap-add IPC_LOCK"
     exit_if_error "Deploying container based IRIS failed."
 fi
 

@@ -5,15 +5,13 @@
 ######################################################################
 
 # These two are used on the script putirisondockerhub.sh 
-#export IRIS_TAG=2019.4.0.383.0 # This version has a problem with the WIJ that causes IRIS not to start
-export IRIS_TAG=2019.3.0.309.0
-export IRIS_PRIVATE_REPO=amirsamary/irisdemo
+export IRIS_TAG=$(cat /ICMDurable/CONF_IRISVERSION) 
+export IRIS_PRIVATE_REPO=$(cat /ICMDurable/CONF_DOCKERHUB_REPOSITORY)
 
 # This one is what is used to replace <IRISDockerImage> on defaults.json template files:
 # The "iris" prefix in front of the IRIS_TAG will allow us to add more than one IRIS image to the same 
 # Docker Hub private repository. 
 export IRIS_DOCKER_IMAGE=$IRIS_PRIVATE_REPO:iris.$IRIS_TAG
-
 
 ######################################################################
 # Do not change anything bellow this comment
