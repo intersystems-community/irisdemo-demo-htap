@@ -360,7 +360,7 @@ Open both Speed Tests on your browser and hit the button **Run Test**. Here are 
 | InterSystems IRIS 2020 | i3.xlarge | 600s    | 82,161/sec          | 61,947,000           |  20,362/s           | 15,407,877                 | 0.04909ms                   | 30-75% |
 | SAP HANA Express 2.0   | i3.xlarge | 600s    | 59,000/sec          | 47,389,000           |  836/s              | 913,535                    | 1.22403ms                   | 50-78% |
 
-**ATEOT = At the end of Test. Or "sustained" rate. **
+**ATEOT = At the end of Test. Or "sustained" rate.**
 
 Both databases will start with excellent ingestion rates and then they will "degrade" to their sustained performance. The fact that the average ingestion rate at the beginning of the test is so good affects the final average. Example: If you divide 47,389,000 / 600 = 78,981 records/s for SAP HANA. But SAP HANA started with an ingestion rate of 100K rec/s and ended with an ingestion rate of 59K rec/s. So, SAP HANA's sustained avg ingestion rate with this hardware is of ~59K rec/s.
 
