@@ -357,8 +357,8 @@ Open both Speed Tests on your browser and hit the button **Run Test**. Here are 
 
 | Database               | Machine   | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
 |------------------------|-----------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
-| InterSystems IRIS 2020 | i3.xlarge | 600 s    | 82,161/sec          | 61,947,000           |  20,362/s           | 15,407,877                 | 0.04909 ms                   | 30-75% |
-| SAP HANA Express 2.0   | i3.xlarge | 600 s    | 59,000/sec          | 47,389,000           |  836/s              | 913,535                    | 1.22403 ms                   | 50-78% |
+| InterSystems IRIS 2020 | i3.xlarge | 600s    | 82,161/sec          | 61,947,000           |  20,362/s           | 15,407,877                 | 0.04909ms                   | 30-75% |
+| SAP HANA Express 2.0   | i3.xlarge | 600s    | 59,000/sec          | 47,389,000           |  836/s              | 913,535                    | 1.22403ms                   | 50-78% |
 
 **ATEOT = At the end of Test. Or "sustained" rate. **
 
