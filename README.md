@@ -13,7 +13,7 @@ You can run the tests on AWS! Here are some results:
 * [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md):
   * Soon
 
-You can run the tests on your own P using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
+You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:
   * InterSystems IRIS is 31x faster than MySQL 8.0 at ingestion
   * Intersystems IRIS is 6x faster than MySQL 8.0 at querying
@@ -127,33 +127,11 @@ As you can see, it is not just a matter of running docker-compose up as it is wi
 
 In our tests running the Speed Test on a VM, we found IRIS to be 1.3X faster than SAP HANA for ingesting data, and 20X faster for querying data, and uses a fraction of the memory. 
 
-# 3 - Architecture of the HTAP Demo
-
-The architecture of the HTAP demo is shown below:
-
-![Demo Landing Page](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/README.png?raw=true)
-
-This demo uses docker compose to start five services:
-
-* **htapui** - this is the Angular UI you use to run the demo.
-* **htapirisdb** - since the demo is running on IRIS Community, you don't need an IRIS license to run it. But be aware that IRIS Community has two important limitations:
-  * Max of 5 connections
-  * Max Database size of 10Gb
-* **htapmaster** - This is the HTAP Demo master. The UI talks to it and it talks to the workers to start/stop the speed test and collect metrics.
-* **ingest-worker1** - This is an ingestion worker. You can actually have more than one ingestion worker; just give each one a different service name. They will try to INSERT records into the database as fast as possible.
-* **query-worker1** - This is the consumption worker. You can have more than one of these as well. They will try to read records out of the database as fast as possible.
-
-When running the demo on our PCs, we use Docker and Docker Compose. Docker Compose expects a **docker-compose.yml** that describes these services and the docker images they use. This demo actually provides many docker-compose.yml files and more will be added soon:
-* **docker-compose.yml** - This is the default demo that runs the speed test against IRIS Community described on the bullets and picture above.
-* **docker-compose-mysql.yml** - This is the speed test against MySQL. You will notice that the same test shows that IRIS is 25x faster than MySQL. Running this test against Amazon Aurora MySQL (that is a fine tuned version of MySQL) produced the same results.
-* **docker-compose-sqlserver.yml** - This is the speed test against SqlServer for Dockers. 
-* **docker-compose-enterprise-iris.yml** - If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it.
-
-# 4 - Resources
+## 3 - Resources
 
 A video about this demo is in the works! In the meantime, [here](https://www.intersystems.com/resources/detail/a-superior-alternative-to-in-memory-databases-and-key-value-stores/) is an interesting article that talks about InterSystems IRIS architecture and what makes it faster.
 
-# 5 - How does this benchmark compare against standard benchmarks such as YCSB or TPC-H?
+## 4 - How does this benchmark compare against standard benchmarks such as YCSB or TPC-H?
 
 The open-source Yahoo Cloud Serving Benchmark ([YCSB](https://en.wikipedia.org/wiki/YCSB)) project aims to develop a framework and common set of workloads for evaluating the performance of different “key-value” and “cloud” serving stores. 
 
@@ -165,7 +143,7 @@ This benchmark is about **ingestion rate** versus **query response time**. We ha
 
 This is not a simple problem. Many industries such as Financial Services and IoT have to ingest thousands of records per second. At very high ingestion rates, memory is consumed very quickly. Traditional Databases need to write to disk to keep ingesting while In Memory Databases will also be forced to constantly write to disk as well. At the end of the day, the most efficient SQL database wins.
 
-# 6 - Can I see the table?
+## 5 - Can I see the table?
 
 Here is the the statement we send to all databases we support:
 
@@ -201,7 +179,29 @@ End-to-end performance has to do with the fact that some JDBC drivers have optmi
 
 To proove that we are actually reading the columns we are SELECTing, we sum up the bytes of all the filds reeturned as **proof of work**.
 
-# 7 - Can I run this without containers against a random IRIS Cluster?
+## 6 - Architecture of the HTAP Demo
+
+The architecture of the HTAP demo is shown below:
+
+![Demo Landing Page](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/README.png?raw=true)
+
+This demo uses docker compose to start five services:
+
+* **htapui** - this is the Angular UI you use to run the demo.
+* **htapirisdb** - since the demo is running on IRIS Community, you don't need an IRIS license to run it. But be aware that IRIS Community has two important limitations:
+  * Max of 5 connections
+  * Max Database size of 10Gb
+* **htapmaster** - This is the HTAP Demo master. The UI talks to it and it talks to the workers to start/stop the speed test and collect metrics.
+* **ingest-worker1** - This is an ingestion worker. You can actually have more than one ingestion worker; just give each one a different service name. They will try to INSERT records into the database as fast as possible.
+* **query-worker1** - This is the consumption worker. You can have more than one of these as well. They will try to read records out of the database as fast as possible.
+
+When running the demo on our PCs, we use Docker and Docker Compose. Docker Compose expects a **docker-compose.yml** that describes these services and the docker images they use. This demo actually provides many docker-compose.yml files and more will be added soon:
+* **docker-compose.yml** - This is the default demo that runs the speed test against IRIS Community described on the bullets and picture above.
+* **docker-compose-mysql.yml** - This is the speed test against MySQL. You will notice that the same test shows that IRIS is 25x faster than MySQL. Running this test against Amazon Aurora MySQL (that is a fine tuned version of MySQL) produced the same results.
+* **docker-compose-sqlserver.yml** - This is the speed test against SqlServer for Dockers. 
+* **docker-compose-enterprise-iris.yml** - If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it.
+
+## 7 - Can I run this without containers against a random IRIS Cluster?
 
 Yes! The easiest way to get this done is to clone this repo on each server where you are planning on running the master and the UI (they run on the same server) and on each worker type (ingestion and query workers). You may have as many ingestion workers and query workers as you want! 
 
@@ -220,13 +220,13 @@ What about IRIS? You have two choices:
 
 Just make sure you change your start_master.sh script to configure the environment variables with the correct IRIS end points, usernames and passwords.
 
-# 8 - Customizations
+## 8 - Customizations
 
-## 8.1 - How do I configure this demo to run with more workers, threads, etc?
+### 8.1 - How do I configure this demo to run with more workers, threads, etc?
 
 Look at the docker-compose.yml file and you will notice environment variables that will allow you to configure everything. The provided docker-compose yml files are just good starting points. You can copy them and change your copies to have more workers (it won't make a lot of difference if you are running on your PC), higher number of threads per worker type, change the ingestion batch size, wait time in milliseconds between queries on the consumter, etc.
 
-## 8.2 - Can I change the table name or structure?
+### 8.2 - Can I change the table name or structure?
 
 Yes, but you will have to:
 * Fork this repo on your PC
@@ -243,7 +243,7 @@ Then, change the other *.sql scripts to match your changes. The INSERT script, t
 
 Finally, just run the build.sh to rebuild the demo and you should be ready to go!
 
-# 9 - Other demo applications
+## 9 - Other demo applications
 
 There are other IRIS demo applications that touch different subjects such as NLP, ML, Integration with AWS services, Twitter services, performance benchmarks etc. Here are some of them:
 * [HTAP Demo](https://github.com/intersystems-community/irisdemo-demo-htap) - Hybrid Transaction-Analytical Processing benchmark. See how fast IRIS can insert and query at the same time. You will notice it is up to 20x faster than AWS Aurora!
@@ -252,6 +252,6 @@ There are other IRIS demo applications that touch different subjects such as NLP
 * [HL7 Appointments and SMS (text messages) application](https://github.com/intersystems-community/irisdemo-demo-appointmentsms) -  Shows how IRIS for Health can be used to parse HL7 appointment messages to send SMS (text messages) appointment reminders to patients. It also shows real time dashboards based on appointments data stored in a normalized data lake.
 * [The Readmission Demo](https://github.com/intersystems-community/irisdemo-demo-readmission) - Patient Readmissions are said to be the "Hello World of Machine Learning" in Healthcare. On this demo, we use this problem to show how IRIS can be used to **safely build and operationalize** ML models for real time predictions and how this can be integrated into a random application. This **IRIS for Health** demo seeks to show how a full solution for this problem can be built.
 
-# 10 - Report any Issues
+## 10 - Report any Issues
   
 Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).
