@@ -11,7 +11,8 @@ You can run the tests on AWS! Here are some results:
   * InterSystems IRIS is 1.392x faster than SAP HANA at ingestion
   * Intersystems IRIS is 24.93x faster than SAP HANA at querying
 * [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md):
-  * Soon
+  * InterSystems IRIS is 10.8x faster than AWS Aurora at ingestion
+  * Intersystems IRIS is 6.7x faster than AWS Aurora at querying
 
 You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:

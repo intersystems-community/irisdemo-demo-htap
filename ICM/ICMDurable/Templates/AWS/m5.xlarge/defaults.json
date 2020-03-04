@@ -3,7 +3,7 @@
     "Label": "<Label>",
     "Tag": "IRISSpeedTest",
     "DataVolumeType": "io1",
-    "DataVolumeSize": "50",
+    "DataVolumeSize": "100",
     "DataVolumeIOPS": "2500",
     "WIJVolumeType": "io1",
     "WIJVolumeSize": "50",

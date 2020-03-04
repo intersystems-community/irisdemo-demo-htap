@@ -163,7 +163,6 @@ IRIS and IRIS Speed Test are deployed and you know the VPC_ID where they are. He
 * 6.1 - Manually deploy SAP HANA on the same **VPC_ID**
 * 6.2 - Take note of its **Endpoint**.
 * 6.3 - Configure SAP HANA
-* 6.4 - Deploy SAP HANA Speed Test using its **Endpoint**.
 
 ### 6.1 - Manually deploy SAP HANA
 

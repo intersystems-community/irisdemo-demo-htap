@@ -26,6 +26,11 @@ case $SPEED_TEST_TO_DEPLOY in
         printf "\n\n${GREEN}Deploying HTAP demo for InterSystems IRIS...${RESET}\n\n"
 
         deploy "iris" "SpeedTest | InterSystems IRIS"
+
+        VPC_ID=$(cat ./state/$ICM_LABEL-IRISSpeedTest/terraform.tfstate | grep vpc_id | head -1 | awk -F\" '{print $4}')
+
+        printf "\n\n${YELLOW}If you are planning on deploying SAP HANA, AWS Aurora or any other AWS database, deploy them on the VPC_ID $VPC_ID.${RESET}\n\n"
+
         break
         ;;
     hana)
