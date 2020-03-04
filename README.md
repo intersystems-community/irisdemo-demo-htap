@@ -6,10 +6,16 @@ This demo shows how InterSystems IRIS can ingest thousands of records per second
 
 The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to compare performance and resource utilization in “apples-to-apples” comparisons. 
 
-Here are some results:
+Here are some results of tests run on AWS:
 * [InterSystems IRIS x SAP HANA run on AWS](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md):
   * InterSystems IRIS is 1.392x faster than SAP HANA at ingestion
   * Intersystems IRIS is 24.93x faster at querying
+* [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md):
+  * Soon
+
+And some more results of tests run on a Mac (using Dockers):
+* InterSystems IRIS x MySQL 8.0:
+  * 
 
 
 The architecture of the HTAP demo is shown below:

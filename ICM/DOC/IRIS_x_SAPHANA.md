@@ -386,3 +386,11 @@ ICM will now destroy all the machines, volumes and network configurations provis
 After ICM is done, make sure you:
 * Verify on EC2 Dashboard if all the instances under the label you used are gone
 * Verify on EC2 Volumes if all the volumes under the label you used are gone 
+
+## 10 - Screenshots
+
+Here is the end result of SAP HANA's test:
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA2.png?raw=true)
+
+Here is the end result of InterSystems IRIS test:
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA1.png?raw=true)
