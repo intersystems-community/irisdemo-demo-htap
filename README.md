@@ -4,7 +4,13 @@ The capability to ingest thousands or millions of records per second while allow
 
 This demo shows how InterSystems IRIS can ingest thousands of records per second while allowing for simultaneous queries on the data on the same cluster with very high performance for both ingestion and querying, and with low resource utilization. The demo works on a single IRIS instance or on an IRIS cluster on the cloud.
 
-The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to compare performance and resource utilization in “apples-to-apples” comparisons.
+The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to compare performance and resource utilization in “apples-to-apples” comparisons. 
+
+Here are some results:
+* [InterSystems IRIS x SAP HANA run on AWS](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md):
+  * InterSystems IRIS is 1.392x faster than SAP HANA at ingestion
+  * Intersystems IRIS is 24.93x faster at querying
+
 
 The architecture of the HTAP demo is shown below:
 
