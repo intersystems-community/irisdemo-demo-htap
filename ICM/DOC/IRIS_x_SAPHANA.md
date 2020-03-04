@@ -116,7 +116,7 @@ When done, you will notice that ICM will write on the screen the URL for the man
 
 If you open the management portal, you will notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run.
 
-## 5 - Deploy the Speed Test
+## 5 - Deploy the Speed Test for IRIS
 
 Run the **deployspeedtest.sh** script:
 
@@ -306,7 +306,7 @@ Swap:         4.0G         0B       4.0G
 See https://www.sap.com/developer/tutorials/hxe-ua-getting-started-vm.html to get started.
 ```
 
-### 6.4 - Deploy SAP HANA Speed Test
+## 7 - Deploy Speed Test for SAP HANA
 
 Alright! SAP HANA is deployed and ready! Did you get its **EC2 Private IP**? It's EC2 private IP is its Endpoint. We can now run the script deployspeedtest.sh again to deploy SAP HANA:
 
@@ -351,7 +351,7 @@ Done!
 ```
 Now you have the URL for IRIS Speed Test and the URL for SAP HANA's Speed Test! We are ready to make the comparison now!
 
-## 7 - Comparing the Databases
+## 8 - Comparing the Databases
 
 Open both Speed Tests on your browser and hit the button **Run Test**. Here are my results:
 
@@ -368,7 +368,7 @@ Both databases will start with excellent ingestion rates and then they will "deg
 * InterSystems IRIS is 1.392x faster than SAP HANA at ingestion
 * Intersystems IRIS is 24.93x faster at querying
 
-## Unprovision everything
+## 9 - Unprovision everything
 
 We must first delete SAP HANA's EC2 machine. Use the EC2 dashboard for doing that. Wait for it to finish. SAP HANA is on our VPC. If we don't delete it first, we can't unprovision the Speed Test using ICM because we won't be able to delete that VPC (SAP HANA would be using it).
 
