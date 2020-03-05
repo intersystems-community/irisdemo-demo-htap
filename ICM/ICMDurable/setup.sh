@@ -16,6 +16,12 @@ then
 fi
 
 #
+# Workaround for Prodlog 161538
+#
+
+sed -i  "s/1..26/0..26/g" /ICM/etc/toHost/mountVolumes.sh
+
+#
 # Setting up LABEL for our machines
 #
 

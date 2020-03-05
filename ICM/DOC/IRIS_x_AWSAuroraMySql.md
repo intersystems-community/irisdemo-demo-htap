@@ -250,7 +250,7 @@ Open both Speed Tests on your browser and hit the button **Run Test**. Here are 
 
 | Database               | Machine      | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
 |------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
-| InterSystems IRIS 2020 | m5.xlarge    | 200s     | 117K/s              | 26,271,000           | 28K/s               | 6,227,646                  | 0.03582ms                    | 50%    |
+| InterSystems IRIS 2020 | m5.xlarge    | 200s     | 117K/s              | 22,701,000           | 28K/s               | 4,869,238                  | 0.04126ms                    | 50%    |
 | AWS Aurora             | db.r5.xlarge | 200s     | 7K/s                | 2,427,000            | 4.4K/s              | 1,432,194                  | 0.24155ms                    | 75%    |
 
 m5.xlarge has the same characteristics of db.r5.xlarge with the exception that m5.xlarge has only 16Gb of RAM while db.r5.xlarge has 32Gb of RAM. That means AWS Aurora has an advantage over InterSystems IRIS but it seems that this didn't help them much.
@@ -258,8 +258,8 @@ m5.xlarge has the same characteristics of db.r5.xlarge with the exception that m
 **ATEOT = At the end of Test. Or "sustained" rate.**
 
 **The conclusion is that:**
-* InterSystems IRIS is 10.8x faster than AWS Aurora at ingestion
-* Intersystems IRIS is 6.7x faster at querying
+* InterSystems IRIS is 9x faster than AWS Aurora at ingestion
+* Intersystems IRIS is 5.8x faster than AWS Aurora at querying
 
 ## 9 - Unprovision everything
 
