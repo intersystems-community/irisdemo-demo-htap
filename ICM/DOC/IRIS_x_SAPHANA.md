@@ -356,16 +356,16 @@ Open both Speed Tests on your browser and hit the button **Run Test**. Here are 
 
 | Database               | Machine   | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
 |------------------------|-----------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
-| InterSystems IRIS 2020 | i3.xlarge | 600s    | 82,161/sec          | 61,947,000           |  20,362/s           | 15,407,877                 | 0.04909ms                   | 30-75% |
-| SAP HANA Express 2.0   | i3.xlarge | 600s    | 59,000/sec          | 47,389,000           |  836/s              | 913,535                    | 1.22403ms                   | 50-78% |
+| InterSystems IRIS 2020 | i3.xlarge | 600s     | 82,161/sec          | 61,947,000           |  20,362/s           | 15,407,877                 | 0.04909ms                   | 30-75% |
+| SAP HANA Express 2.0   | i3.xlarge | 601s     | 59,000/sec          | 66,006,000           |  836/s              | 913,535                    | 1.22403ms                   | 50-78% |
 
 **ATEOT = At the end of Test. Or "sustained" rate.**
 
-Both databases will start with excellent ingestion rates and then they will "degrade" to their sustained performance. The fact that the average ingestion rate at the beginning of the test is so good affects the final average. Example: If you divide 47,389,000 / 600 = 78,981 records/s for SAP HANA. But SAP HANA started with an ingestion rate of 100K rec/s and ended with an ingestion rate of 59K rec/s. So, SAP HANA's sustained avg ingestion rate with this hardware is of ~59K rec/s.
+Both databases will start with excellent ingestion rates and then they will "degrade" to their sustained performance. The fact that the average ingestion rate at the beginning of the test is so good affects the final average. Example: If you divide 66,006,000 / 601 = 109,826 records/s for SAP HANA. SAP HANA did start with an ingestion rate above 109K records/s, but it stabilized at the end of the test with an ingestion rate of 59K rec/s. So, SAP HANA's sustained avg ingestion rate with this hardware at the end of the test was of ~59K rec/s with poor query responsiveness. IRIS suffered the same problem, but it was operating at 82K records/s instead ATEOT while maintaining query responsiveness.
 
 **The conclusion is that:**
-* InterSystems IRIS is 1.392x faster than SAP HANA at ingestion
-* Intersystems IRIS is 24.93x faster at querying
+* InterSystems IRIS is 1.392x faster than SAP HANA at ingestion (39.25% faster)
+* Intersystems IRIS is 24.93x faster than SAP HANA at querying (2393% faster!)
 
 ## 9 - Unprovision everything
 
