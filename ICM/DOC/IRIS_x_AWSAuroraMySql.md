@@ -258,8 +258,8 @@ m5.xlarge has the same characteristics of db.r5.xlarge with the exception that m
 **ATEOT = At the end of Test. Or "sustained" rate.**
 
 **The conclusion is that:**
-* InterSystems IRIS is 9x faster than AWS Aurora at ingestion
-* Intersystems IRIS is 5.8x faster than AWS Aurora at querying
+* InterSystems IRIS is 9.35x faster than AWS Aurora at ingestion (835% faster!)
+* Intersystems IRIS is 5.85x faster than AWS Aurora at querying (485% faster!)
 
 ## 9 - Unprovision everything
 
