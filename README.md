@@ -8,8 +8,8 @@ The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to comp
 
 You can run the tests on AWS! Here are some results:
 * [InterSystems IRIS x SAP HANA run on AWS](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md):
-  * InterSystems IRIS is 1.392x faster than SAP HANA at ingestion (39.25% faster)
-  * Intersystems IRIS is 24.93x faster than SAP HANA at querying (2393% faster!)
+  * InterSystems IRIS is 37.61% faster than SAP HANA at ingestion
+  * Intersystems IRIS is 3730% faster than SAP HANA at querying
 * [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md):
   * InterSystems IRIS is 9.35x faster than AWS Aurora at ingestion (835% faster!)
   * Intersystems IRIS is 5.85x faster than AWS Aurora at querying (485% faster!)
