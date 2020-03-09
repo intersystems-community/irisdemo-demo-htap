@@ -363,7 +363,7 @@ Here are my results:
 | Database               | Machine   | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
 |------------------------|-----------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
 | InterSystems IRIS 2020 | i3.xlarge | 1200s    | 79,763rec/s         | 96,087,000           | 20.915rec/s         |  25,184,261                | 0.04779                      | 30-75% |
-| SAP HANA Express 2.0   | i3.xlarge | 1201s    | 57,962rec/s         | 69,062,000           | 546.013 rec/s       |  657,775                   | 1.81548                      | 50-78% |
+| SAP HANA Express 2.0   | i3.xlarge | 1201s    | 57,962rec/s         | 69,062,000           | 546.013rec/s        |  657,775                   | 1.81548                      | 50-78% |
 
 **ATEOT = At the end of Test. Or "sustained" rate.**
 
