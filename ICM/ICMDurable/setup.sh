@@ -145,8 +145,6 @@ exit_if_empty $containerLessInstall
 if [ "$containerLessInstall" == "yes" ];
 then
     CONTAINERLESS=true
-
-    terraform_aws_open_ports
     
     IRIS_KIT=$(ls /ICMDurable/IRISKit/*.tar.gz) 
     if [ ! -z "$IRIS_KIT" ];
@@ -201,10 +199,6 @@ if [ "$CONTAINERLESS" == "true" ];
 then
     sed -E -i  "s;<KitURL>;$IRIS_KIT;g" $DEPLOYMENT_FOLDER/defaults.json
 fi
-
-#
-# Configuring Terraform to open port 8080 on default security group
-#
 
 globalBuffers8kMb=$(cat $DEPLOYMENT_FOLDER/merge.cpf | awk -F, '/^globals=/{ print $3 }')
 routineBuffersMb=$(cat $DEPLOYMENT_FOLDER/merge.cpf | awk -F= '/^routines=/{ print $2 }')

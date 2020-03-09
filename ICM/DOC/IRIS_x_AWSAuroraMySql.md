@@ -246,7 +246,15 @@ Now you have the URL for IRIS Speed Test and the URL for AWS Aurora's Speed Test
 
 ## 8 - Comparing the Databases
 
-Open both Speed Tests on your browser and hit the button **Run Test**. Here are my results:
+Open both Speed Tests on your browser and hit the button **Run Test**. If you get an error after pressing the Run Test button, try going back to the terminal and running the bouncespeedtest script:
+
+```
+/ICMDurable/Deployments/asamarySAPHANA # ./bouncespeedtest.sh
+```
+
+This will restart the containers for the Speed Test application for both IRIS and Aurora. Try again and it should work.
+
+Here are my results:
 
 | Database               | Machine      | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
 |------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
