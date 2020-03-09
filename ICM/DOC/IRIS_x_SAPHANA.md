@@ -112,9 +112,7 @@ Run the **deployiris.sh** script. It deploys InterSystems IRIS for you:
 
 This script will make ICM copy the IRIS install kit to the machine on AWS and install it. So depending on your network, it may be very fast or take longer. On my PC, running from the office, it took 3 minutes.
 
-When done, you will notice that ICM will write on the screen the URL for the management portal. Save that. You will be able to open the management portal using the user **SuperUser** and the password **sys**. 
-
-If you open the management portal, you will notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run.
+When done, you will notice that ICM will write on the screen the URL for the management portal. Save that. You will be able to open the management portal using the user **SuperUser** and the password **sys**. I actaully used it to open the management portal, navigate to **System > Configuration > Local Databases** and clicked on the SPEEDTEST database. I pre-expanded it to 190000MB.
 
 ## 5 - Deploy the Speed Test for IRIS
 
@@ -364,16 +362,16 @@ Here are my results:
 
 | Database               | Machine   | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
 |------------------------|-----------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
-| InterSystems IRIS 2020 | i3.xlarge | 600s     | 82,161/sec          | 61,947,000           |  20,362/s           | 15,407,877                 | 0.04909ms                    | 30-75% |
-| SAP HANA Express 2.0   | i3.xlarge | 601s     | 59,000/sec          | 66,006,000           |  836/s              | 913,535                    | 1.22403ms                    | 50-78% |
+| InterSystems IRIS 2020 | i3.xlarge | 1200s    | 79,763rec/s         | 96,087,000           | 20.915rec/s         |  25,184,261                | 0.04779                      | 30-75% |
+| SAP HANA Express 2.0   | i3.xlarge | 1201s    | 57,962rec/s         | 69,062,000           | 546.013 rec/s       |  657,775                   | 1.81548                      | 50-78% |
 
 **ATEOT = At the end of Test. Or "sustained" rate.**
 
-Both databases will start with excellent ingestion rates and then they will "degrade" to their sustained performance. The fact that the average ingestion rate at the beginning of the test is so good affects the final average. Example: If you divide 66,006,000 / 601 = 109,826 records/s for SAP HANA. SAP HANA did start with an ingestion rate above 109K records/s, but it stabilized at the end of the test with an ingestion rate of 59K rec/s. So, SAP HANA's sustained avg ingestion rate with this hardware at the end of the test was of ~59K rec/s with poor query responsiveness. IRIS suffered the same problem, but it was operating at 82K records/s instead ATEOT while maintaining query responsiveness.
+Both databases will start with excellent ingestion rates and then they will "degrade" to their **sustained performance**. SAP HANA start with an ingestion rate above 109K records/s, but it stabilized at the end of the test with an ingestion rate of ~57K rec/s with poor query responsiveness during the entire test. IRIS suffered the same problem, but it was operating at ~79KK records/s ATEOT (37.61% faster) while maintaining much better query responsiveness during the entire test (3730% faster).
 
-**The conclusion is that:**
-* InterSystems IRIS is 1.392x faster than SAP HANA at ingestion (39.25% faster)
-* Intersystems IRIS is 24.93x faster than SAP HANA at querying (2393% faster!)
+**The conclusion is that, on this ingestion x query stress test:**
+* InterSystems IRIS is 37.61% faster than SAP HANA at ingestion
+* Intersystems IRIS is 3730% faster than SAP HANA at querying
 
 ## 9 - Unprovision everything
 
@@ -396,8 +394,14 @@ After ICM is done, make sure you:
 
 ## 10 - Screenshots
 
-Here is the end result of SAP HANA's test:
+Here is the end result of InterSystems IRIS test with emphasis on the graph for Ingestion rate AEOT:
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA1.png?raw=true)
+
+Here is the end result of InterSystems IRIS test with emphasis on the graph for Query rate AEOT:
 ![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA2.png?raw=true)
 
-Here is the end result of InterSystems IRIS test:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA1.png?raw=true)
+Here is the end result of SAP HANA test with emphasis on the graph for Ingestion rate AEOT:
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA3.png?raw=true)
+
+Here is the end result of SAP HANA test with emphasis on the graph for Query rate AEOT:
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA4.png?raw=true)

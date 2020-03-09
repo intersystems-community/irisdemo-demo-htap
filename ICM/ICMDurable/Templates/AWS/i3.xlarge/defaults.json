@@ -4,7 +4,7 @@
     "Tag": "IRISSpeedTest",
 
     "DataVolumeType": "io1",
-    "DataVolumeSize": "70",
+    "DataVolumeSize": "100",
     "DataVolumeIOPS": "3500",
 
     "WIJVolumeType": "io1",
@@ -12,7 +12,7 @@
     "WIJVolumeIOPS": "3500",
 
     "Journal1VolumeType": "io1",
-    "Journal1VolumeSize": "200",
+    "Journal1VolumeSize": "400",
     "Journal1VolumeIOPS": "3500",
     
     "Journal2VolumeType": "io1",
