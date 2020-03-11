@@ -1,6 +1,6 @@
 # Hybrid Transactional-Analytical Processing (HTAP) Demo
 
-The capability to ingest thousands or millions of records per second while allowing for simultaneous queries in real time is required by many use cases across multiple industries, e.g. equity trade processing, fraud detection, IoT applications including anomaly detection and real time OEE, etc.  Gartner calls this capability ["HTAP" (Hybrid Transactional Analytical Processing)](https://www.gartner.com/imagesrv/media-products/pdf/Kx/KX-1-3CZ44RH.pdf). Others such as Forrester call it [Translytics](https://www.forrester.com/report/The+Forrester+Wave+Translytical+Data+Platforms+Q4+2017/-/E-RES134282). InterSystems IRIS is a powerful, scalable, high performance and resource efficient transactional-analytic data platform that provides the performance of in-memory databases with the consistency, availability, reliability, lower costs of traditional databases. 
+The capability to ingest thousands or millions of records per second while allowing for simultaneous queries in real time is required by many use cases across multiple industries, e.g. equity trade processing, fraud detection, IoT applications including anomaly detection and real time OEE, etc.  Gartner calls this capability ["HTAP" (Hybrid Transactional Analytical Processing)](https://www.gartner.com/imagesrv/media-products/pdf/Kx/KX-1-3CZ44RH.pdf). Others such as Forrester call it [Translytics](https://www.forrester.com/report/The+Forrester+Wave+Translytical+Data+Platforms+Q4+2017/-/E-RES134282). InterSystems IRIS is a powerful, scalable, high performance and resource efficient transactional-analytic data platform that provides the performance of in-memory databases with the consistency, availability, reliability and lower costs of traditional databases. 
 
 This demo shows how InterSystems IRIS can ingest thousands of records per second while allowing for simultaneous queries on the data on the same cluster with very high performance for both ingestion and querying, and with low resource utilization. The demo works on a single IRIS instance or on an IRIS cluster on the cloud.
 
@@ -142,7 +142,20 @@ TPC-H is focused on decision support systems (DSS) and that is not the use case 
 
 This benchmark is about **ingestion rate** versus **query response time**. We have a single table with many columns of different data types. We want to measure how fast a database can ingest the records while, at the same time, allowing for responsive queries.
 
-This is not a simple problem. Many industries such as Financial Services and IoT have to ingest thousands of records per second. At very high ingestion rates, memory is consumed very quickly. Traditional Databases need to write to disk to keep ingesting while In Memory Databases will also be forced to constantly write to disk as well. At the end of the day, the most efficient SQL database wins.
+This is not a simple problem. Many industries such as Financial Services and IoT have to ingest thousands of records per second. At very high ingestion rates, memory is consumed very quickly. Traditional Databases need to write to disk to keep ingesting while In Memory Databases will also be forced to constantly write to disk as well (change logs or journals). The question is: How IRIS can be faster than an In Memory Database if IRIS is writing to disk not only to its transaction log (like In Memory Databases) but also asynchronously keeping the database current?
+
+It is all about efficiency. The ingestion workload will keep the database very busy. CPU and Memory will be working hard. Some In Memory databases will try to compress data in memory. Others will persist data to disk when the memory fills up. All this is happening while we are still trying to query the database in real time. 
+
+We want to show that In Memory Databases will not perform as well as InterSystems IRIS on certain workloads such as Equity Trading, High Ingestion throughput (IoT), etc. That is why we designed this test. It is meant to be much simpler than the general purpose tests out there:
+* I has just one table with 19 columns and 3 very different data types
+* The table has a Primary Key declared on it.
+* The queries we do are by Primary Key with fixed 8 keys we query randomly: W1A1, W1A10, W1A100, W1A1000, W1A10000, W1A100000, W1A1000000 and W1A10000000
+
+InterSystems IRIS is a hybrid database. As with traditional databases, it will also try to keep data in memory. But as thousands of records are coming in fast due to the ingestion work, the memory is purged very fast. This test allows you to see how InterSystems IRIS is smart about its cache. You will see that:
+* Traditional databases will perform poorly at ingestion and query
+* In Memory databases will:
+  * Perform well at ingestion during the first minutes of the test as memory fills up, compression becomes harder and writing to disk becomes unavoidable
+  * Perform poorly at querying since the system will be too busy with ingestion
 
 ## 5 - Can I see the table?
 
