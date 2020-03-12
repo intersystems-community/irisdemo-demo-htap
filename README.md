@@ -142,20 +142,24 @@ TPC-H is focused on decision support systems (DSS) and that is not the use case 
 
 This benchmark is about **ingestion rate** versus **query response time**. We have a single table with many columns of different data types. We want to measure how fast a database can ingest the records while, at the same time, allowing for responsive queries.
 
-This is not a simple problem. Many industries such as Financial Services and IoT have to ingest thousands of records per second. At very high ingestion rates, memory is consumed very quickly. Traditional Databases need to write to disk to keep ingesting while In Memory Databases will also be forced to constantly write to disk as well (change logs or journals). The question is: How IRIS can be faster than an In Memory Database if IRIS is writing to disk not only to its transaction log (like In Memory Databases) but also asynchronously keeping the database current?
+This is not a simple problem. Many industries such as Financial Services and IoT have to ingest thousands of records per second. At very high ingestion rates, memory is consumed very quickly. Traditional Databases need to write to disk to keep ingesting while In Memory Databases will also be forced to constantly write to disk as well (change logs/journals and in some cases even part of the data that is in memory as in traditional databases). The question is: How IRIS can be faster than an In Memory Database if IRIS is writing to disk not only to its transaction log (like In Memory Databases) but also asynchronously keeping the database current?
 
 It is all about efficiency. The ingestion workload will keep the database very busy. CPU and Memory will be working hard. Some In Memory databases will try to compress data in memory. Others will persist data to disk when the memory fills up. All this is happening while we are still trying to query the database in real time. 
 
 We want to show that In Memory Databases will not perform as well as InterSystems IRIS on certain workloads such as Equity Trading, High Ingestion throughput (IoT), etc. That is why we designed this test. It is meant to be much simpler than the general purpose tests out there:
-* I has just one table with 19 columns and 3 very different data types
+* It has just one table with 19 columns and 3 very different data types
 * The table has a Primary Key declared on it.
-* The queries we do are by Primary Key with fixed 8 keys we query randomly: W1A1, W1A10, W1A100, W1A1000, W1A10000, W1A100000, W1A1000000 and W1A10000000
+* The queries we do, fetch records by the Primary Key (account id), with fixed 8 keys we query for randomly: W1A1, W1A10, W1A100, W1A1000, W1A10000, W1A100000, W1A1000000 and W1A10000000. Here is why we do this:
+  * We know it is impossible to hold all data in memory in production systems. Even In memory databases have complex architectures that will move data out of memory when they are running out of it. To make the test simple and comparable, we are fetching this fixed set of records by primary key in order to avoid comparing different types of indices that databases may have. 
+  * Fetching customer account data records by account number (PK) is a real workload that is happening in many of our customers. While data is being ingested at high speeds, the database needs to be responsive for queries. 
+  * As the account id is a primary key, it will be indexed by the database using its preferred (and supposedly optimal) index for it. That will allow us to be fair when comparing the databases, while keeping this simple. 
+  * The database will be given the opportunity to cache this data in memory as we are asking for the same account numbers over and over. We thought that would be an easy task for In Memory databases.
 
-InterSystems IRIS is a hybrid database. As with traditional databases, it will also try to keep data in memory. But as thousands of records are coming in fast due to the ingestion work, the memory is purged very fast. This test allows you to see how InterSystems IRIS is smart about its cache. You will see that:
+InterSystems IRIS is a hybrid database. As with traditional databases, it will also try to keep data in memory. But as thousands of records por second are coming in fast due to the ingestion work, the memory is purged very fast. This test allows you to see how InterSystems IRIS is smart about its cache when compared to other traditional databases and In Memory databases. You will see that:
 * Traditional databases will perform poorly at ingestion and query
 * In Memory databases will:
   * Perform well at ingestion during the first minutes of the test as memory fills up, compression becomes harder and writing to disk becomes unavoidable
-  * Perform poorly at querying since the system will be too busy with ingestion
+  * Perform poorly at querying since the system will be too busy with ingestion, compressing data, moving data out of memory, etc. 
 
 ## 5 - Can I see the table?
 
