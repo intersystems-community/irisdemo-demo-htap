@@ -8,20 +8,20 @@ The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to comp
 
 You can run the tests on AWS! Here are some results:
 * [InterSystems IRIS x SAP HANA run on AWS](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md):
-  * InterSystems IRIS is 37.61% faster than SAP HANA at ingestion
-  * Intersystems IRIS is 3730% faster than SAP HANA at querying
+  * InterSystems IRIS ingest 39% more records than SAP HANA
+  * Intersystems IRIS is 3699% faster than SAP HANA at querying
 * [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md):
-  * InterSystems IRIS is 9.35x faster than AWS Aurora at ingestion (835% faster!)
-  * Intersystems IRIS is 5.85x faster than AWS Aurora at querying (485% faster!)
+  * InterSystems IRIS ingests 831% more records than AWS Aurora at ingestion
+  * Intersystems IRIS is 485% faster than AWS Aurora at querying
 
 You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:
-  * InterSystems IRIS is 31x faster than MySQL 8.0 at ingestion
-  * Intersystems IRIS is 6x faster than MySQL 8.0 at querying
+  * InterSystems IRIS ingests 3043% more records than MySQL 8.0
+  * Intersystems IRIS is 643% faster than MySQL 8.0 at querying
 * InterSystems IRIS x SQL Server 2019 for Ubuntu
-  * InterSystems IRIS is 2.2x faster than SQL Server 2019 at ingestion
-  * Intersystems IRIS is 1346x faster than SQL Server 2019 at querying (not kidding!)
-
+  * InterSystems IRIS ingests 223% more records than faster than SQL Server 2019
+  * Intersystems IRIS is 134,632% faster (really, not a typo) than SQL Server 2019 at querying. 
+  * To be fair, we will be testing SQL Server on AWS and Azure in the future. Stay tuned!
 
 **When running the speed test against any database, before taking notes of the results, let the speed test run for a while to warm it up. That will allow the database to pre-expand and do other things. Every time you start the speed test, we TRUNCATE the table to start over.**
 
