@@ -1,3 +1,13 @@
+## 2.4.1 (March 13, 2020)
+  - Adding reconnect parameter to JDBC connection for SAP HANA
+  - Documenting avg size of record in DATA and JOURNAL
+  - Increasing size of DATA and JOURNAL so we can test IRIS for about 90min on AWS i3.xlarge against SAP HANA
+  - Final results for SAP HANA
+  - Moving change of firewall configurations from setup to provision
+  - Fixing bug on ICM that prevented us from mounting the DATA volume
+  - Documentation for running with AWS Aurora
+  - Full support for SAP HANA Documentation
+  
 ## 2.4.0 (February 17, 2020)
   - Support for SQL Server
   - Adding bouncespeedtest.sh script. When using an ICM deployment, it will restart all CN containers for us.
