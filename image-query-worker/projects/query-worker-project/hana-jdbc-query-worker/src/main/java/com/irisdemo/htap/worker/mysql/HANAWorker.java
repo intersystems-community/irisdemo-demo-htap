@@ -57,7 +57,10 @@ public class HANAWorker implements IWorker
 	        logger.info("Creating data source for '" + config.getConsumptionJDBCURL() + "'...");
 	        Properties connectionProperties = new Properties();
 	        connectionProperties.setProperty("user", config.getConsumptionJDBCUserName());
-	        connectionProperties.setProperty("password", config.getConsumptionJDBCPassword());
+			connectionProperties.setProperty("password", config.getConsumptionJDBCPassword());
+
+			// The reconnect will help us deal with the SQLNonTransientConnectionExceptionSapDB exception we get after running the test for about 90 min
+			connectionProperties.setProperty("reconnect", "true");
 			//connectionProperties.setProperty("serverTimezone", "UTC");
         	//connectionProperties.setProperty("createDatabaseIfNotExist", "true");
 

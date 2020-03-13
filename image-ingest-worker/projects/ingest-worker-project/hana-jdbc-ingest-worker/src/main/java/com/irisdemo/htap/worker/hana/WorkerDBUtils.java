@@ -59,7 +59,10 @@ public class WorkerDBUtils
 	        logger.info("Creating data source for '" + config.getIngestionJDBCURL() + "'...");
 	        Properties connectionProperties = new Properties();
 	        connectionProperties.setProperty("user", config.getIngestionJDBCUserName());
-	        connectionProperties.setProperty("password", config.getIngestionJDBCPassword());
+			connectionProperties.setProperty("password", config.getIngestionJDBCPassword());
+
+			// The reconnect will help us deal with the SQLNonTransientConnectionExceptionSapDB exception we get after running the test for about 90 min
+			connectionProperties.setProperty("reconnect", "true");
 
 	        dataSourceCache = new DriverManagerDataSource(config.getIngestionJDBCURL(), connectionProperties);
 		}
