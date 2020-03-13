@@ -104,5 +104,5 @@ Al right! You are ready to go! :)
 
 Proceed with one of the comparisons bellow:
 * [InterSystems IRIS x SAP HANA](/ICM/DOC/IRIS_x_SAPHANA.md)
-* InterSystems IRIS x AWS Aurora (soon)
+* [InterSystems IRIS x AWS Aurora](/ICM/DOC/IRIS_x_AWSAuroraMySql.md)
 * InterSystems IRIS x SQLServer (soon)
