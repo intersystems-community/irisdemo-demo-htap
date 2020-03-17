@@ -1,12 +1,12 @@
 # InterSystems IRIS x SAP HANA on AWS
 
-This document explains how to use the scripts we provide to quickly deploy the Speed Test against IRIS and SAP HANA. If you haven't done so yet, please follow instructions [here](../README.md) for the initial setup. There you will also find a diagram of how this is going to work.
+This document explains how to use the scripts we provide to quickly deploy the Speed Test against InterSystems IRIS and SAP HANA. If you haven't done so yet, please follow instructions [here](../README.md) for the initial setup. There you will also find a diagram of how this is going to work.
 
 # Provisioning the Initial environment on AWS
 
-On this step, we will provision the initial environment on AWS which includes all the machines for IRIS, the IRIS Speed Test and SAP HANA Speed Test. It will all be provisioned on the same VPC. We will later manually deploy SAP HANA on the same VPC as well.
+On this step, we will provision the initial environment on AWS which includes all the machines for InterSystems IRIS, the InterSystems IRIS Speed Test and SAP HANA Speed Test. It will all be provisioned on the same VPC. We will later manually deploy SAP HANA on the same VPC as well.
 
-We will also on this step deploy IRIS and the Speed Test applications for both IRIS and SAP HANA, so let's get to it!
+We will also on this step deploy InterSystems IRIS and the Speed Test applications for both InterSystems IRIS and SAP HANA, so let's get to it!
 
 ## 1 - Start ICM
 
@@ -35,7 +35,7 @@ Please enter with the label for your ICM machines (ex: asamaryTest1):
 Answer: **asamarySAPHANA**
 
 ````
-Do you want IRIS with Mirroring (answer yes or something else if not)?:**
+Do you want InterSystems IRIS with Mirroring (answer yes or something else if not)?:**
 ````
 Answer: **no**
 
@@ -60,7 +60,7 @@ Please enter with the AWS instance type:
 Answer: **Pick the option for i3.xlarge**
 
 ```
-Is this going to be a containerless installation of IRIS (answer yes or something else if not)?:
+Is this going to be a containerless installation of InterSystems IRIS (answer yes or something else if not)?:
 ```
 Answer: **yes**
 
@@ -102,7 +102,7 @@ Either way, you will see the error eventually. Here is a list of errors I encoun
 
 It is normal to see some instances of "SSH operation failed" on the output. The machines are being provisioned by AWS and ICM keeps trying to SSH into them to continue with the setup process. If AWS hasn't finished provisioning the machines, we will get an SSH error. That is normal and ICM will just retry. Don't worry.
 
-## 4 - Deploy IRIS
+## 4 - Deploy InterSystems IRIS
 
 Run the **deployiris.sh** script. It deploys InterSystems IRIS for you:
 
@@ -110,11 +110,11 @@ Run the **deployiris.sh** script. It deploys InterSystems IRIS for you:
 /ICMDurable/Deployments/asamarySAPHANA # ./deployiris.sh
 ```
 
-This script will make ICM copy the IRIS install kit to the machine on AWS and install it. So depending on your network, it may be very fast or take longer. On my PC, running from the office, it took 3 minutes.
+This script will make ICM copy the InterSystems IRIS install kit to the machine on AWS and install it. So depending on your network, it may be very fast or take longer. On my PC, running from the office, it took 3 minutes.
 
 When done, you will notice that ICM will write on the screen the URL for the management portal. Save that. You will be able to open the management portal using the user **SuperUser** and the password **sys**. I actaully used it to open the management portal, navigate to **System > Configuration > Local Databases** and clicked on the SPEEDTEST database. I pre-expanded it to 190000MB.
 
-## 5 - Deploy the Speed Test for IRIS
+## 5 - Deploy the Speed Test for InterSystems IRIS
 
 Run the **deployspeedtest.sh** script:
 
@@ -122,7 +122,7 @@ Run the **deployspeedtest.sh** script:
 /ICMDurable/Deployments/asamarySAPHANA # ./deployspeedtest.sh
 ```
 
-It will present you a menu asking which speed test you want to deploy. Choose the option for IRIS:
+It will present you a menu asking which speed test you want to deploy. Choose the option for InterSystems IRIS:
 
 ```
 Please, specify which speedtest you want to deploy. Available options are:
@@ -137,7 +137,7 @@ Please, specify which speedtest you want to deploy. Available options are:
 ```
 Answer: **iris**
 
-Deploying the Speed Test for IRIS should take less then 2 minutes. You will see something like the following at the end:
+Deploying the Speed Test for InterSystems IRIS should take less then 2 minutes. You will see something like the following at the end:
 
 ```
 URL to SpeedTest | InterSystems IRIS Speed Test is at:
@@ -149,15 +149,15 @@ If you are planning on deploying SAP HANA, AWS Aurora or any other AWS database,
 Done!
 ```
 
-Take note of this URL! You can open it right now and you should be able to click at the **Run Test** button to run the speed test against IRIS for the first time. Please, click on the button only one and wait. It takes a couple of seconds to start populating the screen with results.
+Take note of this URL! You can open it right now and you should be able to click at the **Run Test** button to run the speed test against InterSystems IRIS for the first time. Please, click on the button only one and wait. It takes a couple of seconds to start populating the screen with results.
 
-You can leave it running for 5 minutes or so. It will pre-expand the IRIS database for us. So when we run it again to compare against SAP HANA, the database will be pre-expanded as in any production system.
+You can leave it running for 5 minutes or so. It will pre-expand the InterSystems IRIS database for us. So when we run it again to compare against SAP HANA, the database will be pre-expanded as in any production system.
 
 Also, please note that we have just told you the **AWS VPC_ID**. Take note of that! When deploying SAP HANA, you must deploy it on this VPC!
 
 ## 6 - Deploy SAP HANA 2.0 Express Edition
 
-IRIS and IRIS Speed Test are deployed and you know the VPC_ID where they are. Here is what else we need to do:
+InterSystems IRIS and InterSystems IRIS Speed Test are deployed and you know the VPC_ID where they are. Here is what else we need to do:
 * 6.1 - Manually deploy SAP HANA on the same **VPC_ID**
 * 6.2 - Take note of its **Endpoint**.
 * 6.3 - Configure SAP HANA
@@ -170,8 +170,8 @@ Click [here](https://aws.amazon.com/marketplace/pp/B07Q6B626P?qid=1576090652259&
   * Pick "SAP HANA Express 2.0 SP04 GA"
   * Pick Region "US East (N. Virginia)"
 * Click on the button **Continue to Launch**
-  * Pick EC2 Instance Type **i3.xlarge**. It has 4 cores, 30Gb of RAM and a very high network performance (up to 10Gigabit). IRIS is deployed on the same machine.
-  * Under VPC Settings, pick the VPC_ID that we gave just after you deployed IRIS.
+  * Pick EC2 Instance Type **i3.xlarge**. It has 4 cores, 30Gb of RAM and a very high network performance (up to 10Gigabit). InterSystems IRIS is deployed on the same machine.
+  * Under VPC Settings, pick the VPC_ID that we gave just after you deployed InterSystems IRIS.
   * Under Security Group Settings, pick the security group that has the form **YourLabel-CN-IRISSpeedTestext**
   * Under Key Pair Settings, pick the key named **YourLabel-CN-IRISSpeedTest**
 * Click on the button **Launch**
@@ -182,7 +182,7 @@ You should see a **Congratulations** message now. SAP HANA is being provisioned 
 
 SAP HANA will be deployed as an EC2 box. So we can open AWS **EC2 Dashboard** and find it there. It will help if you filter by your label. You should see an i3.xlarge machine with no name on your list. That's SAP HANA. It will have the state "Initializing" for a while.
 
-While it is being deployed, we can take note of its endpoint. IRIS will be talking to SAP HANA through its **Private IP**. If you click on the machine, it will appear under the **Description** tab just bellow. Take note of that.
+While it is being deployed, we can take note of its endpoint. InterSystems IRIS will be talking to SAP HANA through its **Private IP**. If you click on the machine, it will appear under the **Description** tab just bellow. Take note of that.
 
 Also take note of its **Public IP** so we can use it to configure SAP HANA.
 
@@ -346,7 +346,7 @@ URL to SpeedTest | SAP HANA Express Speed Test is at:
 
 Done!
 ```
-Now you have the URL for IRIS Speed Test and the URL for SAP HANA's Speed Test! We are ready to make the comparison now!
+Now you have the URL for InterSystems IRIS Speed Test and the URL for SAP HANA's Speed Test! We are ready to make the comparison now!
 
 ## 8 - Comparing the Databases
 
@@ -356,7 +356,7 @@ Open both Speed Tests on your browser and hit the button **Run Test**. If you ge
 /ICMDurable/Deployments/asamarySAPHANA # ./bouncespeedtest.sh
 ```
 
-This will restart the containers for the Speed Test application for both IRIS and SAP HANA. Try again and it should work.
+This will restart the containers for the Speed Test application for both InterSystems IRIS and SAP HANA. Try again and it should work.
 
 Here are my results:
 
@@ -367,7 +367,7 @@ Here are my results:
 
 **ATEOT = At the end of Test. Or "sustained" rate.**
 
-Both databases will start with excellent ingestion rates and then they will "degrade" to their **sustained performance**. SAP HANA start with an ingestion rate above 109K records/s, but it stabilized at the end of the test with an ingestion rate of ~57K rec/s with poor query responsiveness during the entire test. IRIS suffered the same problem, but it was operating at ~79KK records/s ATEOT (37.61% faster) while maintaining much better query responsiveness during the entire test (3730% faster).
+Both databases will start with excellent ingestion rates and then they will "degrade" to their **sustained performance**. SAP HANA start with an ingestion rate above 109K records/s, but it stabilized at the end of the test with an ingestion rate of ~57K rec/s with poor query responsiveness during the entire test. InterSystems IRIS suffered the same problem, but it was operating at ~79KK records/s ATEOT (37.61% faster) while maintaining much better query responsiveness during the entire test (3730% faster).
 
 **The conclusion is that, on this ingestion x query stress test:**
 * InterSystems IRIS is 37.61% faster than SAP HANA at ingestion

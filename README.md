@@ -2,7 +2,7 @@
 
 The capability to ingest thousands or millions of records per second while allowing for simultaneous queries in real time is required by many use cases across multiple industries, e.g. equity trade processing, fraud detection, IoT applications including anomaly detection and real time OEE, etc.  Gartner calls this capability ["HTAP" (Hybrid Transactional Analytical Processing)](https://www.gartner.com/imagesrv/media-products/pdf/Kx/KX-1-3CZ44RH.pdf). Others such as Forrester call it [Translytics](https://www.forrester.com/report/The+Forrester+Wave+Translytical+Data+Platforms+Q4+2017/-/E-RES134282). InterSystems IRIS is a powerful, scalable, high performance and resource efficient transactional-analytic data platform that provides the performance of in-memory databases with the consistency, availability, reliability and lower costs of traditional databases. 
 
-This demo shows how InterSystems IRIS can ingest thousands of records per second while allowing for simultaneous queries on the data on the same cluster with very high performance for both ingestion and querying, and with low resource utilization. The demo works on a single IRIS instance or on an IRIS cluster on the cloud.
+This demo shows how InterSystems IRIS can ingest thousands of records per second while allowing for simultaneous queries on the data on the same cluster with very high performance for both ingestion and querying, and with low resource utilization. The demo works on a single InterSystems IRIS instance or on an InterSystems IRIS cluster on the cloud.
 
 The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to compare performance and resource utilization in “apples-to-apples” comparisons. 
 
@@ -27,7 +27,7 @@ You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here
 
 ## 1 - Running the Speed Test on AWS
 
-Follow [this link](/ICM/README.md) to see instructions on how to run this Speed Test on AWS comparing IRIS with other databases such as SAP HANA and AWS Aurora.
+Follow [this link](/ICM/README.md) to see instructions on how to run this Speed Test on AWS comparing InterSystems IRIS with other databases such as SAP HANA and AWS Aurora.
 
 ## 2 - How to run it on your PC
 
@@ -37,7 +37,7 @@ The pre-requisites for running the speed test on your PC are:
 
 You can currently run this demo on your PC with InterSystems IRIS, MySQL, SqlServer and SAP HANA.
 
-### 2.1 - Run it with IRIS Community
+### 2.1 - Run it with InterSystems IRIS Community
 
 To run the demo on your PC, make sure you have Docker installed on your machine. You can quickly get it up and running with the following commands on your Mac or Linux PC:
 
@@ -93,7 +93,7 @@ docker-compose -f ./docker-compose-mysql.yml rm
 
 This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other.
 
-In our tests, we found IRIS to ingest data 25X faster than MySQL and Amazon Aurora.
+In our tests, we found InterSystems IRIS to ingest data 25X faster than MySQL and Amazon Aurora.
 
 ### 2.3 - SQL Server 2019-GA-ubuntu-16.04 on your PC
 
@@ -106,7 +106,7 @@ docker-compose -f ./docker-compose-sqlserver.yml up
 
 As before, leave this terminal window open and open a browser at http://localhost:10000.
 
-In our tests running on a local PC, we found IRIS to ingest data 2.5X faster than SQL Server while query rates were 400X faster! We will test it against AWS RDS SQL Server and report.
+In our tests running on a local PC, we found InterSystems IRIS to ingest data 2.5X faster than SQL Server while query rates were 400X faster! We will test it against AWS RDS SQL Server and report.
 
 ### 2.4 - SAP Hana on your PC
 
@@ -124,9 +124,9 @@ cd ./irisdemo-demo-htap
 
 Wait for the images to download and for the containers to start. You will know when everything is up once docker-compose stops writing to the screen. But be patient - SAP HANA takes about 6 minutes to start! So, your screen will freeze for a minute or so and then you will see SAP HANA writing more text. It will repeat this for about 6 minutes.. Once you see the text "Startup finished!" you should be good to go. If it crashes with an error, it is probably because you need to give it more memory.
 
-As you can see, it is not just a matter of running docker-compose up as it is with IRIS and MySQL. SAP HANA requires some configurations to the Linux Kernel. The run.sh will do these configurations for you.
+As you can see, it is not just a matter of running docker-compose up as it is with InterSystems IRIS and MySQL. SAP HANA requires some configurations to the Linux Kernel. The run.sh will do these configurations for you.
 
-In our tests running the Speed Test on a VM, we found IRIS to be 1.3X faster than SAP HANA for ingesting data, and 20X faster for querying data, and uses a fraction of the memory. 
+In our tests running the Speed Test on a VM, we found InterSystems IRIS to be 1.3X faster than SAP HANA for ingesting data, and 20X faster for querying data, and uses a fraction of the memory. 
 
 ## 3 - Resources
 
@@ -142,7 +142,7 @@ TPC-H is focused on decision support systems (DSS) and that is not the use case 
 
 This benchmark is about **ingestion rate** versus **query response time**. We have a single table with many columns of different data types. We want to measure how fast a database can ingest the records while, at the same time, allowing for responsive queries.
 
-This is not a simple problem. Many industries such as Financial Services and IoT have to ingest thousands of records per second. At very high ingestion rates, memory is consumed very quickly. Traditional Databases need to write to disk to keep ingesting while In Memory Databases will also be forced to constantly write to disk as well (change logs/journals and in some cases even part of the data that is in memory as in traditional databases). The question is: How IRIS can be faster than an In Memory Database if IRIS is writing to disk not only to its transaction log (like In Memory Databases) but also asynchronously keeping the database current?
+This is not a simple problem. Many industries such as Financial Services and IoT have to ingest thousands of records per second. At very high ingestion rates, memory is consumed very quickly. Traditional Databases need to write to disk to keep ingesting while In Memory Databases will also be forced to constantly write to disk as well (change logs/journals and in some cases even part of the data that is in memory as in traditional databases). The question is: How InterSystems IRIS can be faster than an In Memory Database if InterSystems IRIS is writing to disk not only to its transaction log (like In Memory Databases) but also asynchronously keeping the database current?
 
 It is all about efficiency. The ingestion workload will keep the database very busy. CPU and Memory will be working hard. Some In Memory databases will try to compress data in memory. Others will persist data to disk when the memory fills up. All this is happening while we are still trying to query the database in real time. 
 
@@ -212,7 +212,7 @@ The architecture of the HTAP demo is shown below:
 This demo uses docker compose to start five services:
 
 * **htapui** - this is the Angular UI you use to run the demo.
-* **htapirisdb** - since the demo is running on IRIS Community, you don't need an IRIS license to run it. But be aware that IRIS Community has two important limitations:
+* **htapirisdb** - since the demo is running on InterSystems IRIS Community, you don't need an InterSystems IRIS license to run it. But be aware that InterSystems IRIS Community has two important limitations:
   * Max of 5 connections
   * Max Database size of 10Gb
 * **htapmaster** - This is the HTAP Demo master. The UI talks to it and it talks to the workers to start/stop the speed test and collect metrics.
@@ -220,12 +220,12 @@ This demo uses docker compose to start five services:
 * **query-worker1** - This is the consumption worker. You can have more than one of these as well. They will try to read records out of the database as fast as possible.
 
 When running the demo on our PCs, we use Docker and Docker Compose. Docker Compose expects a **docker-compose.yml** that describes these services and the docker images they use. This demo actually provides many docker-compose.yml files and more will be added soon:
-* **docker-compose.yml** - This is the default demo that runs the speed test against IRIS Community described on the bullets and picture above.
-* **docker-compose-mysql.yml** - This is the speed test against MySQL. You will notice that the same test shows that IRIS is 25x faster than MySQL. Running this test against Amazon Aurora MySQL (that is a fine tuned version of MySQL) produced the same results.
+* **docker-compose.yml** - This is the default demo that runs the speed test against InterSystems IRIS Community described on the bullets and picture above.
+* **docker-compose-mysql.yml** - This is the speed test against MySQL. You will notice that the same test shows that InterSystems IRIS is 25x faster than MySQL. Running this test against Amazon Aurora MySQL (that is a fine tuned version of MySQL) produced the same results.
 * **docker-compose-sqlserver.yml** - This is the speed test against SqlServer for Dockers. 
-* **docker-compose-enterprise-iris.yml** - If you want to run the speed test demo on IRIS standard, there is an example of a docker-compose.yml file for it.
+* **docker-compose-enterprise-iris.yml** - If you want to run the speed test demo on InterSystems IRIS standard, there is an example of a docker-compose.yml file for it.
 
-## 7 - Can I run this without containers against a random IRIS Cluster?
+## 7 - Can I run this without containers against a random InterSystems IRIS Cluster?
 
 Yes! The easiest way to get this done is to clone this repo on each server where you are planning on running the master and the UI (they run on the same server) and on each worker type (ingestion and query workers). You may have as many ingestion workers and query workers as you want! 
 
@@ -234,15 +234,15 @@ Then, for InterSystems IRIS, look at the files on folder [./standalone_scripts/i
 * **On the Ingestion Workers**: start_ingestion_worker.sh - This script will start the ingestion worker which in turn will connect and register with the master.
 * **On the Query Workers**: start_query_worker.sh - This script will start the query worker which in turn will connect and register with the master.
 
-What about IRIS? You have two choices:
-* You can use the start_iris.sh script to start an IRIS server on a docker container for a quick test.
-* You can provision your IRIS cluster by hand or using ICM. Then you could do fancy things such as:
-  * Have both the ingestion and query workers pointing to the same IRIS box
-  * Configure IRIS with ECP and have the ingestion workers pointing to the database server while having the query workers pointing to the ECP servers
-  * Configure a sharded IRIS cluster
+What about InterSystems IRIS? You have two choices:
+* You can use the start_iris.sh script to start an InterSystems IRIS server on a docker container for a quick test.
+* You can provision your InterSystems IRIS cluster by hand or using ICM. Then you could do fancy things such as:
+  * Have both the ingestion and query workers pointing to the same InterSystems IRIS box
+  * Configure InterSystems IRIS with ECP and have the ingestion workers pointing to the database server while having the query workers pointing to the ECP servers
+  * Configure a sharded InterSystems IRIS cluster
   * etc.
 
-Just make sure you change your start_master.sh script to configure the environment variables with the correct IRIS end points, usernames and passwords.
+Just make sure you change your start_master.sh script to configure the environment variables with the correct InterSystems IRIS end points, usernames and passwords.
 
 ## 8 - Customizations
 
@@ -269,12 +269,12 @@ Finally, just run the build.sh to rebuild the demo and you should be ready to go
 
 ## 9 - Other demo applications
 
-There are other IRIS demo applications that touch different subjects such as NLP, ML, Integration with AWS services, Twitter services, performance benchmarks etc. Here are some of them:
-* [HTAP Demo](https://github.com/intersystems-community/irisdemo-demo-htap) - Hybrid Transaction-Analytical Processing benchmark. See how fast IRIS can insert and query at the same time. You will notice it is up to 20x faster than AWS Aurora!
-* [Fraud Prevention](https://github.com/intersystems-community/irisdemo-demo-fraudprevention) - Apply Machine Learning and Business Rules to prevent frauds in financial services transactions using IRIS.
-* [Twitter Sentiment Analysis](https://github.com/intersystems-community/irisdemo-demo-twittersentiment) - Shows how IRIS can be used to consume Tweets in realtime and use its NLP (natural language processing) and business rules capabilities to evaluate the tweet's sentiment and the metadata to make decisions on when to contact someone to offer support.
-* [HL7 Appointments and SMS (text messages) application](https://github.com/intersystems-community/irisdemo-demo-appointmentsms) -  Shows how IRIS for Health can be used to parse HL7 appointment messages to send SMS (text messages) appointment reminders to patients. It also shows real time dashboards based on appointments data stored in a normalized data lake.
-* [The Readmission Demo](https://github.com/intersystems-community/irisdemo-demo-readmission) - Patient Readmissions are said to be the "Hello World of Machine Learning" in Healthcare. On this demo, we use this problem to show how IRIS can be used to **safely build and operationalize** ML models for real time predictions and how this can be integrated into a random application. This **IRIS for Health** demo seeks to show how a full solution for this problem can be built.
+There are other InterSystems IRIS demo applications that touch different subjects such as NLP, ML, Integration with AWS services, Twitter services, performance benchmarks etc. Here are some of them:
+* [HTAP Demo](https://github.com/intersystems-community/irisdemo-demo-htap) - Hybrid Transaction-Analytical Processing benchmark. See how fast InterSystems IRIS can insert and query at the same time. You will notice it is up to 20x faster than AWS Aurora!
+* [Fraud Prevention](https://github.com/intersystems-community/irisdemo-demo-fraudprevention) - Apply Machine Learning and Business Rules to prevent frauds in financial services transactions using InterSystems IRIS.
+* [Twitter Sentiment Analysis](https://github.com/intersystems-community/irisdemo-demo-twittersentiment) - Shows how InterSystems IRIS can be used to consume Tweets in realtime and use its NLP (natural language processing) and business rules capabilities to evaluate the tweet's sentiment and the metadata to make decisions on when to contact someone to offer support.
+* [HL7 Appointments and SMS (text messages) application](https://github.com/intersystems-community/irisdemo-demo-appointmentsms) -  Shows how InterSystems IRIS for Health can be used to parse HL7 appointment messages to send SMS (text messages) appointment reminders to patients. It also shows real time dashboards based on appointments data stored in a normalized data lake.
+* [The Readmission Demo](https://github.com/intersystems-community/irisdemo-demo-readmission) - Patient Readmissions are said to be the "Hello World of Machine Learning" in Healthcare. On this demo, we use this problem to show how InterSystems IRIS can be used to **safely build and operationalize** ML models for real time predictions and how this can be integrated into a random application. This **InterSystems IRIS for Health** demo seeks to show how a full solution for this problem can be built.
 
 ## 10 - Report any Issues
   

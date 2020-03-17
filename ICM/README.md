@@ -3,9 +3,9 @@
 We are using [InterSystems Cloud Manager (ICM)](https://docs.intersystems.com/irislatest/csp/docbook/Doc.View.cls?KEY=GICM_oview) to help us to provision the infrastructure for these Ingestion tests on AWS. 
 
 ICM is built on top of Terraform and allows you to declare your infrastructure as code (a very simple JSON file) and to provision it. ICM also allows you to deploy InterSystems IRIS in this infrastructure in a variety of configurations:
-* A simple IRIS database server
-* An IRIS database server with a replica (mirror) on a second availability zone (data center)
-* A full blown IRIS database server with shards and compute nodes
+* A simple InterSystems IRIS database server
+* An InterSystems IRIS database server with a replica (mirror) on a second availability zone (data center)
+* A full blown InterSystems IRIS database server with shards and compute nodes
 * etc.
 
 Finally, you can use ICM to deploy your own application as Docker images! This HTAP Speed Test is packaged like this. See the architecture of the Speed Test [here](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/README.md) for more information. ICM will deploy all of this automatically for you on AWS.
@@ -19,27 +19,27 @@ Here is how it will work:
 On step 1, you use the provided scripts to:
 * Provision the infrastructure on AWS which will also create a VPC for us there.
 * Deploy InterSystems IRIS on AWS on this VPC
-* Deploy The Speed Test for IRIS on AWS on this VPC
-* Deploy The Speed Test for the other database you are comparing IRIS with on AWS on this same VPC
+* Deploy The Speed Test for InterSystems IRIS on AWS on this VPC
+* Deploy The Speed Test for the other database you are comparing InterSystems IRIS with on AWS on this same VPC
 
-Then, on step 2, you need to manually deploy the other database you are comparing IRIS with on that same VPC ICM created for us. Don't worry! We will guide you all the way!
+Then, on step 2, you need to manually deploy the other database you are comparing InterSystems IRIS with on that same VPC ICM created for us. Don't worry! We will guide you all the way!
 
 # Pre-Requisites
 
-To run the HTAP Speed Test with IRIS on AWS, you will need:
+To run the HTAP Speed Test with InterSystems IRIS on AWS, you will need:
 * Basic understanding of AWS EC2 
 * An AWS account
 * Git installed on your machine so you can clone this repository on your local PC
 * Docker installed on your machine so you can run ICM
-* An **IRIS 2020 License for Ubuntu**. Careful: This must not be a docker based license. We are using ICM to deploy a containerless installation of IRIS on AWS.
-* IRIS 2020 install kit for Ubuntu
+* An **InterSystems IRIS 2020 License for Ubuntu**. Careful: This must not be a docker based license. We are using ICM to deploy a containerless installation of InterSystems IRIS on AWS.
+* InterSystems IRIS 2020 install kit for Ubuntu
 * ICM 2020 docker image
 
-If you are a supported InterSystems customer, you can download **IRIS for Linux Ubuntu** and an IRIS license from the [Evaluation Service](https://evaluation.intersystems.com).
+If you are a supported InterSystems customer, you can download **InterSystems IRIS for Linux Ubuntu** and an InterSystems IRIS license from the [Evaluation Service](https://evaluation.intersystems.com).
 
-You will also need to go to the [Worldwide Response Center (WRC)](https://wrc.intersystems.com) and download ICM for IRIS 2020. If you need help, just send an e-mail to support@intersystems.com and we will be glad to help!
+You will also need to go to the [Worldwide Response Center (WRC)](https://wrc.intersystems.com) and download ICM for InterSystems IRIS 2020. If you need help, just send an e-mail to support@intersystems.com and we will be glad to help!
 
-If you are not an InterSystems customer, you will still be able to run the HTAP Speed Test on your PC comparing IRIS with some databases such as MySQL and SQL Server. Just follow instructions [here](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/README.md).
+If you are not an InterSystems customer, you will still be able to run the HTAP Speed Test on your PC comparing InterSystems IRIS with some databases such as MySQL and SQL Server. Just follow instructions [here](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/README.md).
 
 
 # Preparing the Environment
@@ -54,11 +54,11 @@ Clone this repository to your git folder on your PC:
 git clone https://github.com/intersystems-community/irisdemo-demo-htap
 ```
 
-## 2. Copy the IRIS license key
+## 2. Copy the InterSystems IRIS license key
 
 Put the iris.key file on the folder **./irisdemo-demo-htap/ICM/ICMDurable/license/**. Make sure there is only one license key file there. If you let more than one key file there, you may have problems.
 
-## 3. Preparing ICM to be run and IRIS to be deployed
+## 3. Preparing ICM to be run and InterSystems IRIS to be deployed
 
 You downloaded InterSystems IRIS and ICM from the [Evaluation Service](https://evaluation.intersystems.com) and [Worldwide Response Center (WRC)](https://wrc.intersystems.com) as per instructions above and now you must have two tar.gz files like these:
 
@@ -67,9 +67,9 @@ IRIS-2020.1.0.199.0-lnxubuntux64.tar.gz
 icm-2019.4.0.383.0-docker.tar.gz
 ```
 
-**Please, notice that the IRIS tar.gz is NOT a docker image. It is a normal IRIS install kit for Ubuntu.**
+**Please, notice that the InterSystems IRIS tar.gz is NOT a docker image. It is a normal InterSystems IRIS install kit for Ubuntu.**
 
-Copy the IRIS install kit to the folder **ICM/ICMDurable/IRISKit/**.
+Copy the InterSystems IRIS install kit to the folder **ICM/ICMDurable/IRISKit/**.
 
 ICM must be loaded into your local docker installation with the following commands:
 ```bash
