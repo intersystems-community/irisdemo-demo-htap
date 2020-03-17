@@ -371,7 +371,7 @@ Both databases will start with excellent ingestion rates and then they will "deg
 
 **The conclusion is that, on this ingestion x query stress test:**
 * InterSystems IRIS is 37.61% faster than SAP HANA at ingestion
-* Intersystems IRIS is 3730% faster than SAP HANA at querying
+* InterSystems IRIS is 3730% faster than SAP HANA at querying
 
 ## 9 - Unprovision everything
 
