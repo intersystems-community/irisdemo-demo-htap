@@ -197,6 +197,17 @@ End-to-end performance has to do with the fact that some JDBC drivers have optmi
 
 To proove that we are actually reading the columns we are SELECTing, we sum up the bytes of all the filds reeturned as **proof of work**.
 
+## 6 - How do you achieve maximum throughput on ingestion and querying?
+
+To achieve maximum throughput, each ingestion worker will start multiple threads that each will:
+- Prepare a set of 1000 random values for each column of the table above. This is done because each column can have a different data type and a different size. So we want to genererate records that can vary accordingly
+- For each new record to be inserted, the ingestion worker will randomly select one value out of the 1000 values for each column and once a record is ready, it will be added to the batch
+- Use batch inserting with a default batch size of 1000 records per batch
+
+The default number of ingestion worker threads is 15. But it can be changed during the test by clicking at the **Settings** button.
+
+The query workers, on the other hand, also start multiple threads to query as many records as possible. But as we explained above, we are also providing **proof of work**. We are reading the columns returned and summing up the number of bytes read to make sure the data is actually traveling from the database, through the wire and into the query worker. That is to avoid optimizations implemented by some JDBC drivers that will only bring the data over the wire if it is actually used. We are actually consuming the data returned and providing a sum of MB read/s and total number of MB read as proof of it.
+
 ## 7 - How much space does it take on disk?
 
 I filled up a 70Gb DATA file system after ingesting 171,421,000 records. That would mean that each records would take an avergage of 439 bytes (rounding up).
