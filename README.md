@@ -212,7 +212,7 @@ The query workers, on the other hand, also start multiple threads to query as ma
 
 I filled up a 70Gb DATA file system after ingesting 171,421,000 records. That would mean that each records would take an avergage of 439 bytes (rounding up).
 
-I also fileed 100% of my first journal directory and about 59% of the second. Both filesystems had 100Gb which means that 171,421,000 would take about 159Gb of journal space or that each records would take an average of 996 bytes. 
+I also filled 100% of my first journal directory and about 59% of the second. Both filesystems had 100Gb which means that 171,421,000 would take about 159Gb of journal space or that each records would take an average of 996 bytes. 
 
 ## 6 - Architecture of the HTAP Demo
 
