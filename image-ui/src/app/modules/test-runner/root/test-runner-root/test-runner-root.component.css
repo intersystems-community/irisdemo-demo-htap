@@ -64,3 +64,13 @@
     border: 2px solid;
     border-color: #333695;
 }
+
+.results-button{
+    background-color: #105010;
+    color: white;
+    border-radius: 3px;
+    height: 40px;
+    width: 100px;
+    border: 2px solid;
+    border-color: #333695;
+}

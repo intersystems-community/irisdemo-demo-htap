@@ -3,6 +3,8 @@
         <div class="test-runner-button-wrapper">
             <button *ngIf="!testRunning" class="app-button" mat-raised-button color="primary" (click)="runTest()">Run Test</button>
             <button *ngIf="testRunning" class="app-button" mat-raised-button color="primary" (click)="stopTest()">Stop Test</button>
+            
+            <div *ngIf="hasResultsToDownload">&nbsp;<a href="/master/metrics" class="results-button" mat-raised-button color="primary">Results</a></div>
         </div>
 
         <div class="stat-tracker">

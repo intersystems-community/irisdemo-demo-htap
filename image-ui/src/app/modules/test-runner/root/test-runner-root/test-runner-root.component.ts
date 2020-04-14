@@ -13,6 +13,7 @@ import { TestDirectorService } from '../../../../providers/test-director.service
 export class TestRunnerRootComponent implements OnInit {
 
   testRunning: boolean = false;
+  hasResultsToDownload: boolean = false;
   testRunTime: number = 15;
   latestMetrics: any = {};
 
@@ -147,6 +148,7 @@ export class TestRunnerRootComponent implements OnInit {
       response => {
         this.$startSubscription.unsubscribe();
         this.testRunning = true;
+        this.hasResultsToDownload = false;
         //this.startTestSafetyKill();
         this.monitorMetrics();
       },
@@ -162,6 +164,7 @@ export class TestRunnerRootComponent implements OnInit {
       response => {
         this.$stopSubscription.unsubscribe();
         this.testRunning = false;
+        this.hasResultsToDownload = true;
         console.log("Stopping Test");
       },
       error => {
