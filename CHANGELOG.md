@@ -1,3 +1,8 @@
+## 2.4.2 (April 14, 2020)
+  - Adding button to the UI so we can retrieve the results as a csv file.
+  - Adding  --stateDir state to unprovision template
+  - Adding more information to the README
+  
 ## 2.4.1 (March 13, 2020)
   - Adding reconnect parameter to JDBC connection for SAP HANA
   - Documenting avg size of record in DATA and JOURNAL

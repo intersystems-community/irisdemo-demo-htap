@@ -15,7 +15,7 @@ services:
       - htapmaster
     container_name: htapui
     hostname: htapui
-    image: intersystemsdc/irisdemo-demo-htap:ui-version-2.4.1
+    image: intersystemsdc/irisdemo-demo-htap:ui-version-2.4.2
     ports:
     - "10000:4200" # Where Node Will be listening
 
@@ -39,7 +39,7 @@ services:
     container_name: htapmaster
     hostname: htapmaster
     init: true
-    image: intersystemsdc/irisdemo-demo-htap:master-version-2.4.1
+    image: intersystemsdc/irisdemo-demo-htap:master-version-2.4.2
     ports:
       - "10002:8080" # Where Springboot Will be listening
     environment:
@@ -64,7 +64,7 @@ services:
     container_name: ingest-worker1
     hostname: ingest-worker1
     init: true
-    image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.4.1
+    image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.4.2
     ports:
       - "10003:8080" # Where Springboot Will be listening
     environment:
@@ -77,7 +77,7 @@ services:
     container_name: query-worker1
     hostname: query-worker1
     init: true
-    image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.4.1
+    image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.4.2
     ports:
       - "10004:8080" # Where Springboot Will be listening
     environment:
