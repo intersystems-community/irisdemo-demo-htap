@@ -10,14 +10,23 @@ import com.irisdemo.htap.worker.QueryWorker;
 import com.irisdemo.htap.config.Config;
 import com.irisdemo.htap.config.WorkerConfig;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,10 +36,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.http.*;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
 
 @CrossOrigin()
 @RestController
@@ -59,6 +73,60 @@ public class AppController {
     Config config;
 
     Logger logger = LoggerFactory.getLogger(AppController.class);
+    
+    @Autowired
+    MetricsFileManager metricsFileManager;
+    
+    long speedTestStartTimeInMillis;
+
+    @Bean
+    public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
+        ByteArrayHttpMessageConverter arrayHttpMessageConverter = new ByteArrayHttpMessageConverter();
+        arrayHttpMessageConverter.setSupportedMediaTypes(getSupportedMediaTypes());
+        return arrayHttpMessageConverter;
+    }
+
+    private List<MediaType> getSupportedMediaTypes() {
+        List<MediaType> list = new ArrayList<MediaType>();
+        list.add(MediaType.TEXT_PLAIN);
+        return list;
+    }
+
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(byteArrayHttpMessageConverter());
+    }
+
+    @RequestMapping(value = "/master/metrics", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getImageAsByteArray() throws IOException 
+    {
+        String fileName;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        if (config.getTitle()!=null && !config.getTitle().equals(""))
+        {
+            fileName = config.getTitle()+" results.txt";
+        }
+        else
+        {
+            fileName = "metrics.txt";
+        }
+        
+        fileName = fileName.replace("/", "_");
+        fileName = fileName.replace("\\", "_");
+        fileName = fileName.replace("  ", " ");
+
+        ContentDisposition contentDisposition = ContentDisposition.parse("attachment;filename="+ fileName);
+        
+        headers.setContentDisposition(contentDisposition);
+
+        InputStream in = this.metricsFileManager.getMetricsFileContents();
+        
+        byte[] media = IOUtils.toByteArray(in);
+
+        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
+        return responseEntity;       
+    }
 
     /**
      * This is called by the container HEALTHCHECK
@@ -68,18 +136,24 @@ public class AppController {
         return 1;
     }
 
+
+
     @PostMapping(value = "/master/startSpeedTest")
     public synchronized void startSpeedTest() throws Exception {
-        if (!speedTestRunning) {
-            IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
+        if (!speedTestRunning) 
+        {
+            metricsFileManager.openMetricsFile();
+            speedTestStartTimeInMillis = new Date().getTime();
+
+            final IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
             if (!databaseHasBeenInitialized) {
                 logger.info("START speed test. Asking one worker to prepare the database...");
-                String prepareURL = "http://" + ingestWorker.getHostname() + "/worker/prepare";
+                final String prepareURL = "http://" + ingestWorker.getHostname() + "/worker/prepare";
                 restTemplate.postForEntity(prepareURL, null, null);
                 databaseHasBeenInitialized = true;
             } else {
                 logger.info("START speed test. Asking one worker to truncate the table...");
-                String truncateTableURL = "http://" + ingestWorker.getHostname() + "/worker/truncateTable";
+                final String truncateTableURL = "http://" + ingestWorker.getHostname() + "/worker/truncateTable";
                 restTemplate.postForEntity(truncateTableURL, null, null);
             }
 
@@ -94,7 +168,9 @@ public class AppController {
             if (config.getStartConsumers()) {
                 queryWorkerRegistryService.startSpeedTest();
             }
-        } else {
+        } 
+        else 
+        {
             logger.warn(
                     "Request to start the speed test received. Speed Test was already running. Nothing has been done.");
         }
@@ -121,7 +197,7 @@ public class AppController {
 
     @GetMapping(value = "/master/getActiveFeeds")
     public int getActiveFeeds() {
-        int activeFeeds = 0;
+        final int activeFeeds = 0;
         return activeFeeds;
     }
 
@@ -131,14 +207,14 @@ public class AppController {
     }
 
     @GetMapping(value = "/master/ingestworker/register/{hostname}")
-    public WorkerConfig registerIngestWorker(@PathVariable String hostname) {
-        IngestWorker worker = new IngestWorker(hostname);
+    public WorkerConfig registerIngestWorker(@PathVariable final String hostname) {
+        final IngestWorker worker = new IngestWorker(hostname);
         return ingestWorkerRegistryService.register(worker);
     }
 
     @GetMapping(value = "/master/queryworker/register/{hostname}")
-    public WorkerConfig registerQueryWorker(@PathVariable String hostname) {
-        QueryWorker worker = new QueryWorker(hostname);
+    public WorkerConfig registerQueryWorker(@PathVariable final String hostname) {
+        final QueryWorker worker = new QueryWorker(hostname);
         return queryWorkerRegistryService.register(worker);
     }
 
@@ -148,12 +224,12 @@ public class AppController {
     }
 
     @GetMapping(value = "/master/queryworker/count")
-    public int getNumOfQueryWorkers(String hostname) {
+    public int getNumOfQueryWorkers(final String hostname) {
         return queryWorkerRegistryService.getNumOfWorkers();
     }
 
     @GetMapping(value = "/master/countworkers")
-    public int getNumOfWorkers(String hostname) {
+    public int getNumOfWorkers(final String hostname) {
         return ingestWorkerRegistryService.getNumOfWorkers() + queryWorkerRegistryService.getNumOfWorkers();
     }
 
@@ -163,19 +239,33 @@ public class AppController {
     }
 
     @Scheduled(fixedRate = 1000)
+    synchronized protected void saveMetricsToFile() throws Exception
+    {
+        long currentTimeInSeconds;
+        int ellapsedSeconds;
+        // Just take the current accumulated Metrics for ingestion and query and add it to the end of the file
+        if (speedTestRunning)
+        {
+            currentTimeInSeconds = new Date().getTime();
+            ellapsedSeconds = (int) (currentTimeInSeconds-this.speedTestStartTimeInMillis)/1000;
+            metricsFileManager.appendMetrics(ellapsedSeconds, new Metrics(accumulatedIngestMetrics, accumulatedQueryMetrics));
+        }
+    }
+
+    @Scheduled(fixedRate = 1000)
     synchronized protected void getIngestionMetricsFromWorkers() {
         if (speedTestRunning) {
-            AccumulatedIngestMetrics tempIngestionMetrics = new AccumulatedIngestMetrics();
-            ConcurrentHashMap<String, IngestWorker> ingestWorkers = ingestWorkerRegistryService.getWorkers();
+            final AccumulatedIngestMetrics tempIngestionMetrics = new AccumulatedIngestMetrics();
+            final ConcurrentHashMap<String, IngestWorker> ingestWorkers = ingestWorkerRegistryService.getWorkers();
 
             ingestWorkers.forEach((hostname, worker) -> {
 
-                String url = "http://" + hostname + "/worker/getMetrics";
+                final String url = "http://" + hostname + "/worker/getMetrics";
 
                 try {
-                    IngestMetrics workerMetrics = restTemplate.getForObject(url, IngestMetrics.class);
+                    final IngestMetrics workerMetrics = restTemplate.getForObject(url, IngestMetrics.class);
                     tempIngestionMetrics.addToStats(workerMetrics);
-                } catch (RestClientException restException) {
+                } catch (final RestClientException restException) {
                     logger.info("Ingestion worker on " + hostname
                             + " is not responding. Marking worker as unavailable because of: "
                             + restException.getMessage());
@@ -191,19 +281,19 @@ public class AppController {
     @Scheduled(fixedRate = 1000)
     synchronized protected void getQueryMetricsFromWorkers() {
         if (speedTestRunning) {
-            AccumulatedQueryMetrics tempQueryMetrics = new AccumulatedQueryMetrics();
-            ConcurrentHashMap<String, QueryWorker> QueryWorkers = queryWorkerRegistryService.getWorkers();
+            final AccumulatedQueryMetrics tempQueryMetrics = new AccumulatedQueryMetrics();
+            final ConcurrentHashMap<String, QueryWorker> QueryWorkers = queryWorkerRegistryService.getWorkers();
 	    	
 	    	QueryWorkers.forEach((hostname, worker) -> {
 	    		
-	    		String url = "http://" + hostname +"/worker/getMetrics";
+	    		final String url = "http://" + hostname +"/worker/getMetrics";
 	    		
 	    		try
 	    		{
-	    			QueryMetrics workerMetrics = restTemplate.getForObject(url, QueryMetrics.class);
+	    			final QueryMetrics workerMetrics = restTemplate.getForObject(url, QueryMetrics.class);
 	    			tempQueryMetrics.addToStats(workerMetrics);
 	    		}
-	    		catch (RestClientException restException)
+	    		catch (final RestClientException restException)
 	    		{
 	    			logger.info("Query worker on " + hostname + " is not responding. Marking worker as unavailable because of: " + restException.getMessage());
 	    			worker.setAvailable(false);
@@ -222,7 +312,7 @@ public class AppController {
     }
 
     @PostMapping(path = "/master/updateApplicationConfig", consumes = "application/json", produces = "application/json")
-    public Config getApplicationConfig(@RequestBody Config newConfig) {
+    public Config getApplicationConfig(@RequestBody final Config newConfig) {
 
         /* Ingestion Settings */
         config.setIngestionBatchSize(newConfig.getIngestionBatchSize());
@@ -252,7 +342,7 @@ public class AppController {
     {
         public String value;
 
-        public RESTStringContainer(String value)
+        public RESTStringContainer(final String value)
         {
             this.value=value;
         }

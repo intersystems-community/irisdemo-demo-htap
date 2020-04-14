@@ -46,6 +46,39 @@ public class Metrics
     	
     }
 
+    public String toString()
+    {
+        StringBuffer str = new StringBuffer();
+        str.append(this.numberOfRowsIngested);
+        str.append(",");
+        str.append(this.recordsIngestedPerSec);
+        str.append(",");
+    	str.append(this.avgRecordsIngestedPerSec);
+        str.append(",");
+        str.append(this.MBIngested);
+        str.append(",");
+        str.append(this.MBIngestedPerSec);
+        str.append(",");
+    	str.append(this.avgMBIngestedPerSec);
+    	str.append(",");
+        str.append(this.numberOfRowsConsumed);
+        str.append(",");
+        str.append(this.recordsConsumedPerSec);
+        str.append(",");
+    	str.append(this.avgRecordsConsumedPerSec);
+    	str.append(",");
+        str.append(this.MBConsumed);
+        str.append(",");
+        str.append(this.MBConsumedPerSec);
+        str.append(",");
+    	str.append(this.avgMBConsumedPerSec);
+    	str.append(",");
+        str.append(this.avgQueryAndConsumptionTimeInMs);
+
+        return str.toString();
+    }
+
+
     public double getNumberOfRowsIngested() {
         return numberOfRowsIngested;
     }
