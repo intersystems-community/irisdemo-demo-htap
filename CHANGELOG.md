@@ -1,3 +1,8 @@
+## 2.4.3 (April 15, 2020)
+  - Speed Test UI can now be closed, leaving the test running on the server. It can be opened again to check on progress and download the results of the test.
+  - Adding new configuration field to the UI to specify maximum time to run the test
+  - Adding stop_containers.sh to stand alone scripts.
+
 ## 2.4.2 (April 14, 2020)
   - Adding button to the UI so we can retrieve the results as a csv file.
   - Adding  --stateDir state to unprovision template
