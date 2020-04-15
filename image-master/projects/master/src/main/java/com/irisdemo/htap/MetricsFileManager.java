@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +37,9 @@ public class MetricsFileManager {
     private void addHeaderLine() throws IOException
     {
         StringBuffer str = new StringBuffer();
-        
+
+        str.append("timeInSeconds");
+        str.append(",");
         str.append("numberOfRowsIngested");
         str.append(",");
         str.append("recordsIngestedPerSec");
@@ -68,8 +69,8 @@ public class MetricsFileManager {
         metricsFileWriter.append(str + "\n");
     }
 
-    public void appendMetrics(int ellapsedSeconds, Metrics metrics) throws Exception {
-        metricsFileWriter.append(ellapsedSeconds + "," + metrics.toString() + "\n");
+    public void appendMetrics(Metrics metrics) throws Exception {
+        metricsFileWriter.append(metrics.toString() + "\n");
     }
 
     public InputStream getMetricsFileContents() throws IOException

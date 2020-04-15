@@ -10,14 +10,10 @@ import com.irisdemo.htap.worker.QueryWorker;
 import com.irisdemo.htap.config.Config;
 import com.irisdemo.htap.config.WorkerConfig;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,11 +32,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -77,7 +70,10 @@ public class AppController {
     @Autowired
     MetricsFileManager metricsFileManager;
     
-    long speedTestStartTimeInMillis;
+    private long speedTestStartTimeInMillis;
+    private int speedTestRuntimeInSeconds;
+
+    private Metrics currentAggregatedMetrics = new Metrics();
 
     @Bean
     public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
@@ -136,14 +132,13 @@ public class AppController {
         return 1;
     }
 
-
-
     @PostMapping(value = "/master/startSpeedTest")
     public synchronized void startSpeedTest() throws Exception {
         if (!speedTestRunning) 
         {
             metricsFileManager.openMetricsFile();
             speedTestStartTimeInMillis = new Date().getTime();
+            speedTestRuntimeInSeconds = 0;
 
             final IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
             if (!databaseHasBeenInitialized) {
@@ -178,7 +173,8 @@ public class AppController {
 
     @PostMapping(value = "/master/stopSpeedTest")
     public synchronized void stopSpeedTest() throws Exception {
-        if (speedTestRunning) {
+        if (speedTestRunning) 
+        {
             logger.info("STOP speed test. Notifying all workers...");
 
             // Stop ingestion...
@@ -190,6 +186,10 @@ public class AppController {
             }
 
             speedTestRunning = false;
+
+            // Aggregating metrics one last time, to include the update to speedTestRunning
+            aggregateMetrics();
+
         } else {
             logger.warn("Request to stop speed test received. Speed test was not running. Nothing has been done.");
         }
@@ -235,21 +235,35 @@ public class AppController {
 
     @RequestMapping("/master/getMetrics")
     public Metrics getMetrics() {
-        return new Metrics(accumulatedIngestMetrics, accumulatedQueryMetrics);
+        return this.currentAggregatedMetrics;
     }
 
     @Scheduled(fixedRate = 1000)
-    synchronized protected void saveMetricsToFile() throws Exception
-    {
-        long currentTimeInSeconds;
-        int ellapsedSeconds;
+    synchronized protected void monitorAndAggregateMetrics() throws Exception
+    {        
         // Just take the current accumulated Metrics for ingestion and query and add it to the end of the file
         if (speedTestRunning)
         {
-            currentTimeInSeconds = new Date().getTime();
-            ellapsedSeconds = (int) (currentTimeInSeconds-this.speedTestStartTimeInMillis)/1000;
-            metricsFileManager.appendMetrics(ellapsedSeconds, new Metrics(accumulatedIngestMetrics, accumulatedQueryMetrics));
+            long currentTimeInSeconds = new Date().getTime();
+            this.speedTestRuntimeInSeconds = (int) (currentTimeInSeconds-this.speedTestStartTimeInMillis)/1000;
+
+            // Is it time to stop already?
+            if (this.speedTestRuntimeInSeconds >= config.getMaxTimeToRunInSeconds())
+            {
+                this.stopSpeedTest();
+            }
+
+            // Aggregating metrics from ingestion and query workers
+            aggregateMetrics();
         }
+    }
+
+    private void aggregateMetrics() throws Exception
+    {
+        this.currentAggregatedMetrics = new Metrics(speedTestRunning, speedTestRuntimeInSeconds, accumulatedIngestMetrics, accumulatedQueryMetrics);
+
+        // Appending to file just in case they want to download it
+        metricsFileManager.appendMetrics(this.currentAggregatedMetrics);
     }
 
     @Scheduled(fixedRate = 1000)
@@ -334,6 +348,8 @@ public class AppController {
         config.setConsumptionJDBCURL(newConfig.getConsumptionJDBCURL());
 
         config.setQueryStatement(newConfig.getQueryStatement());
+
+        config.setMaxTimeToRunInSeconds(newConfig.getMaxTimeToRunInSeconds());
 
         return config;
     }

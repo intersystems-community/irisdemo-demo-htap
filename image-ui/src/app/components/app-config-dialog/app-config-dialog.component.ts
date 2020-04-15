@@ -45,6 +45,7 @@ export class AppConfigDialogComponent implements OnInit {
 
   createForm() {
     this.configFormGroup = this.formBuilder.group({
+      'maxTimeToRunInSeconds': [null, [Validators.required]],
       'ingestionJDBCURL': [null, [Validators.required]],
       'ingestionJDBCUserName': [null, [Validators.required]],
       'ingestionJDBCPassword': [null, [Validators.required]],
@@ -61,6 +62,7 @@ export class AppConfigDialogComponent implements OnInit {
 
   updateFormWithConfigValue(config: any): void {
     this.configFormGroup.setValue({
+      maxTimeToRunInSeconds: config.maxTimeToRunInSeconds, 
       ingestionJDBCURL: config.ingestionJDBCURL, 
       ingestionJDBCUserName: config.ingestionJDBCUserName,
       ingestionJDBCPassword: config.ingestionJDBCPassword,

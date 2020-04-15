@@ -29,6 +29,7 @@ public class Config
 	private String tableCreateStatement;
 	private String tableTruncateStatement;
 	private String title;
+	private int maxTimeToRunInSeconds;
 	
 	/* 
 	INGESTION CONFIGURATION 
@@ -53,6 +54,8 @@ public class Config
 
 	public Config()
 	{
+		this.maxTimeToRunInSeconds = 60*5;
+
 		try
 		{
 			queryStatement=Util.getSingleStatementFromFile("TABLE_SELECT.sql");
@@ -144,6 +147,16 @@ public class Config
 		}
 	}
 	
+	public int getMaxTimeToRunInSeconds()
+	{
+		return maxTimeToRunInSeconds;
+	}
+
+	public void setMaxTimeToRunInSeconds(int maxTimeToRunInSeconds)
+	{
+		this.maxTimeToRunInSeconds=maxTimeToRunInSeconds;
+	}
+
 	@Value( "${MASTER_SPEEDTEST_TITLE:IRIS Speed Test}" )
 	public void setTitle(String title)
 	{

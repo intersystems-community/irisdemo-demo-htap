@@ -5,6 +5,9 @@ import com.irisdemo.htap.worker.AccumulatedQueryMetrics;
 
 public class Metrics 
 {
+    private boolean speedTestIsRunning;
+    private int runTimeInSeconds;
+
     private double numberOfRowsIngested;
     private double recordsIngestedPerSec;
     private double avgRecordsIngestedPerSec;
@@ -24,7 +27,20 @@ public class Metrics
     private double queryAndConsumptionTimeInMs;
     private double avgQueryAndConsumptionTimeInMs;
     
-    public Metrics(AccumulatedIngestMetrics accumulatedIngestMetrics, AccumulatedQueryMetrics accumulatedQueryMetrics)
+    public Metrics(boolean speedTestIsRunning, int runTime, AccumulatedIngestMetrics accumulatedIngestMetrics, AccumulatedQueryMetrics accumulatedQueryMetrics)
+    {
+        this.speedTestIsRunning = speedTestIsRunning;
+        this.runTimeInSeconds = runTime;
+        populateMetrics(accumulatedIngestMetrics, accumulatedQueryMetrics);
+    }
+
+    public Metrics()
+    {
+        this.speedTestIsRunning = false;
+        this.runTimeInSeconds = 0;
+    }
+
+    private void populateMetrics(AccumulatedIngestMetrics accumulatedIngestMetrics, AccumulatedQueryMetrics accumulatedQueryMetrics)
     {
     	this.numberOfRowsIngested=accumulatedIngestMetrics.getNumberOfRowsIngested();
     	this.recordsIngestedPerSec=accumulatedIngestMetrics.getRecordsIngestedPerSec();
@@ -43,12 +59,12 @@ public class Metrics
     	this.avgMBConsumedPerSec=accumulatedQueryMetrics.getAvgMBConsumedPerSec();
     	
     	this.avgQueryAndConsumptionTimeInMs=accumulatedQueryMetrics.getAvgQueryAndConsumptionTimeInMillis();
-    	
     }
-
     public String toString()
     {
         StringBuffer str = new StringBuffer();
+        str.append(this.runTimeInSeconds);
+        str.append(",");
         str.append(this.numberOfRowsIngested);
         str.append(",");
         str.append(this.recordsIngestedPerSec);
@@ -78,6 +94,15 @@ public class Metrics
         return str.toString();
     }
 
+    public int getRunTimeInSeconds()
+    {
+        return this.runTimeInSeconds;
+    }
+
+    public boolean isSpeedTestRunning()
+    {
+        return this.speedTestIsRunning;
+    }
 
     public double getNumberOfRowsIngested() {
         return numberOfRowsIngested;

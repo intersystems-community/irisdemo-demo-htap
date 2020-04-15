@@ -4,6 +4,8 @@ import { interval, Subscription } from 'rxjs';
 import { take, flatMap } from 'rxjs/operators';
 
 import { TestDirectorService } from '../../../../providers/test-director.service'
+// import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+// import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-test-runner-root',
@@ -119,8 +121,16 @@ export class TestRunnerRootComponent implements OnInit {
 
     let ingestionMatch =  this.latestMetrics.numberOfRowsIngested === currentMetrics.numberOfRowsIngested;
     let consumptionMatch = this.latestMetrics.numberOfRowsConsumed === currentMetrics.numberOfRowsConsumed;
-    if(!this.testRunning && ingestionMatch && consumptionMatch){
+    
+    // When we request the speed test to stop from the UI, the server will process the request
+    // as it has always done it. But the metrics returned now include its status (speedTestrunning)
+    // The server may also simply stop the test if the time to stop has come
+    // So, now, we will only stop subscription if the server told us to do so.
+    if(!currentMetrics.speedTestRunning)
+    {
       this.$metricsSubscription.unsubscribe();
+      this.testRunning = false;
+      this.hasResultsToDownload = true;
     }
 
     this.latestMetrics = currentMetrics;
@@ -163,8 +173,6 @@ export class TestRunnerRootComponent implements OnInit {
     this.$stopSubscription = this.testDirector.stopTest().subscribe(
       response => {
         this.$stopSubscription.unsubscribe();
-        this.testRunning = false;
-        this.hasResultsToDownload = true;
         console.log("Stopping Test");
       },
       error => {
@@ -181,9 +189,12 @@ export class TestRunnerRootComponent implements OnInit {
     
     this.$metricsSubscription = metricsStatusCheck.subscribe(
       metricsResponse => {
-        this.runTime++;
-        console.log(metricsResponse);
+        //console.log(metricsResponse);
+        
+        this.runTime = metricsResponse.runTimeInSeconds; // Test runtime is dictated by the server now
+        
         this.handleMetricsResponse(metricsResponse);
+
       },
       error =>{
         alert("an error occured subscribing to metrics Status")
