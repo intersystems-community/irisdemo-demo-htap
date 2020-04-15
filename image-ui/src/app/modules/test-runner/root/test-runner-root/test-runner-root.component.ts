@@ -4,8 +4,6 @@ import { interval, Subscription } from 'rxjs';
 import { take, flatMap } from 'rxjs/operators';
 
 import { TestDirectorService } from '../../../../providers/test-director.service'
-// import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-// import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-test-runner-root',
@@ -97,9 +95,12 @@ export class TestRunnerRootComponent implements OnInit {
 
   constructor(private testDirector: TestDirectorService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.catchUpIfServerIsRunningSpeedTest();
+  }
 
   handleMetricsResponse(currentMetrics: any): void {
+    this.runTime = currentMetrics.runTimeInSeconds; // Test runtime is dictated by the server now
 
     this.rowsConsumed = currentMetrics.numberOfRowsConsumed;
     this.rowsIngested = currentMetrics.numberOfRowsIngested;
@@ -119,8 +120,8 @@ export class TestRunnerRootComponent implements OnInit {
     this.dataConsumptionRecords[1].series.push({name: this.runTime, value: currentMetrics.avgRecordsConsumedPerSec})
     this.dataConsumptionRecords = [...this.dataConsumptionRecords];
 
-    let ingestionMatch =  this.latestMetrics.numberOfRowsIngested === currentMetrics.numberOfRowsIngested;
-    let consumptionMatch = this.latestMetrics.numberOfRowsConsumed === currentMetrics.numberOfRowsConsumed;
+    // let ingestionMatch =  this.latestMetrics.numberOfRowsIngested === currentMetrics.numberOfRowsIngested;
+    // let consumptionMatch = this.latestMetrics.numberOfRowsConsumed === currentMetrics.numberOfRowsConsumed;
     
     // When we request the speed test to stop from the UI, the server will process the request
     // as it has always done it. But the metrics returned now include its status (speedTestrunning)
@@ -128,7 +129,9 @@ export class TestRunnerRootComponent implements OnInit {
     // So, now, we will only stop subscription if the server told us to do so.
     if(!currentMetrics.speedTestRunning)
     {
-      this.$metricsSubscription.unsubscribe();
+      if (this.$metricsSubscription)
+        this.$metricsSubscription.unsubscribe();
+        
       this.testRunning = false;
       this.hasResultsToDownload = true;
     }
@@ -169,6 +172,37 @@ export class TestRunnerRootComponent implements OnInit {
     )
   }
 
+  // In the situation where the browser was closed and the server was left running the speed test,
+  // we can simply reopen the application and this will try to get the metrics only once. 
+  catchUpIfServerIsRunningSpeedTest(): void {
+    this.$startSubscription = this.testDirector.getMetrics().subscribe(
+      response => {
+        this.$startSubscription.unsubscribe();
+
+        if (response.speedTestRunning) // Is test still running?
+        {
+          this.runTest();
+        }
+        else if (response.runTimeInSeconds>0) // Was test running and has already stopped?
+        {
+          // Don't start the test to catch up. Just update the graph with the last results. 
+          // We should implement a service to download the entire data we have stored in the server to
+          // populate the graph again. But the user will be able to use the new green "Results" button
+          // to download the CSV file themselves.
+          this.handleMetricsResponse(response);
+        }
+        else
+        {
+          this.clearGraphs();
+        }
+
+      },
+      error => {
+        this.$startSubscription.unsubscribe();
+      }
+    )
+  }
+
   stopTest(): void {
     this.$stopSubscription = this.testDirector.stopTest().subscribe(
       response => {
@@ -184,14 +218,11 @@ export class TestRunnerRootComponent implements OnInit {
 
   monitorMetrics(): void {
     /*Take Metrics Every 2 seconds*/
-    const metricsStatusCheck = 
-    interval(1 * 1000).pipe(flatMap(() => this.testDirector.getMetrics()))
+    const metricsStatusCheck = interval(1 * 1000).pipe(flatMap(() => this.testDirector.getMetrics()))
     
     this.$metricsSubscription = metricsStatusCheck.subscribe(
       metricsResponse => {
         //console.log(metricsResponse);
-        
-        this.runTime = metricsResponse.runTimeInSeconds; // Test runtime is dictated by the server now
         
         this.handleMetricsResponse(metricsResponse);
 
