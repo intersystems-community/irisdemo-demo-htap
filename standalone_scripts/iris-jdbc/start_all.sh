@@ -13,76 +13,18 @@
 # variables to point to an existing IRIS cluster.
 #
 
-export DISABLE_JOURNAL_FOR_DROP_TABLE=false
-export DISABLE_JOURNAL_FOR_TRUNCATE=false
-export INGESTION_THREADS_PER_WORKER=1
-export INGESTION_BATCH_SIZE=1000
-export INGESTION_JDBC_URL=jdbc:IRIS://localhost:51773/USER
-export INGESTION_JDBC_USERNAME=SuperUser
-export INGESTION_JDBC_PASSWORD=sys
-export CONSUMER_JDBC_URL=jdbc:IRIS://localhost:51773/USER
-export CONSUMER_JDBC_USERNAME=SuperUser
-export CONSUMER_JDBC_PASSWORD=sys
-export CONSUMER_THREADS_PER_WORKER=1
-export CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS=0
-
-# This is the name of the server where the master is. This is used by the workers only
-export MASTER_HOSTNAME=$(hostname)
-export MASTER_PORT=8080
-
-# This is used so that the workers can report the correct hostname for this server to the master so that
-# the master can reach it
-export HOSTNAME=$(hostname)
-
-# Spring boot mode. Service means it will run on the background
-export MODE="service"
-export PID_FOLDER=$PWD/pids
-export LOG_FOLDER=$PWD/logs
-
-# COLOR CONSTANTS
-PURPLE='\033[0;35m'
-NOCOLOR='\033[0m'
+source ./start_all_config.sh
 
 # Configure function cleanup() to be executed on CTRL+C
-trap cleanup INT
 function cleanup()
 {
     # Restore normal CTRL+C behaviour
     trap - INT
 
     # Do the cleanup
-    printf "${PURPLE}\n"
-    echo '********************************************************************************'
-    echo 'Stopping Master'
-    echo '********************************************************************************'
-    printf "${NOCOLOR}\n"
-
-    ../../image-master/projects/master.jar stop
-
-    printf "${PURPLE}\n"
-    echo '********************************************************************************'
-    echo 'Stopping IRIS JDBC Ingestion Worker'
-    echo '********************************************************************************'
-    printf "${NOCOLOR}\n"
-
-    ../../image-ingest-worker/projects/iris-jdbc-ingest-worker.jar stop
-
-    printf "${PURPLE}\n"
-    echo '********************************************************************************'
-    echo 'Stopping IRIS JDBC Query Worker'
-    echo '********************************************************************************'
-    printf "${NOCOLOR}\n"
-
-    ../../image-query-worker/projects/iris-jdbc-query-worker.jar stop
-
-    printf "${PURPLE}\n"
-    echo '********************************************************************************'
-    echo 'Stopping IRIS'
-    echo '********************************************************************************'
-    printf "${NOCOLOR}\n"
-
-    docker stop iris_htap
+    source ./stop_containers.sh
 }
+trap cleanup INT
 
 printf "${PURPLE}\n"
 echo '********************************************************************************'
