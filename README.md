@@ -290,3 +290,7 @@ There are other InterSystems IRIS demo applications that touch different subject
 ## 10 - Report any Issues
   
 Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).
+
+## 11 - Check the Change Log
+
+All the changes to this project are logged [here](CHANGELOG.md).
