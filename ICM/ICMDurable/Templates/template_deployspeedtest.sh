@@ -56,7 +56,7 @@ case $SPEED_TEST_TO_DEPLOY in
         break
         ;;
     sqlserver)
-        DB_TITLE="AWS RDS SQL Server"
+        DB_TITLE="AWS RDS SQL Server Enterprise 2017"
         read_endpoint_and_credentials "$DB_TITLE" "sa"
         exit_if_error "We need all the information to proceed."
 
