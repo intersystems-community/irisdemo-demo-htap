@@ -64,6 +64,8 @@ public class MetricsFileManager {
         str.append(",");
     	str.append("avgMBConsumedPerSec");
     	str.append(",");
+        str.append("queryAndConsumptionTimeInMs");
+    	str.append(",");
         str.append("avgQueryAndConsumptionTimeInMs");
 
         metricsFileWriter.append(str + "\n");

@@ -60,6 +60,7 @@ public class Metrics
     	
     	this.avgQueryAndConsumptionTimeInMs=accumulatedQueryMetrics.getAvgQueryAndConsumptionTimeInMillis();
     }
+
     public String toString()
     {
         StringBuffer str = new StringBuffer();
@@ -88,6 +89,8 @@ public class Metrics
         str.append(this.MBConsumedPerSec);
         str.append(",");
     	str.append(this.avgMBConsumedPerSec);
+    	str.append(",");
+        str.append(this.queryAndConsumptionTimeInMs);
     	str.append(",");
         str.append(this.avgQueryAndConsumptionTimeInMs);
 
