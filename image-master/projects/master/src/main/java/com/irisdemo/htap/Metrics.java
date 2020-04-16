@@ -57,7 +57,8 @@ public class Metrics
     	this.MBConsumed=accumulatedQueryMetrics.getMBConsumed();
     	this.MBConsumedPerSec=accumulatedQueryMetrics.getMBConsumedPerSec();
     	this.avgMBConsumedPerSec=accumulatedQueryMetrics.getAvgMBConsumedPerSec();
-    	
+        
+        this.queryAndConsumptionTimeInMs=accumulatedQueryMetrics.getQueryAndConsumptionTimeInMillis();
     	this.avgQueryAndConsumptionTimeInMs=accumulatedQueryMetrics.getAvgQueryAndConsumptionTimeInMillis();
     }
 
