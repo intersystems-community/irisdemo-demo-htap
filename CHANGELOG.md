@@ -1,3 +1,8 @@
+## 2.4.4 (April 16, 2020)
+  - Documenting metrics on CSV on README.md file
+  - Adding missing metric to CSV file: queryAndConsumptionTimeInMs
+  - Adding reference to the change log
+
 ## 2.4.3 (April 15, 2020)
   - Speed Test UI can now be closed, leaving the test running on the server. It can be opened again to check on progress and download the results of the test.
   - Adding new configuration field to the UI to specify maximum time to run the test
