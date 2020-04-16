@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AccumulatedQueryMetrics extends QueryMetrics 
 {
-	
+	// Called to update the main bean that is a singleton
 	synchronized public void update(AccumulatedQueryMetrics accumulatedMetrics)
 	{
 		this.MBConsumed=accumulatedMetrics.getMBConsumed();
@@ -18,8 +18,10 @@ public class AccumulatedQueryMetrics extends QueryMetrics
 		this.recordsConsumedPerSec=accumulatedMetrics.getRecordsConsumedPerSec();
 		this.avgRecordsConsumedPerSec=accumulatedMetrics.getAvgRecordsConsumedPerSec();
 		this.avgQueryAndConsumptionTimeInMillis=accumulatedMetrics.getAvgQueryAndConsumptionTimeInMillis();
+		this.queryAndConsumptionTimeInMillis=accumulatedMetrics.getQueryAndConsumptionTimeInMillis();
 	}
 	
+	// Used when accumulaing all measures from all workers before updating the main singloton bean
 	public void addToStats(QueryMetrics newMetrics)
 	{
 		this.MBConsumed+=newMetrics.getMBConsumed();
@@ -29,5 +31,18 @@ public class AccumulatedQueryMetrics extends QueryMetrics
 		this.recordsConsumedPerSec+=newMetrics.getRecordsConsumedPerSec();
 		this.avgRecordsConsumedPerSec+=newMetrics.getAvgRecordsConsumedPerSec();
 		this.avgQueryAndConsumptionTimeInMillis+=newMetrics.getAvgQueryAndConsumptionTimeInMillis();
+		this.queryAndConsumptionTimeInMillis+=newMetrics.getQueryAndConsumptionTimeInMillis();
+	}
+
+	// Used to reset main singleton bean
+	synchronized public void reset()
+	{
+		this.MBConsumed=0;
+		this.MBConsumedPerSec=0;
+		this.avgMBConsumedPerSec=0;
+		this.numberOfRowsConsumed=0;
+		this.recordsConsumedPerSec=0;
+		this.avgRecordsConsumedPerSec=0;
+		this.avgQueryAndConsumptionTimeInMillis=0;
 	}
 }

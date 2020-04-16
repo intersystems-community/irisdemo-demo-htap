@@ -75,7 +75,7 @@ public class AccumulatedMetrics
      * @param MBIngested
      */
     synchronized public void addToStats(double timeSpentOnWorkInMillis, double numberOfRowsConsumed, double bytesConsumed) {
-        this.setNumberOfRowsConsumed(this.getNumberOfRowsConsumed() + numberOfRowsConsumed);
+        this.numberOfRowsConsumed+=numberOfRowsConsumed;
         this.bytesConsumed+=bytesConsumed;
         this.MBConsumed=this.bytesConsumed/1024/1024;
         this.timeSpentOnWorkInMillis+=timeSpentOnWorkInMillis;
@@ -97,15 +97,16 @@ public class AccumulatedMetrics
 				double ellapsedTimeInSeconds = ellapsedTimeInMillis/1000d;
 
 				previousNumberOfRowsConsumed = numberOfRowsConsumed;
-				this.setRecordsConsumedPerSec(deltaNumberOfRowsConsumed);						
+				this.setRecordsConsumedPerSec(deltaNumberOfRowsConsumed); // divided by 1 second				
 				
-				this.setMBConsumedPerSec(MBConsumed - previousMBConsumed);
+				this.setMBConsumedPerSec(MBConsumed - previousMBConsumed); // divided by 1 second
 				previousMBConsumed = MBConsumed;
 				
-				setAvgRecordsConsumedPerSec(numberOfRowsConsumed / ellapsedTimeInSeconds);
+				setAvgRecordsConsumedPerSec(numberOfRowsConsumed / ellapsedTimeInSeconds); //total
 				
-				setAvgMBConsumedPerSec(MBConsumed / ellapsedTimeInSeconds);
+				setAvgMBConsumedPerSec(MBConsumed / ellapsedTimeInSeconds); //total
 				
+				queryAndConsumptionTimeInMillis = 1000/deltaNumberOfRowsConsumed;
 				avgQueryAndConsumptionTimeInMillis = ellapsedTimeInMillis/numberOfRowsConsumed;
 			}
     	}

@@ -96,8 +96,6 @@ public class AppController {
     public ResponseEntity<byte[]> getImageAsByteArray() throws IOException 
     {
         String fileName;
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
 
         if (config.getTitle()!=null && !config.getTitle().equals(""))
         {
@@ -112,16 +110,7 @@ public class AppController {
         fileName = fileName.replace("\\", "_");
         fileName = fileName.replace("  ", " ");
 
-        ContentDisposition contentDisposition = ContentDisposition.parse("attachment;filename="+ fileName);
-        
-        headers.setContentDisposition(contentDisposition);
-
-        InputStream in = this.metricsFileManager.getMetricsFileContents();
-        
-        byte[] media = IOUtils.toByteArray(in);
-
-        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
-        return responseEntity;       
+        return this.metricsFileManager.getMetricsFileAsResponseEntity(fileName);     
     }
 
     /**
@@ -132,13 +121,21 @@ public class AppController {
         return 1;
     }
 
+    private void resetMetricsForNewlyStartedTest() throws Exception
+    {
+        metricsFileManager.openMetricsFile();
+        speedTestStartTimeInMillis = new Date().getTime();
+        speedTestRuntimeInSeconds = 0;
+        currentAggregatedMetrics = new Metrics();
+        accumulatedIngestMetrics.reset();
+        accumulatedQueryMetrics.reset();
+    }
+    
     @PostMapping(value = "/master/startSpeedTest")
     public synchronized void startSpeedTest() throws Exception {
         if (!speedTestRunning) 
         {
-            metricsFileManager.openMetricsFile();
-            speedTestStartTimeInMillis = new Date().getTime();
-            speedTestRuntimeInSeconds = 0;
+            resetMetricsForNewlyStartedTest();            
 
             final IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
             if (!databaseHasBeenInitialized) {
@@ -258,7 +255,7 @@ public class AppController {
         }
     }
 
-    private void aggregateMetrics() throws Exception
+    synchronized private void aggregateMetrics() throws Exception
     {
         this.currentAggregatedMetrics = new Metrics(speedTestRunning, speedTestRuntimeInSeconds, accumulatedIngestMetrics, accumulatedQueryMetrics);
 
@@ -268,7 +265,8 @@ public class AppController {
 
     @Scheduled(fixedRate = 1000)
     synchronized protected void getIngestionMetricsFromWorkers() {
-        if (speedTestRunning) {
+        if (speedTestRunning) 
+        {
             final AccumulatedIngestMetrics tempIngestionMetrics = new AccumulatedIngestMetrics();
             final ConcurrentHashMap<String, IngestWorker> ingestWorkers = ingestWorkerRegistryService.getWorkers();
 
@@ -276,10 +274,13 @@ public class AppController {
 
                 final String url = "http://" + hostname + "/worker/getMetrics";
 
-                try {
+                try 
+                {
                     final IngestMetrics workerMetrics = restTemplate.getForObject(url, IngestMetrics.class);
                     tempIngestionMetrics.addToStats(workerMetrics);
-                } catch (final RestClientException restException) {
+                } 
+                catch (final RestClientException restException) 
+                {
                     logger.info("Ingestion worker on " + hostname
                             + " is not responding. Marking worker as unavailable because of: "
                             + restException.getMessage());

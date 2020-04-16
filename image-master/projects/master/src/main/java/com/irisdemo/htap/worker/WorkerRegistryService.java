@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.irisdemo.htap.config.*;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 

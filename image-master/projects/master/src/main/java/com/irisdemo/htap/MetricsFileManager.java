@@ -1,6 +1,11 @@
 package com.irisdemo.htap;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -10,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 @Component()
@@ -75,7 +81,7 @@ public class MetricsFileManager {
         metricsFileWriter.append(metrics.toString() + "\n");
     }
 
-    public InputStream getMetricsFileContents() throws IOException
+    public FileInputStream getMetricsFileContents() throws IOException
     {
         try
         {
@@ -91,6 +97,22 @@ public class MetricsFileManager {
         }
 
         return null;
+    }
+    
+    public ResponseEntity<byte[]> getMetricsFileAsResponseEntity(String fileName) throws IOException 
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+        ContentDisposition contentDisposition = ContentDisposition.parse("attachment;filename="+ fileName);
+        
+        headers.setContentDisposition(contentDisposition);
+
+        byte[] media = IOUtils.toByteArray(getMetricsFileContents());
+
+        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
+        
+        return responseEntity;   
     }
     
 }

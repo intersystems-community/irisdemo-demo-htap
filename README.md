@@ -278,7 +278,28 @@ Then, change the other *.sql scripts to match your changes. The INSERT script, t
 
 Finally, just run the build.sh to rebuild the demo and you should be ready to go!
 
-## 9 - Other demo applications
+## 9 - Documentation about the columns on the Results CSV file
+
+After running a test, the UI will allow you to download the test results as a CSV file. Here is what the columns on the Results CSV file mean:
+* Ingestion:
+  - **timeInSeconds** - A point in time during the test given in seconds.
+  - **numberOfRowsIngested** - Total number of records inserted at a given point in time
+  - **recordsIngestedPerSec** - Instantaneous ingestion rate expressed in number of records inserted per second (rec/s) at a given point in time. 
+  - **avgRecordsIngestedPerSec** - Average number of records inserted per second up to a given point in time considering all records inserted up to that point in time.
+  - **MBIngested** - Total amount of MB (mega bytes) inserted into the database at a given point in time
+  - **MBIngestedPerSec** - Instantaneous ingestion rate expressed in amount of MB per second (MB/s) inserted at a given point in time.
+  - **avgMBIngestedPerSec** - Average number of records inserted per second at a given point in time considering all records inserted up to that point in time.
+* Querying:
+  - **numberOfRowsConsumed** - Total number of records fetched from the database at a given point in time
+  - **recordsConsumedPerSec** Instantaneous query rate expressed in number of records fetched per second (rec/s) at a given point in time. 
+  - **avgRecordsConsumedPerSec** - Average number of records fetched per second at a given point in time considering all records fetched up to that point in time.
+  - **MBConsumed** - Total amount of MB (mega bytes) fetched from the database at a given point in time (as proof of work done by the querying workers)
+  - **MBConsumedPerSec** - Instantaneous querying rate expressed in amount of MB per second (MB/s) fetched at a given point in time.
+  - **avgMBConsumedPerSec** - Average number of records fetched per second at a given point in time considering all records fetched up to that point in time.
+  - **queryAndConsumptionTimeInMs** - Instantaneous time taken to fetch a single record from the database and process it (sum the number of bytes fetched) measured in milliseconds.
+  - **avgQueryAndConsumptionTimeInMs** - Average time taken to fetch a single record form the database and process it considering the total number of records fetched and how long the test has been running in milliseconds.
+
+## 10 - Other demo applications
 
 There are other InterSystems IRIS demo applications that touch different subjects such as NLP, ML, Integration with AWS services, Twitter services, performance benchmarks etc. Here are some of them:
 * [HTAP Demo](https://github.com/intersystems-community/irisdemo-demo-htap) - Hybrid Transaction-Analytical Processing benchmark. See how fast InterSystems IRIS can insert and query at the same time. You will notice it is up to 20x faster than AWS Aurora!
@@ -287,10 +308,10 @@ There are other InterSystems IRIS demo applications that touch different subject
 * [HL7 Appointments and SMS (text messages) application](https://github.com/intersystems-community/irisdemo-demo-appointmentsms) -  Shows how InterSystems IRIS for Health can be used to parse HL7 appointment messages to send SMS (text messages) appointment reminders to patients. It also shows real time dashboards based on appointments data stored in a normalized data lake.
 * [The Readmission Demo](https://github.com/intersystems-community/irisdemo-demo-readmission) - Patient Readmissions are said to be the "Hello World of Machine Learning" in Healthcare. On this demo, we use this problem to show how InterSystems IRIS can be used to **safely build and operationalize** ML models for real time predictions and how this can be integrated into a random application. This **InterSystems IRIS for Health** demo seeks to show how a full solution for this problem can be built.
 
-## 10 - Report any Issues
+## 11 - Report any Issues
   
 Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).
 
-## 11 - Check the Change Log
+## 12 - Check the Change Log
 
 All the changes to this project are logged [here](CHANGELOG.md).

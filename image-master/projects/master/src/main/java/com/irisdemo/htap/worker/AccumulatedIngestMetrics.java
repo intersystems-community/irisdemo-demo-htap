@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AccumulatedIngestMetrics extends IngestMetrics 
 {
+	// Called to update the main bean that is a singleton
 	synchronized public void update(AccumulatedIngestMetrics accumulatedMetrics)
 	{
 		this.MBIngested=accumulatedMetrics.getMBIngested();
@@ -18,6 +19,7 @@ public class AccumulatedIngestMetrics extends IngestMetrics
 		this.avgRecordsIngestedPerSec=accumulatedMetrics.getAvgRecordsIngestedPerSec();
 	}
 	
+	// Used when accumulaing all measures from all workers before updating the main singloton bean
 	public void addToStats(IngestMetrics newMetrics)
 	{
 		this.MBIngested+=newMetrics.getMBIngested();
@@ -26,5 +28,16 @@ public class AccumulatedIngestMetrics extends IngestMetrics
 		this.numberOfRowsIngested+=newMetrics.getNumberOfRowsIngested();
 		this.recordsIngestedPerSec+=newMetrics.getRecordsIngestedPerSec();
 		this.avgRecordsIngestedPerSec+=newMetrics.getAvgRecordsIngestedPerSec();
+	}
+
+	// Used to reset main singleton bean
+	synchronized public void reset()
+	{
+		this.MBIngested=0;
+		this.MBIngestedPerSec=0;
+		this.avgMBIngestedPerSec=0;
+		this.numberOfRowsIngested=0;
+		this.recordsIngestedPerSec=0;
+		this.avgRecordsIngestedPerSec=0;
 	}
 }
