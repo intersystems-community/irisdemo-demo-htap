@@ -1,3 +1,8 @@
+## 2.4.5 (April 19, 2020)
+  - Making Test be based on IRIS 2020.2.0.196.0
+  - Immediately hide Start Button after pressing it. Show a starting message instead. Show stop button just after we know the test has been started successfully.
+  - Adding support for SQL Server on AWS
+
 ## 2.4.4 (April 16, 2020)
   - Documenting metrics on CSV on README.md file
   - Adding missing metric to CSV file: queryAndConsumptionTimeInMs
