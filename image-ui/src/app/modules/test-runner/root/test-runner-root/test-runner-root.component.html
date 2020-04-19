@@ -1,8 +1,11 @@
 <div class="test-runner-layout">
     <div class="test-running-stats-wrapper">
         <div class="test-runner-button-wrapper">
-            <button *ngIf="!testRunning" class="app-button" mat-raised-button color="primary" (click)="runTest()">Run Test</button>
-            <button *ngIf="testRunning" class="app-button" mat-raised-button color="primary" (click)="stopTest()">Stop Test</button>
+            <button *ngIf="testRunningStatus=='stopped'" class="app-button" mat-raised-button color="primary" (click)="runTest()">Run Test</button>
+            <div *ngIf="testRunningStatus=='starting'">
+                Starting...
+            </div>
+            <button *ngIf="testRunningStatus=='running'" class="app-button" mat-raised-button color="primary" (click)="stopTest()">Stop Test</button>
             
             <div *ngIf="hasResultsToDownload">
                 &nbsp;&nbsp;<a href="/master/metrics" class="results-button" mat-raised-button>Results</a>

@@ -12,7 +12,7 @@ import { TestDirectorService } from '../../../../providers/test-director.service
 })
 export class TestRunnerRootComponent implements OnInit {
 
-  testRunning: boolean = false;
+  testRunningStatus = "stopped";
   hasResultsToDownload: boolean = false;
   testRunTime: number = 15;
   latestMetrics: any = {};
@@ -132,7 +132,7 @@ export class TestRunnerRootComponent implements OnInit {
       if (this.$metricsSubscription)
         this.$metricsSubscription.unsubscribe();
         
-      this.testRunning = false;
+      this.testRunningStatus = "stopped";
       this.hasResultsToDownload = true;
     }
 
@@ -156,16 +156,22 @@ export class TestRunnerRootComponent implements OnInit {
   }
 
   runTest(): void {
+    
+    // We will assume the test will be running so the Run Test button will be hidden
+    this.testRunningStatus = "starting";
+    this.hasResultsToDownload = false;
     this.clearGraphs();
     this.$startSubscription = this.testDirector.startTest().subscribe(
       response => {
         this.$startSubscription.unsubscribe();
-        this.testRunning = true;
-        this.hasResultsToDownload = false;
+        
+        this.testRunningStatus = "running";
+        
         //this.startTestSafetyKill();
         this.monitorMetrics();
       },
       error => {
+        this.testRunningStatus = "stopped";
         this.$startSubscription.unsubscribe();
         alert("an error occured subscribing to Start Subscription")
       }
