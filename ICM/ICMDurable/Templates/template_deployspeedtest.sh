@@ -16,7 +16,7 @@ printf "\n\n\t ${YELLOW}iris${RESET}  - InterSystems IRIS"
 # printf "\n\n\t ${YELLOW}mysql${RESET} - MySQL/AWSAurora (not implemented)"
 printf "\n\n\t ${YELLOW}hana${RESET}  - SAP HANA"
 printf "\n\n\t ${YELLOW}aurora${RESET}  - AWS Aurora"
-printf "\n\n\t ${YELLOW}sqlserver${RESET}  - AWS RDS SQL Server"
+printf "\n\n\t ${YELLOW}mssqlserver${RESET}  - AWS RDS SQL Server"
 
 printf "\n\n${RESET}"
 
@@ -55,15 +55,15 @@ case $SPEED_TEST_TO_DEPLOY in
         deploy "mysql" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
         break
         ;;
-    sqlserver)
+    mssqlserver)
         DB_TITLE="AWS RDS SQL Server Enterprise 2017"
-        read_endpoint_and_credentials "$DB_TITLE" "sa"
+        read_endpoint_and_credentials "$DB_TITLE" "admin"
         exit_if_error "We need all the information to proceed."
 
         INGESTION_JDBC_URL="jdbc:sqlserver://$DB_HOSTNAME:1433;DatabaseName=model"
         CONSUMER_JDBC_URL="jdbc:sqlserver://$DB_HOSTNAME:1433;DatabaseName=model"
 
-        deploy "sqlserver" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$JDBC_USERNAME" "$JDBC_PASSWORD"
+        deploy "mssqlserver" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
         break
         ;;
     mysql)

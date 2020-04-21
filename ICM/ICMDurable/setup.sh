@@ -3,6 +3,8 @@
 source /ICMDurable/utils.sh
 source /ICMDurable/base_env.sh
 
+setupWorkarounds
+
 export SSH_DIR=/ICMDurable/keys
 export TLS_DIR=/ICMDurable/keys
 
@@ -14,12 +16,6 @@ then
     printf "\n\n${GREEN}Generating TLS keys on $TLS_DIR:\n${RESET}"
     /ICM/bin/keygenTLS.sh $TLS_DIR
 fi
-
-#
-# Workaround for Prodlog 161538
-#
-
-sed -i  "s/1..26/0..26/g" /ICM/etc/toHost/mountVolumes.sh
 
 #
 # Setting up LABEL for our machines

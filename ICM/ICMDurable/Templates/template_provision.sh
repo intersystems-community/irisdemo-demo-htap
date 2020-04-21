@@ -2,6 +2,8 @@
 source ./env.sh
 source /ICMDurable/utils.sh
 
+provisionWorkarounds
+
 if [ ! -f ./defaults.json ];
 then
     printf "\n\n${RED}You must run setup.sh first.\n\n${RESET}"

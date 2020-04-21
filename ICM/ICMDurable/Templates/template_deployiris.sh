@@ -7,6 +7,8 @@
 source ./env.sh
 source /ICMDurable/utils.sh
 
+deployirisWorkarounds
+
 if [ "$CONTAINERLESS" == "true" ];
 then
     icm scp --role DM -localPath $IRIS_KIT_LOCAL_PATH -remotePath $IRIS_KIT_REMOTE_PATH
@@ -25,6 +27,6 @@ fi
 
 printf "\n\n${YELLOW}You can run ./deployspeedtest.sh to deploy the Speed Test to the provisioned infrastructure now.\n\n${RESET}"
 
-VPC_ID=$(cat ./state/$ICM_LABEL-IRISSpeedTest/terraform.tfstate | grep vpc_id | head -1 | awk -F\" '{print $4}')
+getVPC
 
 printf "\n\n${YELLOW}If you are planning on deploying SAP HANA, AWS Aurora or any other AWS database, deploy them on the VPC_ID $VPC_ID.${RESET}\n\n"
