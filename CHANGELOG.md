@@ -1,3 +1,7 @@
+## 2.4.6 (April 21, 2020)
+  - Adding better workaround support to ICM scripts
+  - Adding support for pre-expanding database for IRIS and SQL Server before test starts
+
 ## 2.4.5 (April 19, 2020)
   - Making Test be based on IRIS 2020.2.0.196.0
   - Immediately hide Start Button after pressing it. Show a starting message instead. Show stop button just after we know the test has been started successfully.
