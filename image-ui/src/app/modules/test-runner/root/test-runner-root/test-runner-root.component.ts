@@ -127,13 +127,25 @@ export class TestRunnerRootComponent implements OnInit {
     // as it has always done it. But the metrics returned now include its status (speedTestrunning)
     // The server may also simply stop the test if the time to stop has come
     // So, now, we will only stop subscription if the server told us to do so.
-    if(!currentMetrics.speedTestRunning)
+    console.log(currentMetrics);
+    
+    switch (currentMetrics.speedTestRunningStatus)
     {
-      if (this.$metricsSubscription)
+      case 0:
+        if (this.$metricsSubscription)
         this.$metricsSubscription.unsubscribe();
         
-      this.testRunningStatus = "stopped";
-      this.hasResultsToDownload = true;
+        this.testRunningStatus = "stopped";
+        this.hasResultsToDownload = true;
+        break;
+
+      case 1:
+        this.testRunningStatus = "starting";
+        break;
+
+      case 2:
+        this.testRunningStatus = "running";
+        break;
     }
 
     this.latestMetrics = currentMetrics;
@@ -165,8 +177,6 @@ export class TestRunnerRootComponent implements OnInit {
       response => {
         this.$startSubscription.unsubscribe();
         
-        this.testRunningStatus = "running";
-        
         //this.startTestSafetyKill();
         this.monitorMetrics();
       },
@@ -185,7 +195,7 @@ export class TestRunnerRootComponent implements OnInit {
       response => {
         this.$startSubscription.unsubscribe();
 
-        if (response.speedTestRunning) // Is test still running?
+        if (response.speedTestRunningStatus!=0) // Is test starting or already running?
         {
           this.runTest();
         }

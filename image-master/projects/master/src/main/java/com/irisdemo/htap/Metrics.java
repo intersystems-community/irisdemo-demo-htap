@@ -5,7 +5,7 @@ import com.irisdemo.htap.worker.AccumulatedQueryMetrics;
 
 public class Metrics 
 {
-    private boolean speedTestIsRunning;
+    private int speedTestRunningStatus;
     private int runTimeInSeconds;
 
     private double numberOfRowsIngested;
@@ -27,16 +27,16 @@ public class Metrics
     private double queryAndConsumptionTimeInMs;
     private double avgQueryAndConsumptionTimeInMs;
     
-    public Metrics(boolean speedTestIsRunning, int runTime, AccumulatedIngestMetrics accumulatedIngestMetrics, AccumulatedQueryMetrics accumulatedQueryMetrics)
+    public Metrics(int speedTestRunningStatus, int runTime, AccumulatedIngestMetrics accumulatedIngestMetrics, AccumulatedQueryMetrics accumulatedQueryMetrics)
     {
-        this.speedTestIsRunning = speedTestIsRunning;
+        this.speedTestRunningStatus = speedTestRunningStatus;
         this.runTimeInSeconds = runTime;
         populateMetrics(accumulatedIngestMetrics, accumulatedQueryMetrics);
     }
 
     public Metrics()
     {
-        this.speedTestIsRunning = false;
+        this.speedTestRunningStatus = 0;
         this.runTimeInSeconds = 0;
     }
 
@@ -103,9 +103,9 @@ public class Metrics
         return this.runTimeInSeconds;
     }
 
-    public boolean isSpeedTestRunning()
+    public int getSpeedTestRunningStatus()
     {
-        return this.speedTestIsRunning;
+        return this.speedTestRunningStatus;
     }
 
     public double getNumberOfRowsIngested() {

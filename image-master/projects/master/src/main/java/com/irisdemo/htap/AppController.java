@@ -11,13 +11,11 @@ import com.irisdemo.htap.config.Config;
 import com.irisdemo.htap.config.WorkerConfig;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +43,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 public class AppController {
     private static boolean databaseHasBeenInitialized = false;
 
-    private boolean speedTestRunning = false;
+    /// 0 - Stopped, 1 - Starting, 2 - Running
+    private int speedTestRunningStatus = 0;
 
     @Autowired
     WorkerRegistryService<IngestWorker> ingestWorkerRegistryService;
@@ -133,10 +132,12 @@ public class AppController {
     
     @PostMapping(value = "/master/startSpeedTest")
     public synchronized void startSpeedTest() throws Exception {
-        if (!speedTestRunning) 
+        
+        // Are we stopped?
+        if (speedTestRunningStatus==0) 
         {
-            resetMetricsForNewlyStartedTest();            
-
+            speedTestRunningStatus = 1; //Starting...
+            
             final IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
             if (!databaseHasBeenInitialized) {
                 logger.info("START speed test. Asking one worker to prepare the database...");
@@ -149,28 +150,31 @@ public class AppController {
                 restTemplate.postForEntity(truncateTableURL, null, null);
             }
 
-            speedTestRunning = true;
-
             logger.info("START speed test. Notifying all workers...");
+
+            resetMetricsForNewlyStartedTest();
 
             // Start ingestion...
             ingestWorkerRegistryService.startSpeedTest();
-
+            
             // Should we start the consumers as well?
             if (config.getStartConsumers()) {
                 queryWorkerRegistryService.startSpeedTest();
             }
+            speedTestRunningStatus = 2; 
         } 
         else 
         {
             logger.warn(
-                    "Request to start the speed test received. Speed Test was already running. Nothing has been done.");
+                    "Request to start the speed test received. Speed Test was already starting or running. Nothing has been done.");
         }
     }
 
     @PostMapping(value = "/master/stopSpeedTest")
     public synchronized void stopSpeedTest() throws Exception {
-        if (speedTestRunning) 
+        
+        // Are we running?
+        if (speedTestRunningStatus==2) 
         {
             logger.info("STOP speed test. Notifying all workers...");
 
@@ -182,7 +186,7 @@ public class AppController {
                 queryWorkerRegistryService.stopSpeedTest();
             }
 
-            speedTestRunning = false;
+            speedTestRunningStatus = 0; //Stopped
 
             // Aggregating metrics one last time, to include the update to speedTestRunning
             aggregateMetrics();
@@ -239,7 +243,7 @@ public class AppController {
     synchronized protected void monitorAndAggregateMetrics() throws Exception
     {        
         // Just take the current accumulated Metrics for ingestion and query and add it to the end of the file
-        if (speedTestRunning)
+        if (speedTestRunningStatus==2)
         {
             long currentTimeInSeconds = new Date().getTime();
             this.speedTestRuntimeInSeconds = (int) (currentTimeInSeconds-this.speedTestStartTimeInMillis)/1000;
@@ -257,7 +261,7 @@ public class AppController {
 
     synchronized private void aggregateMetrics() throws Exception
     {
-        this.currentAggregatedMetrics = new Metrics(speedTestRunning, speedTestRuntimeInSeconds, accumulatedIngestMetrics, accumulatedQueryMetrics);
+        this.currentAggregatedMetrics = new Metrics(speedTestRunningStatus, speedTestRuntimeInSeconds, accumulatedIngestMetrics, accumulatedQueryMetrics);
 
         // Appending to file just in case they want to download it
         metricsFileManager.appendMetrics(this.currentAggregatedMetrics);
@@ -265,7 +269,8 @@ public class AppController {
 
     @Scheduled(fixedRate = 1000)
     synchronized protected void getIngestionMetricsFromWorkers() {
-        if (speedTestRunning) 
+        // If we are running
+        if (speedTestRunningStatus==2) 
         {
             final AccumulatedIngestMetrics tempIngestionMetrics = new AccumulatedIngestMetrics();
             final ConcurrentHashMap<String, IngestWorker> ingestWorkers = ingestWorkerRegistryService.getWorkers();
@@ -295,7 +300,8 @@ public class AppController {
 
     @Scheduled(fixedRate = 1000)
     synchronized protected void getQueryMetricsFromWorkers() {
-        if (speedTestRunning) {
+        //If we are running
+        if (speedTestRunningStatus==2) {
             final AccumulatedQueryMetrics tempQueryMetrics = new AccumulatedQueryMetrics();
             final ConcurrentHashMap<String, QueryWorker> QueryWorkers = queryWorkerRegistryService.getWorkers();
 	    	
