@@ -63,8 +63,8 @@ Put the iris.key file on the folder **./irisdemo-demo-htap/ICM/ICMDurable/licens
 You downloaded InterSystems IRIS and ICM from the [Evaluation Service](https://evaluation.intersystems.com) and [Worldwide Response Center (WRC)](https://wrc.intersystems.com) as per instructions above and now you must have two tar.gz files like these:
 
 ```bash
-IRIS-2020.1.0.199.0-lnxubuntux64.tar.gz
-icm-2019.4.0.383.0-docker.tar.gz
+IRIS-2020.2.0.196.0-lnxubuntux64.tar.gz
+icm-2020.2.0.196.0-docker.tar.gz
 ```
 
 **Please, notice that the InterSystems IRIS tar.gz is NOT a docker image. It is a normal InterSystems IRIS install kit for Ubuntu.**
@@ -73,8 +73,8 @@ Copy the InterSystems IRIS install kit to the folder **ICM/ICMDurable/IRISKit/**
 
 ICM must be loaded into your local docker installation with the following commands:
 ```bash
-docker load --input ./icm-2019.4.0.383.0-docker.tar.gz
-Loaded image: intersystems/icm:2019.4.0.383.0
+docker load --input ./icm-2020.2.0.196.0-docker.tar.gz
+Loaded image: intersystems/icm:2020.2.0.196.0
 ```
 
 ## 4. Configure CONF_IRISVERSION
@@ -82,7 +82,7 @@ Loaded image: intersystems/icm:2019.4.0.383.0
 Look inside the file **./irisdemo-demo-htap/ICM/ICMDurable/CONF_IRISVERSION**. You will see the version of IRIS/ICM we are using:
 
 ```bash
-2020.1.0.199.0
+2020.2.0.196.0
 ```
 
 Make sure it matches the version of ICM you just loaded. You can change it to match the version of ICM you just downloaded.
