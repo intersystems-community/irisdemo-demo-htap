@@ -1,4 +1,4 @@
-## 2.4.6 (April 21, 2020)
+## 2.4.7 (April 21, 2020)
   - Adding better workaround support to ICM scripts
   - Adding support for pre-expanding database for IRIS and SQL Server before test starts
 
