@@ -1,3 +1,7 @@
+## 2.4.8 (April 21, 2020)
+  - Allowing user to close web browser and reopen it on starting state.
+  - Adding intermediate state 'starting' to the Run Test button.
+
 ## 2.4.7 (April 21, 2020)
   - Adding better workaround support to ICM scripts
   - Adding support for pre-expanding database for IRIS and SQL Server before test starts
