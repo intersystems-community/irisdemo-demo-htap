@@ -127,8 +127,8 @@ export class TestRunnerRootComponent implements OnInit {
     // as it has always done it. But the metrics returned now include its status (speedTestrunning)
     // The server may also simply stop the test if the time to stop has come
     // So, now, we will only stop subscription if the server told us to do so.
-    console.log(currentMetrics);
-    
+    //console.log(currentMetrics);
+
     switch (currentMetrics.speedTestRunningStatus)
     {
       case 0:
@@ -194,6 +194,8 @@ export class TestRunnerRootComponent implements OnInit {
     this.$startSubscription = this.testDirector.getMetrics().subscribe(
       response => {
         this.$startSubscription.unsubscribe();
+        
+        console.log(response);
 
         if (response.speedTestRunningStatus!=0) // Is test starting or already running?
         {

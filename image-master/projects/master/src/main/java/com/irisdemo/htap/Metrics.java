@@ -34,9 +34,9 @@ public class Metrics
         populateMetrics(accumulatedIngestMetrics, accumulatedQueryMetrics);
     }
 
-    public Metrics()
+    public Metrics(int speedTestRunningStatus)
     {
-        this.speedTestRunningStatus = 0;
+        this.speedTestRunningStatus = speedTestRunningStatus;
         this.runTimeInSeconds = 0;
     }
 

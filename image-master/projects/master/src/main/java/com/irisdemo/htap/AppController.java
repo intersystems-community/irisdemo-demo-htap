@@ -72,7 +72,7 @@ public class AppController {
     private long speedTestStartTimeInMillis;
     private int speedTestRuntimeInSeconds;
 
-    private Metrics currentAggregatedMetrics = new Metrics();
+    private Metrics currentAggregatedMetrics = new Metrics(0);
 
     @Bean
     public ByteArrayHttpMessageConverter byteArrayHttpMessageConverter() {
@@ -125,7 +125,7 @@ public class AppController {
         metricsFileManager.openMetricsFile();
         speedTestStartTimeInMillis = new Date().getTime();
         speedTestRuntimeInSeconds = 0;
-        currentAggregatedMetrics = new Metrics();
+        currentAggregatedMetrics = new Metrics(speedTestRunningStatus);
         accumulatedIngestMetrics.reset();
         accumulatedQueryMetrics.reset();
     }
@@ -137,6 +137,7 @@ public class AppController {
         if (speedTestRunningStatus==0) 
         {
             speedTestRunningStatus = 1; //Starting...
+            currentAggregatedMetrics = new Metrics(speedTestRunningStatus);
             
             final IngestWorker ingestWorker = ingestWorkerRegistryService.getOneWorker();
             if (!databaseHasBeenInitialized) {
