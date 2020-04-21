@@ -229,4 +229,62 @@ public class WorkerDBUtils
 			throw new SQLException(returnMsg);
 		}
 	}
+
+	public void createIRISExpandDatabaseProc(Connection connection) throws SQLException, IOException
+	{
+		PreparedStatement statement;
+		
+		try
+		{
+			String sqlCmd = "CREATE FUNCTION IRISDemo.ExpandDatabase(IN pSizeInGB INTEGER) FOR IRISDemo.HTAPDemoAPI2 RETURNS VARCHAR(32000) LANGUAGE OBJECTSCRIPT { \n " +
+			"	Set tSC = $$$OK \n" +
+			"	Set tNS = $Namespace \n" +
+			"	Try { \n" +
+			"		Set $Namespace=\"%SYS\" \n" +
+			"       Set tSC = ##class(Config.Databases).Get(tNS, .properties) \n"+
+			"		Quit:$$$ISERR(tSC)\n" +
+			"		\n" +
+			"		Set dir=properties(\"Directory\")\n" +
+			"		Set db=##class(SYS.Database).%OpenId(dir,,.tSC)\n" +
+			"		Quit:$$$ISERR(tSC)\n" +
+			"		Set db.Size=pSizeInGB*1024 \n" +
+			"		Set tSC = db.%Save()\n" +
+			"		\n" +
+			"	} Catch (oException) { \n" +
+			"		Set tSC = oException.AsStatus() \n" +
+			"	} \n" +
+			"	Set $Namespace=tNS \n" +
+			"	If $$$ISERR(tSC) Quit $System.Status.GetErrorText(tSC) \n" +
+			"	Quit 1 \n" +
+			"}\n";
+
+		    statement = connection.prepareStatement(sqlCmd);
+		    statement.execute();
+		    statement.close();
+
+		}
+		catch (SQLException exception)
+		{
+			if (exception.getErrorCode()!=362) //Method '???' does not exist in any class
+			{
+				throw exception;
+			}
+		}
+    }
+	
+	public static void expandDatabase(Connection connection, int databaseSizeInGB) throws SQLException
+	{
+		CallableStatement statement = connection.prepareCall("{ ? = call IRISDemo.ExpandDatabase(?) }");
+		statement.registerOutParameter(1, Types.VARCHAR);
+		statement.setInt(2, databaseSizeInGB);
+
+		statement.execute();
+		
+		String returnMsg = statement.getString(1);
+		
+		if (!returnMsg.equals("1"))
+		{
+			throw new SQLException(returnMsg);
+		}
+	}
 }

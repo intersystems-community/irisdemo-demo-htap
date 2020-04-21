@@ -111,6 +111,9 @@ public class IRISWorker implements IWorker
 		try
 		{
 			workerDBUtils.createIRISDisableJournalProc(connection);
+			workerDBUtils.createIRISExpandDatabaseProc(connection);
+			
+			WorkerDBUtils.expandDatabase(connection, config.getDatabaseSizeInGB());
 
 			if (config.getDisableJournalForDropTable())
 			{

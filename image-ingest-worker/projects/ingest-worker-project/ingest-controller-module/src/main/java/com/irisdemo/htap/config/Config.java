@@ -25,6 +25,7 @@ public class Config
 	private String thisHostName;
 	private int thisServerPort;
 	private String workerNodePrefix;
+	private int databaseSizeInGB;
 	
 	private boolean disableJournalForDropTable;
 	private boolean disableJournalForTruncateTable;
@@ -101,6 +102,15 @@ public class Config
 	public void setThisServerPort(int thisServerPort) {
 		logger.info("This server port is " + thisServerPort);
 		this.thisServerPort = thisServerPort;
+	}
+
+	public int getDatabaseSizeInGB() {
+		return this.databaseSizeInGB;
+	}
+
+	public void setDatabaseSizeInGB(int databaseSizeInGB) {
+		logger.info("Database size set to " + databaseSizeInGB + "GB." );
+		this.databaseSizeInGB = databaseSizeInGB;
 	}
 
 	public int getThisServerPort() {

@@ -44,14 +44,15 @@ services:
       - START_CONSUMERS=true
       - INGESTION_THREADS_PER_WORKER=2
       - INGESTION_BATCH_SIZE=1000
-      - INGESTION_JDBC_URL=jdbc:sqlserver://mssqlserver:1433;DatabaseName=model
+      - INGESTION_JDBC_URL=jdbc:sqlserver://mssqlserver:1433
       - INGESTION_JDBC_USERNAME=sa
       - INGESTION_JDBC_PASSWORD=ALongPasswordWith1
-      - CONSUMER_JDBC_URL=jdbc:sqlserver://mssqlserver:1433;DatabaseName=model
+      - CONSUMER_JDBC_URL=jdbc:sqlserver://mssqlserver:1433
       - CONSUMER_JDBC_USERNAME=sa
       - CONSUMER_JDBC_PASSWORD=ALongPasswordWith1
       - CONSUMER_THREADS_PER_WORKER=1
       - CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS=0
+      - DATABASE_SIZE_IN_GB=11
 
   ingest-worker1:
     depends_on: 

@@ -3,6 +3,7 @@ package com.irisdemo.htap.worker.mysql;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -73,14 +74,16 @@ public class MSSQLWorker implements IWorker
 	@Async
     public CompletableFuture<Long> startOneConsumer(int threadNum) throws IOException, SQLException, ClassNotFoundException
     {	
+		logger.info("Starting Consumer thread "+threadNum+"...");
+
 		PreparedStatement preparedStatement;
 		ResultSet rs;
 		ResultSetMetaData rsmd;
 		Connection connection = getDataSource().getConnection();
+		changeDatabase(connection, "SPEEDTEST");
+
 		double t0, t1, t2, t3, rowCount;
 		int idIndex, rowSizeInBytes, colnumCount;
-		
-		logger.info("Starting Consumer thread "+threadNum+"...");
 		
 		// Harry was using a fixed sequence of IDs like this:
 		String[] IDs = {"W1A1", "W1A10", "W1A100", "W1A1000","W1A10000", "W1A100000", "W1A1000000", "W1A10000000"};
@@ -163,4 +166,11 @@ public class MSSQLWorker implements IWorker
 		return null;
 	}
 	
+	public void changeDatabase(Connection connection, String databaseName) throws SQLException
+	{
+		logger.info("Changing to database " + databaseName + "...");
+		Statement statement = connection.createStatement();
+		statement.execute("USE " + databaseName);
+	}
+
 }

@@ -56,8 +56,6 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 				config.setIngestionJDBCURL(workerConfig.config.ingestionJDBCURL);
 				config.setIngestionJDBCUserName(workerConfig.config.ingestionJDBCUserName);
 				config.setIngestionNumThreadsPerWorker(workerConfig.config.ingestionNumThreadsPerWorker);
-
-				logger.info("IN CONFIGSERVICE, THE VALUE FOR INGESTION THREADS IS: " + workerConfig.config.ingestionNumThreadsPerWorker);
 				
 				config.setInsertStatement(workerConfig.config.insertStatement);
 				config.setQueryStatement(workerConfig.config.queryStatement);
@@ -68,6 +66,8 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 				config.setIrisProcDisableJournal(workerConfig.config.irisProcDisableJournal);
 				config.setIrisProcDisableJournalDrop(workerConfig.config.irisProcDisableJournalDrop);
 				config.setIrisProcEnableCallInService(workerConfig.config.irisProcEnableCallInService);
+				
+				config.setDatabaseSizeInGB(workerConfig.config.databaseSizeInGB);
 				
 				logger.info("Registration successful. Configuration data received and stored.");
 		}

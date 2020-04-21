@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -61,7 +62,12 @@ public class WorkerDBUtils
 
 	        Properties connectionProperties = new Properties();
 	        connectionProperties.setProperty("user", config.getIngestionJDBCUserName());
-	        connectionProperties.setProperty("password", config.getIngestionJDBCPassword());
+			connectionProperties.setProperty("password", config.getIngestionJDBCPassword());
+
+			// All connections will be created on the master database. That will be used to setup the SPEEDTEST
+			// database, SpeedTest Schema and SpeedTest.Account table. The database will be pre-expanded.
+			// The MSSQLWorker.java class will USE SPEEDTEST to do the inserts on the right database.
+			connectionProperties.setProperty("databaseName", "master");
 
 	        dataSourceCache = new DriverManagerDataSource(config.getIngestionJDBCURL(), connectionProperties);
 		}
@@ -173,6 +179,8 @@ public class WorkerDBUtils
     
 	public void createTable(Connection connection) throws SQLException, Exception
 	{
+		createDatabase(connection, "SPEEDTEST", config.getDatabaseSizeInGB());
+		changeDatabase(connection, "SPEEDTEST");
 		createSchema(connection);
 		
 		logger.info("Creating table ...");
@@ -234,5 +242,87 @@ public class WorkerDBUtils
 		PreparedStatement statement = connection.prepareStatement(config.getTableTruncateStatement());
 	    statement.execute();
 	    statement.close();
+	}
+
+	public void createDatabase(Connection connection, String databaseName,int initialDatabaseSize) throws Exception, SQLException
+	{
+		String folderName;
+		int initialLogSize = initialDatabaseSize*3;
+
+		logger.info("Creating database " + databaseName + "...");
+		
+		if (isRunningOnLinux(connection))
+		{
+			folderName = "/tmp";
+		}
+		else
+		{
+			throw new Exception("Don't know where to put the database file and transaction logs on this platform.");
+		}
+
+		String databaseFileName=folderName+"/SPEEDTEST.mdf";
+		String logFileName=folderName+"/SPEEDTEST.ldf";
+
+		// We are in the MASTER database, so we are safe to do this
+		String sqlCommand = "CREATE DATABASE " + databaseName + " ON " +   
+		"( NAME = SPEEDTEST_DAT,  " +
+		"	FILENAME = '"+ databaseFileName +"', "+
+		"	SIZE = "+initialDatabaseSize+"GB, "+
+		"	MAXSIZE = UNLIMITED, "+  
+		"	FILEGROWTH = 50 MB)  "+ 
+		"LOG ON   "+
+		"( NAME = SPEEDTEST_LOG,   "+
+		"	FILENAME = '"+logFileName+"', "+
+		"	SIZE = "+initialLogSize+"GB, "+
+		"	MAXSIZE = UNLIMITED, "+ 
+		"	FILEGROWTH = 5MB );";
+		
+		logger.info("Creating database: " + sqlCommand);
+
+		Statement statement = connection.createStatement();
+		statement.execute(sqlCommand);
+	    statement.close();
+	}
+
+	public void changeDatabase(Connection connection, String databaseName) throws SQLException
+	{
+		logger.info("Changing to database " + databaseName + "...");
+		Statement statement = connection.createStatement();
+		statement.execute("USE " + databaseName);
+	}
+
+
+	// If it is running on Linux, it is propably on a container in a user's PC
+	// so there is no gain in picking a proper file system for the database and 
+	// transaction logs. 
+	// But if we are running on a proper server on AWS, we should pick the best 
+	// place possible for the database and transaction logs.
+	public boolean isRunningOnLinux(Connection connection) throws SQLException, Exception
+	{
+		boolean isRunningOnLinux = false;
+		
+		Statement statement = connection.createStatement();
+
+		try
+		{
+			
+			ResultSet rs = statement.executeQuery("SELECT @@VERSION");
+			rs.next();
+
+			if (rs.getString(1).contains("Linux"))
+			{
+				isRunningOnLinux=true;
+			}
+		}
+		catch (SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			statement.close();
+		}
+		
+		return isRunningOnLinux;
 	}
 }

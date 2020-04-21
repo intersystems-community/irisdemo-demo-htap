@@ -1,6 +1,9 @@
 # Mac 
 .DS_Store
 
+# DBeaver
+**/.dbeaver
+
 # Compiled class file
 *.class
 

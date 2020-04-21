@@ -45,9 +45,10 @@ public class MSSQLWorker implements IWorker
 		long recordNum = 0;
 		long batchSizeInBytes;
 		
-		Connection connection = workerDBUtils.getDataSource().getConnection();
-    	
 		logger.info("Ingestion worker #"+threadNum+" started.");
+
+		Connection connection = workerDBUtils.getDataSource().getConnection();
+    	workerDBUtils.changeDatabase(connection, "SPEEDTEST");
 		
 		connection.setAutoCommit(false);
 		

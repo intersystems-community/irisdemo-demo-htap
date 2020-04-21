@@ -15,6 +15,7 @@ public class RESTMasterConfig
 	public int ingestionNumThreadsPerWorker;
 	public boolean disableJournalForDropTable;
 	public boolean disableJournalForTruncateTable;
+	public int databaseSizeInGB;
 	
 	/*
 	 * Statements

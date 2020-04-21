@@ -22,6 +22,38 @@ exit_if_error() {
 	fi
 }
 
+#
+# Workaround for Prodlog 161538
+#
+prodlog161538() {
+    # Always test first
+    if [ ! -z "$(cat /ICM/etc/toHost/mountVolumes.sh | grep 1..26)" ];
+    then 
+        sed -i  "s/1..26/0..26/g" /ICM/etc/toHost/mountVolumes.sh
+    fi
+}
+
+# provision.sh scripts instantiated from the template will call this every time they run
+# in order to apply required workarounds for this stage. As ICM is started fresh every time 
+# a new ICM container is started, we must always check and apply required workarounds
+provisionWorkarounds() {
+    prodlog161538
+}
+
+# deployiris.sh scripts instantiated from the template will call this every time they run
+# in order to apply required workarounds for this stage. As ICM is started fresh every time 
+# a new ICM container is started, we must always check and apply required workarounds
+deployirisWorkarounds() {
+    prodlog161538
+}
+
+# setup.sh scripts instantiated from the template will call this every time they run
+# in order to apply required workarounds for this stage. As ICM is started fresh every time 
+# a new ICM container is started, we must always check and apply required workarounds
+setupWorkarounds() {
+    echo
+}
+
 exit_if_terraform_error() {
 
 	if [ $? -ne 0 ];
@@ -47,7 +79,7 @@ exit_if_empty() {
 terraform_aws_open_ports() {
     if [ -z "$(cat /ICM/etc/Terraform/AWS/Instance/infrastructure.tf | grep "39013 \# SAP" )" ];
     then
-        printf "\n\n${GREEN}Configuring Terraform for opening TCP ports 8080 and 39013...\n\n${RESET}"
+        printf "\n\n${GREEN}Configuring Terraform for opening required TCP ports...\n\n${RESET}"
         
         # for HTAP Workers to be able to talk to master and vice versa
         ingress8080='ingress \{\n from_port=8080 \# HTAP \n to_port=8080 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
@@ -59,10 +91,10 @@ terraform_aws_open_ports() {
         ingress3306='ingress \{\n from_port=3306 \# HTAP \n to_port=3306 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
 
         # for AWS SQL Server
-        ingress3306='ingress \{\n from_port=1433 \# HTAP \n to_port=1433 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
+        ingress1433='ingress \{\n from_port=1433 \# HTAP \n to_port=1433 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
 
         # /a is used for appending after the pattern
-        sed -E -i  "/ *vpc_id *= *var.aws_vpc_default_id *$/a $ingress8080 \n $ingress39013 \n $ingress3306" /ICM/etc/Terraform/AWS/Instance/infrastructure.tf
+        sed -E -i  "/ *vpc_id *= *var.aws_vpc_default_id *$/a $ingress8080 \n $ingress39013 \n $ingress3306 \n $ingress1433" /ICM/etc/Terraform/AWS/Instance/infrastructure.tf
          
     fi
 }
@@ -114,6 +146,11 @@ containerless_docker_run() {
     exit_if_error "Error when creating container $2 at machine $1 with image $3"
 }
 
+find_iris_database_size() {
+    
+    export DATABASE_SIZE_IN_GB=$(cat ./defaults.json | awk 'BEGIN { FS = "\"" } /"DataVolumeSize"/ { print $4 }')
+}
+
 deploy()
 {
     IMAGE_PREFIX=$1
@@ -145,6 +182,8 @@ deploy()
         JDBC_USERNAME=$5
         JDBC_PASSWORD=$6
     fi
+
+    find_iris_database_size
 
     CN_MACHINE_GROUP=${ICM_LABEL}-CN-IRISSpeedTest
 
@@ -181,16 +220,16 @@ deploy()
         
         containerless_docker_pull ${UI_MACHINE_NAME} intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION}
 
-        containerless_docker_run ${UI_MACHINE_NAME} htapmaster intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION} "-p 8080:8080 -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_SPEEDTEST_TITLE=\"${MASTER_SPEEDTEST_TITLE}\" -e INGESTION_JDBC_URL=${INGESTION_JDBC_URL} -e CONSUMER_JDBC_URL=${CONSUMER_JDBC_URL} -e INGESTION_JDBC_USERNAME=${JDBC_USERNAME} -e INGESTION_JDBC_PASSWORD=${JDBC_PASSWORD} -e CONSUMER_JDBC_USERNAME=${JDBC_USERNAME} -e CONSUMER_JDBC_PASSWORD=${JDBC_PASSWORD}"
+        containerless_docker_run ${UI_MACHINE_NAME} htapmaster intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION} "-p 8080:8080 -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_SPEEDTEST_TITLE=\"${MASTER_SPEEDTEST_TITLE}\" -e DATABASE_SIZE_IN_GB=\"$DATABASE_SIZE_IN_GB\" -e INGESTION_JDBC_URL=\"${INGESTION_JDBC_URL}\" -e CONSUMER_JDBC_URL=\"${CONSUMER_JDBC_URL}\" -e INGESTION_JDBC_USERNAME=\"${JDBC_USERNAME}\" -e INGESTION_JDBC_PASSWORD=\"${JDBC_PASSWORD}\" -e CONSUMER_JDBC_USERNAME=\"${JDBC_USERNAME}\" -e CONSUMER_JDBC_PASSWORD=\"${JDBC_PASSWORD}\""
 
         containerless_internal_ip $MASTER_MACHINE_NAME
-        HTAP_MASTER_IP=$INTERNAL_IP        
+        HTAP_MASTER_IP=$INTERNAL_IP 
     else    
         icm run  \
             --machine ${MASTER_MACHINE_NAME} \
             --container htapmaster \
             --image intersystemsdc/irisdemo-demo-htap:master-${HTAP_DEMO_VERSION} \
-            --options "-e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_SPEEDTEST_TITLE=\"${MASTER_SPEEDTEST_TITLE}\" -e INGESTION_JDBC_URL=${INGESTION_JDBC_URL} -e CONSUMER_JDBC_URL=${CONSUMER_JDBC_URL} -e INGESTION_JDBC_USERNAME=${JDBC_USERNAME} -e INGESTION_JDBC_PASSWORD=${JDBC_PASSWORD} -e CONSUMER_JDBC_USERNAME=${JDBC_USERNAME} -e CONSUMER_JDBC_PASSWORD=${JDBC_PASSWORD}"
+            --options "-e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_SPEEDTEST_TITLE=\"${MASTER_SPEEDTEST_TITLE}\" -e DATABASE_SIZE_IN_GB=\"$DATABASE_SIZE_IN_GB\" -e INGESTION_JDBC_URL=\"${INGESTION_JDBC_URL}\" -e CONSUMER_JDBC_URL=\"${CONSUMER_JDBC_URL}\" -e INGESTION_JDBC_USERNAME=\"${JDBC_USERNAME}\" -e INGESTION_JDBC_PASSWORD=\"${JDBC_PASSWORD}\" -e CONSUMER_JDBC_USERNAME=\"${JDBC_USERNAME}\" -e CONSUMER_JDBC_PASSWORD=\"${JDBC_PASSWORD}\""
 
         exit_if_error "Deploying HTAP Demo Master for ${MASTER_SPEEDTEST_TITLE} failed."
 
@@ -371,4 +410,9 @@ read_endpoint_and_credentials() {
     export DB_HOSTNAME
     export DB_JDBC_USERNAME
     export DB_JDBC_PASSWORD
+}
+
+getVPC()
+{
+    export VPC_ID=$(cat ./state/$ICM_LABEL-IRISSpeedTest/terraform.tfstate | grep vpc_id | head -1 | awk -F\" '{print $4}')
 }

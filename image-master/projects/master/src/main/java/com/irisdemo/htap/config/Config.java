@@ -30,7 +30,8 @@ public class Config
 	private String tableTruncateStatement;
 	private String title;
 	private int maxTimeToRunInSeconds;
-	
+	private int databaseSizeInGB;
+
 	/* 
 	INGESTION CONFIGURATION 
 	*/
@@ -286,6 +287,16 @@ public class Config
 	public void setIngestionBatchSize(int ingestionBatchSize) {
 		logger.info("Setting INGESTION_BATCH_SIZE = " + ingestionBatchSize);
 		this.ingestionBatchSize = ingestionBatchSize;
+	}
+
+	@Value( "${DATABASE_SIZE_IN_GB:10}" )
+	public void setDatabaseSizeInGB(int databaseSizeInGB) {
+		logger.info("Setting DATABASE_SIZE_IN_GB = " + databaseSizeInGB);
+		this.databaseSizeInGB = databaseSizeInGB;
+	}
+
+	public int getDatabaseSizeInGB() {
+		return this.databaseSizeInGB;
 	}
 
 	public String getConsumptionJDBCURL() {
