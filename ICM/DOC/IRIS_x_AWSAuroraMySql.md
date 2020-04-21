@@ -4,9 +4,11 @@ This document explains how to use the scripts we provide to quickly deploy the S
 
 # Provisioning the Initial environment on AWS
 
-On this step, we will provision the initial environment on AWS which includes all the machines for InterSystems IRIS, the InterSystems IRIS Speed Test and AWS Aurora Speed Test. It will all be provisioned on the same VPC. We will later manually deploy AWS Aurora on the same VPC as well.
+On this step, we will provision the initial environment on AWS which includes:
+- All the machines for InterSystems IRIS, the InterSystems IRIS Speed Test and AWS RDS Aurora Speed Test. 
+- It will all be provisioned on the same VPC. 
 
-We will also on this step deploy InterSystems IRIS and the Speed Test applications for both InterSystems IRIS and AWS Aurora, so let's get to it!
+Once we are done with the steps above, we will know our AWS VPC. We will use this information to manually deploy AWS Aurora on the same VPC later on.
 
 ## 1 - Start ICM
 
@@ -114,9 +116,13 @@ Run the **deployiris.sh** script. It deploys InterSystems IRIS for you:
 
 This script will make ICM copy the InterSystems IRIS install kit to the machine on AWS and install it. So depending on your network, it may be very fast or take longer. On my PC, running from the office, it took 3 minutes.
 
-When done, you will notice that ICM will write on the screen the URL for the management portal. Save that. You will be able to open the management portal using the user **SuperUser** and the password **sys**. 
-
-If you open the management portal, you will notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run.
+When done, you will notice that ICM will write on the screen the URL for the management portal. Save that and open the management portal using the user **SuperUser** and the password **sys**. You will notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run. But now, let's use the management portal to pre-expand IRIS database. This is something that we must before running the speed test. This is a normal configuration on production systems. So, from the main menu of the management portal:
+- Choose option **System Administration > Configuration > System Configuration > Local Databases**. 
+- Click on database **SPEEDTEST*.
+- We have configured ICM's DataVolumeSize for this test with 100Gb. You can see this [here](../ICMDurable/Templates/AWS/m5.xlarge/defaults.json). But you will notice that the **Size (MB)** field on the screen is only showing a little bit more than 1Gb (~1671Mb). That is what we need to increase.
+- Change field **Size (MB)** to **97375** (~95GB). We don't want to take all available storage on that filesystem. Just pre-expand the database to use most of it.
+- Click on the **Save** button at the top of the screen. A warning will complain about taking more than 90% of the space on the file system. Just accept it.
+- You will be returned to the screen with the list of databases. You will notice that the SPEEDTEST database has its **Status** column displaying **Expanding**. You can continue with the procedure bellow to finish deploying AWS Aurora and the SpeedTest for it. **But come back here to check if expansion has finished BEFORE running the speed test.**.
 
 ## 5 - Deploy the Speed Test for InterSystems IRIS
 
@@ -180,7 +186,7 @@ Click [here](https://console.aws.amazon.com/rds/home?region=us-east-1#) to open 
 * Under "Settings":
   * At "DB cluster identifier" enter with **speedtest**
   * At "Credential Settings" leave "Master username" as **admin** and set the password to **admin123**
-* At "DB instance size", pick **db.r5.xlarge**
+* At "DB instance size", pick **db.r5.xlarge** (careful: don't take db.r5.large by mistake!)
 * At "Availability & durability" leave it as **Create an Aurora Replica/Reader node in a different AZ (recommended for scaled availability)**
 * Under "Connectivity":
   * At "Virtual Private Cloud (VPC)", pick the VPC_ID created for us on the previous steps
@@ -246,20 +252,29 @@ Now you have the URL for InterSystems IRIS Speed Test and the URL for AWS Aurora
 
 ## 8 - Comparing the Databases
 
-Open both Speed Tests on your browser and hit the button **Run Test**. If you get an error after pressing the Run Test button, try going back to the terminal and running the bouncespeedtest script:
+Open both Speed Tests on your browser. Press the **Settings** button:
+- Required: Change the maximum time to run the speed test for 1200 seconds (20minutes)
+- Optional: You can set AWS Aurora **Data Querying** JDBC URL to point to the second end point (replica's endpoint) provided by AWS Aurora. That will make AWS Aurora:
+  - About 35% faster for ingestion than AWS Aurora without it
+  - About 44% faster for querying than AWS Aurora without it
+  - Although you could, you don't need to bother doing such configuration for InterSystems IRIS.
+
+Now just hit the **Run Test** button. If you get an error after pressing the Run Test button, try going back to the terminal and running the bouncespeedtest script:
 
 ```
-/ICMDurable/Deployments/asamarySAPHANA # ./bouncespeedtest.sh
+/ICMDurable/Deployments/asamaryAuroraMySQL # ./bouncespeedtest.sh
 ```
 
-This will restart the containers for the Speed Test application for both InterSystems IRIS and Aurora. Try again and it should work.
+This will restart the containers for the Speed Test application for both InterSystems IRIS and Aurora. Try again and it should work. 
 
-Here are my results:
+**If you needed to run the bounce speed test script, make sure you reconfigure the maximum time for running the test above again.**
+
+After 20 minutes, here are my results:
 
 | Database               | Machine      | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
 |------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
-| InterSystems IRIS 2020 | m5.xlarge    | 200s     | 117K/s              | 22,701,000           | 28K/s               | 4,869,238                  | 0.04126ms                    | 50%    |
-| AWS Aurora             | db.r5.xlarge | 200s     | 7K/s                | 2,427,000            | 4.4K/s              | 1,432,194                  | 0.24155ms                    | 75%    |
+| InterSystems IRIS 2020 | m5.xlarge    | 1200s    | 117K/s              | 22,701,000           | 28K/s               | 4,869,238                  | 0.04126ms                    | 50%    |
+| AWS Aurora             | db.r5.xlarge | 1200s    | 7K/s                | 2,427,000            | 4.4K/s              | 1,432,194                  | 0.24155ms                    | 75%    |
 
 m5.xlarge has the same characteristics of db.r5.xlarge with the exception that m5.xlarge has only 16Gb of RAM while db.r5.xlarge has 32Gb of RAM. That means AWS Aurora has an advantage over InterSystems IRIS but it seems that this didn't help them much.
 
