@@ -92,7 +92,7 @@ public class AppController {
     }
 
     @RequestMapping(value = "/master/metrics", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getImageAsByteArray() throws IOException 
+    public ResponseEntity<byte[]> getMetricsFileAsByteArray() throws IOException 
     {
         String fileName;
 
