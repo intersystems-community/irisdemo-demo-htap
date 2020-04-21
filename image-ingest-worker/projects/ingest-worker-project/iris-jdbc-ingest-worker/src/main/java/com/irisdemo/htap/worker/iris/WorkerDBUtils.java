@@ -265,7 +265,7 @@ public class WorkerDBUtils
 		}
 		catch (SQLException exception)
 		{
-			if (exception.getErrorCode()!=362) //Method '???' does not exist in any class
+			if (exception.getErrorCode()!=361) //Method or Query name not unique
 			{
 				throw exception;
 			}
@@ -275,16 +275,32 @@ public class WorkerDBUtils
 	public static void expandDatabase(Connection connection, int databaseSizeInGB) throws SQLException
 	{
 		CallableStatement statement = connection.prepareCall("{ ? = call IRISDemo.ExpandDatabase(?) }");
-		statement.registerOutParameter(1, Types.VARCHAR);
-		statement.setInt(2, databaseSizeInGB);
+		String returnMsg;
 
-		statement.execute();
-		
-		String returnMsg = statement.getString(1);
-		
-		if (!returnMsg.equals("1"))
+		for (int i=0; i<2; i++)
 		{
-			throw new SQLException(returnMsg);
+			statement.registerOutParameter(1, Types.VARCHAR);
+			statement.setInt(2, databaseSizeInGB);
+
+			statement.execute();
+			
+			returnMsg = statement.getString(1);
+			
+			if (returnMsg.equals("1"))
+			{
+				break; //SUCCESS! Exit for loop
+			}
+			else
+			{
+				if (returnMsg.contains("the expansion failed to start"))
+				{
+					continue; //try again
+				}
+				else
+				{
+					throw new SQLException(returnMsg); // Unpredicted error. Exist for loop with exception
+				}
+			}
 		}
 	}
 }
