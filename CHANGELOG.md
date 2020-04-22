@@ -1,6 +1,10 @@
+## 2.4.10 (April 21, 2020)
+  - Fixing problem with results.csv where initial lines had zero values
+  - Better name for a method
+  - Adding docker_safe_cleanup.sh script
+
 ## 2.4.9 (April 21, 2020)
   - Making sure we are using IRIS JDBC Driver for 2020.2
-  - Adding docker_safe_cleanup.sh script
 
 ## 2.4.8 (April 21, 2020)
   - Allowing user to close web browser and reopen it on starting state.
