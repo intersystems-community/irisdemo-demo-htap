@@ -120,14 +120,15 @@ public class AppController {
         return 1;
     }
 
-    private void resetMetricsForNewlyStartedTest() throws Exception
+    private void startMetricAggregation() throws Exception
     {
         metricsFileManager.openMetricsFile();
         speedTestStartTimeInMillis = new Date().getTime();
-        speedTestRuntimeInSeconds = 0;
-        currentAggregatedMetrics = new Metrics(speedTestRunningStatus);
+        speedTestRuntimeInSeconds = 0;        
         accumulatedIngestMetrics.reset();
         accumulatedQueryMetrics.reset();
+        speedTestRunningStatus = 2; //Running
+        currentAggregatedMetrics = new Metrics(speedTestRunningStatus);
     }
     
     @PostMapping(value = "/master/startSpeedTest")
@@ -153,8 +154,6 @@ public class AppController {
 
             logger.info("START speed test. Notifying all workers...");
 
-            resetMetricsForNewlyStartedTest();
-
             // Start ingestion...
             ingestWorkerRegistryService.startSpeedTest();
             
@@ -162,7 +161,8 @@ public class AppController {
             if (config.getStartConsumers()) {
                 queryWorkerRegistryService.startSpeedTest();
             }
-            speedTestRunningStatus = 2; 
+
+            startMetricAggregation();
         } 
         else 
         {
@@ -179,6 +179,11 @@ public class AppController {
         {
             logger.info("STOP speed test. Notifying all workers...");
 
+            speedTestRunningStatus = 0; //Stopped
+
+            // Aggregating metrics one last time, to include the update to speedTestRunning
+            aggregateMetrics();
+
             // Stop ingestion...
             ingestWorkerRegistryService.stopSpeedTest();
 
@@ -186,13 +191,9 @@ public class AppController {
             if (config.getStartConsumers()) {
                 queryWorkerRegistryService.stopSpeedTest();
             }
-
-            speedTestRunningStatus = 0; //Stopped
-
-            // Aggregating metrics one last time, to include the update to speedTestRunning
-            aggregateMetrics();
-
-        } else {
+        } 
+        else 
+        {
             logger.warn("Request to stop speed test received. Speed test was not running. Nothing has been done.");
         }
     }
@@ -262,10 +263,13 @@ public class AppController {
 
     synchronized private void aggregateMetrics() throws Exception
     {
-        this.currentAggregatedMetrics = new Metrics(speedTestRunningStatus, speedTestRuntimeInSeconds, accumulatedIngestMetrics, accumulatedQueryMetrics);
+        if (speedTestRuntimeInSeconds>0)
+        {
+            this.currentAggregatedMetrics = new Metrics(speedTestRunningStatus, speedTestRuntimeInSeconds, accumulatedIngestMetrics, accumulatedQueryMetrics);
 
-        // Appending to file just in case they want to download it
-        metricsFileManager.appendMetrics(this.currentAggregatedMetrics);
+            // Appending to file just in case they want to download it
+            metricsFileManager.appendMetrics(this.currentAggregatedMetrics);
+        }
     }
 
     @Scheduled(fixedRate = 1000)
