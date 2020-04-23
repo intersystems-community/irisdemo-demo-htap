@@ -362,7 +362,8 @@ public class AppController {
         config.setQueryStatement(newConfig.getQueryStatement());
 
         config.setMaxTimeToRunInSeconds(newConfig.getMaxTimeToRunInSeconds());
-
+        config.setConsumptionNumOfKeysToFetch(newConfig.getConsumptionNumOfKeysToFetch());
+        
         return config;
     }
 

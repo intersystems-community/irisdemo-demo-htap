@@ -60,6 +60,7 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 			config.setConsumptionTimeBetweenQueriesInMillis(workerConfig.config.consumptionTimeBetweenQueriesInMillis);
 			config.setQueryStatement(workerConfig.config.queryStatement);
 			config.setQueryByIdStatement(workerConfig.config.queryByIdStatement);
+			config.setConsumptionNumOfKeysToFetch(workerConfig.config.consumptionNumOfKeysToFetch);
 			
 			logger.info("Registration successful. Configuration data received and stored.");
 		}

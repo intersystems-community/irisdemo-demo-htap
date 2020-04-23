@@ -57,6 +57,8 @@ export class AppConfigDialogComponent implements OnInit {
       'consumptionJDBCPassword': [null, [Validators.required]],
       'consumptionTimeBetweenQueriesInMillis': [0, [Validators.required]],
       'consumptionNumThreadsPerWorker': [1, [Validators.required]],
+      'consumptionNumOfKeysToFetch': [1, [Validators.required]]
+      
     });
   }
 
@@ -72,7 +74,8 @@ export class AppConfigDialogComponent implements OnInit {
       consumptionJDBCUserName: config.consumptionJDBCUserName,
       consumptionJDBCPassword: config.consumptionJDBCPassword,
       consumptionTimeBetweenQueriesInMillis: config.consumptionTimeBetweenQueriesInMillis,
-      consumptionNumThreadsPerWorker: config.consumptionNumThreadsPerWorker
+      consumptionNumThreadsPerWorker: config.consumptionNumThreadsPerWorker,
+      consumptionNumOfKeysToFetch: config.consumptionNumOfKeysToFetch
     });
   }
 

@@ -19,4 +19,5 @@ public class RESTMasterConfig
 	public int consumptionTimeBetweenQueriesInMillis;
 	public String queryStatement;
 	public String queryByIdStatement;
+	public int consumptionNumOfKeysToFetch;
 }

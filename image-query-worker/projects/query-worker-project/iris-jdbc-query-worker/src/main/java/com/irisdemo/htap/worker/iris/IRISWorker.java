@@ -77,8 +77,12 @@ public class IRISWorker implements IWorker
 		
 		logger.info("Starting Consumer thread "+threadNum+"...");
 		
-		// Harry was using a fixed sequence of IDs like this:
-		String[] IDs = {"W1A1", "W1A10", "W1A100", "W1A1000","W1A10000", "W1A100000", "W1A1000000", "W1A10000000"};
+		String[] IDs = new String[config.getConsumptionNumOfKeysToFetch()];
+
+		for (idIndex = 0; idIndex<config.getConsumptionNumOfKeysToFetch(); idIndex++)
+		{
+			IDs[idIndex]="W1A"+idIndex;
+		}		 	 
 		
 		/*
 		 *  Each thread will run queries on the first 4 elements of the array.

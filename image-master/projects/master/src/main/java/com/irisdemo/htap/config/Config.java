@@ -52,6 +52,7 @@ public class Config
 	private int consumptionTimeBetweenQueriesInMillis;
 	private String queryStatement;
 	private String queryByIdStatement;
+	private int consumptionNumOfKeysToFetch;
 
 	public Config()
 	{
@@ -147,7 +148,18 @@ public class Config
 			logger.warn("Could not read statement from file IRIS_PROC_ENABLE_CALLIN.sql");
 		}
 	}
-	
+
+	public int getConsumptionNumOfKeysToFetch()
+	{
+		return consumptionNumOfKeysToFetch;
+	}
+
+	@Value( "${CONSUMER_NUM_OF_KEYS_TO_FETCH:8}" )
+	public void setConsumptionNumOfKeysToFetch(int consumptionNumOfKeysToFetch)
+	{
+		this.consumptionNumOfKeysToFetch=consumptionNumOfKeysToFetch;
+	}
+
 	public int getMaxTimeToRunInSeconds()
 	{
 		return maxTimeToRunInSeconds;

@@ -47,6 +47,7 @@ public class Config
 	private int consumptionNumThreadsPerWorker;
 	private int consumptionTimeBetweenQueriesInMillis;
 	private String queryStatement;
+	private int consumptionNumOfKeysToFetch;
 
 	public void setWorkerNodePrefix(String workerNodePrefix)
 	{
@@ -128,6 +129,15 @@ public class Config
 
 	public int getThisServerPort() {
 		return this.thisServerPort;
+	}
+
+	public void setConsumptionNumOfKeysToFetch(int consumptionNumOfKeysToFetch) {
+		logger.info("Number of keys to fetch: " + consumptionNumOfKeysToFetch);
+		this.consumptionNumOfKeysToFetch = consumptionNumOfKeysToFetch;
+	}
+
+	public int getConsumptionNumOfKeysToFetch() {
+		return this.consumptionNumOfKeysToFetch;
 	}
 
 	public int getIngestionNumThreadsPerWorker() 
