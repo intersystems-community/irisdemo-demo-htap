@@ -41,5 +41,9 @@ fi
 
 touch ./.provisionHasBeenRun
 
+getVPC
+
+printf "\n\n${YELLOW}If you are planning on deploying SAP HANA, AWS Aurora or any other AWS database, deploy them on the VPC_ID $VPC_ID.${RESET}\n\n"
+
 printf "\n\n${YELLOW}You can run ./deployiris.sh to deploy InterSystems IRIS to the provisioned infrastructure.\n\n${RESET}"
 
