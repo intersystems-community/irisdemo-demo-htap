@@ -1,3 +1,9 @@
+## 2.4.11 (April 23, 2020)
+  - Adding support for specifying how many keys query workers should be fetching
+  - Updating SAP HANA's results
+  - Updating AWS Aurora Results
+  - Displaying VPC information after provisioning just in case user wants to test just a non-IRIS database
+
 ## 2.4.10 (April 21, 2020)
   - Fixing problem with results.csv where initial lines had zero values
   - Better name for a method
