@@ -4,7 +4,7 @@
     "Tag": "IRISSpeedTest",
 
     "DataVolumeType": "io1",
-    "DataVolumeSize": "180",
+    "DataVolumeSize": "70",
     "DataVolumeIOPS": "3500",
 
     "WIJVolumeType": "io1",
@@ -12,11 +12,11 @@
     "WIJVolumeIOPS": "3500",
 
     "Journal1VolumeType": "io1",
-    "Journal1VolumeSize": "300",
+    "Journal1VolumeSize": "200",
     "Journal1VolumeIOPS": "3500",
     
     "Journal2VolumeType": "io1",
-    "Journal2VolumeSize": "250",
+    "Journal2VolumeSize": "200",
     "Journal2VolumeIOPS": "3500",
 
     "SSHUser": "ubuntu",

@@ -164,10 +164,11 @@ InterSystems IRIS and InterSystems IRIS Speed Test are deployed and you know the
 
 ### 6.1 - Manually deploy SAP HANA
 
-Click [here](https://aws.amazon.com/marketplace/pp/B07Q6B626P?qid=1576090652259&sr=0-1&ref_=srh_res_product_title) to open SAP HANA Express 2.0 page on AWS:
+Click [here](https://aws.amazon.com/marketplace/pp/B086L36N2H?qid=1587590071891&sr=0-2&ref_=srh_res_product_title) to open SAP HANA Express 2.0 page on AWS:
 * Click on the button **Continue to Subscribe**.
+* On the next screen, click on the button **Accept Terms**. Wait for the screen to update and show the Effective subscription date.
 * Click on the button **Continue to Configuration**
-  * Pick "SAP HANA Express 2.0 SP04 GA"
+  * Pick "SAP HANA Express 2.0 Rev 45 (Apr 14, 2020)"
   * Pick Region "US East (N. Virginia)"
 * Click on the button **Continue to Launch**
   * Pick EC2 Instance Type **i3.xlarge**. It has 4 cores, 30Gb of RAM and a very high network performance (up to 10Gigabit). InterSystems IRIS is deployed on the same machine.
@@ -208,7 +209,7 @@ Have a lot of fun...
 ec2-user@hxehost:~>
 ```
 
-You are not on the SAP HANA's machine. Type the following to change 
+You are now on the SAP HANA's machine. Type the following to change the hxeadm's password:
 
 ```
 ec2-user@hxehost:~> sudo passwd hxeadm
@@ -350,7 +351,9 @@ Now you have the URL for InterSystems IRIS Speed Test and the URL for SAP HANA's
 
 ## 8 - Comparing the Databases
 
-Open both Speed Tests on your browser and hit the button **Run Test**. If you get an error after pressing the Run Test button, try going back to the terminal and running the bouncespeedtest script:
+Open both Speed Tests on your browser. Press the **Settings** button. Change the maximum time to run the speed test for 1200 seconds (20minutes).
+
+Now just hit the **Run Test** button. If you get an error after pressing the Run Test button, try going back to the terminal and running the bouncespeedtest script:
 
 ```
 /ICMDurable/Deployments/asamarySAPHANA # ./bouncespeedtest.sh
@@ -358,12 +361,22 @@ Open both Speed Tests on your browser and hit the button **Run Test**. If you ge
 
 This will restart the containers for the Speed Test application for both InterSystems IRIS and SAP HANA. Try again and it should work.
 
+After clicking on **Run Test**, it should immediately change to **Starting...**. For IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). SAP HANA doesn't care too much about this since it is an **"In Memory"** database. IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So IRIS still needs to have its disk database properly expanded. Just wait for it.
+
+**Warning**: IRIS Database expansion can take a long time. We have given a lot of disk to IRIS so we can let the test running for more than 20min without filling up the disk. Just be patient. You may want to go to the InterSystems IRIS Management portal to check the expansion status.
+
 Here are my results:
 
-| Database               | Machine   | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
-|------------------------|-----------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
-| InterSystems IRIS 2020 | i3.xlarge | 1200s    | 79,763rec/s         | 96,087,000           | 20.915rec/s         |  25,184,261                | 0.04779                      | 30-75% |
-| SAP HANA Express 2.0   | i3.xlarge | 1201s    | 57,962rec/s         | 69,062,000           | 546.013rec/s        |  657,775                   | 1.81548                      | 50-78% |
+| Database               | Machine   | Run time | Inserts/s ATEOT     | Tot Records Inserted | Queries/s ATEOT     | Tot Records Retrieved AEOT | Avg Query Response Time AEOT |
+|------------------------|-----------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
+| InterSystems IRIS 2020.2 | i3.xlarge | 1200s    | 126,000rec/s        | 100,819,000          | 23,158rec/s         |  25,184,261                | 0.0432                       |
+| SAP HANA Express 2.0   | i3.xlarge | 1201s    | 114,000rec/s        | 63,076,000           | 692rec/s            |  657,775                   | 1.4451                       |
+
+InterSystems IRIS:
+-	Ingested 59.9% more records	
+- Was ingesting them 10.6% faster
+- Retrieved 2732.8% more records
+- Was retrieving them 3246.6% faster
 
 **ATEOT = At the end of Test. Or "sustained" rate.**
 
@@ -394,14 +407,8 @@ After ICM is done, make sure you:
 
 ## 10 - Screenshots
 
-Here is the end result of InterSystems IRIS test with emphasis on the graph for Ingestion rate AEOT:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA1.png?raw=true)
+Here is the end result of SAP HANA's test:
+![SAP HANA Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_SAP_HANA_Express_2.0_i3.xlarge_results.png?raw=true)
 
-Here is the end result of InterSystems IRIS test with emphasis on the graph for Query rate AEOT:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA2.png?raw=true)
-
-Here is the end result of SAP HANA test with emphasis on the graph for Ingestion rate AEOT:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA3.png?raw=true)
-
-Here is the end result of SAP HANA test with emphasis on the graph for Query rate AEOT:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_SAPHANA4.png?raw=true)
+Here is the end result of InterSystems IRIS test:
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_InterSystems_IRIS_2020.2_i3.xlarge_results.png?raw=true)
