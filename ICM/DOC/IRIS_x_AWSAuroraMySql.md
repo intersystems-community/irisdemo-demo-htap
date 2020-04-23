@@ -274,6 +274,8 @@ This will restart the containers for the Speed Test application for both InterSy
 
 After clicking on **Run Test**, it should immediately change to **Starting...**. For IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So IRIS still needs to have its disk database properly expanded. Just wait for it. We could not find a way of doing the same for AWS Aurora, so what we did was to run the Speed Test once on AWS Aurora to "warm it up". Then we did the actual test against IRIS.
 
+**Warning**: IRIS Database expansion can take a long time. We have given a lot of disk to IRIS so we can let the test running for more than 20min without filling up the disk. Just be patient. You may want to go to the InterSystems IRIS Management portal to check the expansion status.
+
 **If you needed to run the bounce speed test script, make sure you reconfigure the maximum time for running the test above again.**
 
 After 20 minutes, here are my results:

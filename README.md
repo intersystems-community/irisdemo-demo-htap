@@ -7,12 +7,16 @@ This demo shows how InterSystems IRIS can ingest thousands of records per second
 The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to compare performance and resource utilization in “apples-to-apples” comparisons. 
 
 You can run the tests on AWS! Here are some results:
-* [InterSystems IRIS x SAP HANA run on AWS](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md):
-  * InterSystems IRIS ingest 39% more records than SAP HANA
-  * InterSystems IRIS is 3699% faster than SAP HANA at querying
-* [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md):
-  * InterSystems IRIS ingests 831% more records than AWS Aurora at ingestion
-  * InterSystems IRIS is 485% faster than AWS Aurora at querying
+* [InterSystems IRIS x SAP HANA run on AWS](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md). InterSystems IRIS:
+  -	Ingested 59.9% more records	
+  - Was ingesting them 10.6% faster
+  - Retrieved 2732.8% more records
+  - Was retrieving them 3246.6% faster
+* [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md). InterSystems IRIS:					
+  - Ingested 1252.3% more records	
+  - Was ingesting them 712.5% faster	
+  - Retrieved 40.4% more records	
+  - Was retrieving them 45.3% faster
 
 You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:
@@ -22,8 +26,6 @@ You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here
   * InterSystems IRIS ingests 223% more records than faster than SQL Server 2019
   * InterSystems IRIS is 134,632% faster (really, not a typo) than SQL Server 2019 at querying. 
   * To be fair, we will be testing SQL Server on AWS and Azure in the future. Stay tuned!
-
-**When running the speed test against any database, before taking notes of the results, let the speed test run for a while to warm it up. That will allow the database to pre-expand and do other things. Every time you start the speed test, we TRUNCATE the table to start over.**
 
 ## 1 - Running the Speed Test on AWS
 
@@ -62,9 +64,19 @@ When starting, you will see lots of messages from all the containers that are st
 
 When it is done, it will just hang there, without returning control to you. That is fine too. Just leave this window open. If you CTRL+C on this window, docker compose will stop all the containers and stop the demo.
 
-After all the containers have started, open a browser at [http://localhost:10000](http://localhost:10000) to see the demo UI. Just click on the **Run Test** button to run the HTAP Demo!
+After all the containers have started, open a browser at [http://localhost:10000](http://localhost:10000) to see the demo UI. 
 
-When you are done, go back to that terminal and enter CTRL+C. You may also want to enter with the following commands to stop containers that may still be running and remove them:
+Just click on the **Run Test** button to run the HTAP Demo! It will run for a maximum time of 300 seconds or until you manually stop it. 
+
+If you want to change the maximum time to run the test, click  the **Settings** button at the top right of the UI. Change the maximum time to run the speed test to whatever you want. 
+
+After clicking on **Run Test**, it should immediately change to **Starting...**. If you are testing IRIS or SQL Server, it may stay on this status for a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So IRIS still needs to have its disk database properly expanded. Just wait for it. For some databases, we could not find a way of doing this right from start (Aurora and MySQL) so what we did was to run the Speed Test once to "warm it up". Then we run it again (which causes the table to be truncated) with the database warmed up.
+
+**Warning**: IRIS Database expansion can take some time. Fortunately, when running on your PC, we will pre-expand the database only to up to 9Gb since IRIS Community has a limit on the database size.
+
+When the test finishes running, a green button will appear, allowing you to download the test results statistics as a CSV file.
+
+When you are done testing, go back to that terminal and enter CTRL+C. You may also want to enter with the following commands to stop containers that may still be running and remove them:
 
 ```bash
 docker-compose stop

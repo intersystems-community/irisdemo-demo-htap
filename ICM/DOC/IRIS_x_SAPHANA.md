@@ -149,9 +149,7 @@ If you are planning on deploying SAP HANA, AWS Aurora or any other AWS database,
 Done!
 ```
 
-Take note of this URL! You can open it right now and you should be able to click at the **Run Test** button to run the speed test against InterSystems IRIS for the first time. Please, click on the button only one and wait. It takes a couple of seconds to start populating the screen with results.
-
-You can leave it running for 5 minutes or so. It will pre-expand the InterSystems IRIS database for us. So when we run it again to compare against SAP HANA, the database will be pre-expanded as in any production system.
+Take note of this URL!
 
 Also, please note that we have just told you the **AWS VPC_ID**. Take note of that! When deploying SAP HANA, you must deploy it on this VPC!
 
