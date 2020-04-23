@@ -203,7 +203,9 @@ Click [here](https://console.aws.amazon.com/rds/home?region=us-east-1#) to open 
 
 ### 6.2 - Take note of AWS Aurora's Endpoint
 
-After pressing the **Create Database** button, you will be taken to the management page for your new database. While AWS Aurora is being created you can click on its main identifier (**speedtest**) and look for its endpoint. It should be something like "speedtest.cluster-c9amfj7kmxqv.us-east-1.rds.amazonaws.com".
+After pressing the **Create Database** button, you will be taken to the management page for your new database. While AWS Aurora is being created you can click on its main identifier (**speedtest**) and look for its endpoints. It should have two endpoints: One for the Writer and another for the Reader (the replica). They look like "speedtest.cluster-c9amfj7kmxqv.us-east-1.rds.amazonaws.com".
+
+Take note of both of them! 
 
 ## 7 - Deploy Speed Test for AWS Aurora
 
@@ -225,9 +227,9 @@ Please, specify which speedtest you want to deploy. Available options are:
 Answer: **aurora**
 
 ```
-Enter with AWS Aurora Express's end point:
+Enter with AWS Aurora Express's WRITER end point:
 ```
-Answer: **Enter with AWS Aurora's EC2 Private IP address**
+Answer: **Enter with Enter with AWS Aurora's end point:**
 
 ```
 Enter with AWS Aurora's username (admin):
@@ -248,16 +250,19 @@ URL to SpeedTest | AWS Aurora Speed Test is at:
 
 Done!
 ```
-Now you have the URL for InterSystems IRIS Speed Test and the URL for AWS Aurora's Speed Test! We are ready to make the comparison now!
+Now you have the URL for InterSystems IRIS Speed Test and the URL for AWS Aurora's Speed Test! Open it.
 
-## 8 - Comparing the Databases
-
-Open both Speed Tests on your browser. Press the **Settings** button:
-- Required: Change the maximum time to run the speed test for 1200 seconds (20minutes)
-- Optional: You can set AWS Aurora **Data Querying** JDBC URL to point to the second end point (replica's endpoint) provided by AWS Aurora. That will make AWS Aurora:
+Click on the **Settings** button and make sure you adjust the **Data Query**'s **JDBC URL** to use the READER end point instead of the WRITER end point. 
+That will make AWS Aurora:
   - About 35% faster for ingestion than AWS Aurora without it
   - About 44% faster for querying than AWS Aurora without it
   - Although you could, you don't need to bother doing such configuration for InterSystems IRIS.
+
+We are ready to make the comparison now!
+
+## 8 - Comparing the Databases
+
+Open both Speed Tests on your browser. Press the **Settings** button. Change the maximum time to run the speed test for 1200 seconds (20minutes).
 
 Now just hit the **Run Test** button. If you get an error after pressing the Run Test button, try going back to the terminal and running the bouncespeedtest script:
 
@@ -267,22 +272,26 @@ Now just hit the **Run Test** button. If you get an error after pressing the Run
 
 This will restart the containers for the Speed Test application for both InterSystems IRIS and Aurora. Try again and it should work. 
 
+After clicking on **Run Test**, it should immediately change to **Starting...**. For IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So IRIS still needs to have its disk database properly expanded. Just wait for it. We could not find a way of doing the same for AWS Aurora, so what we did was to run the Speed Test once on AWS Aurora to "warm it up". Then we did the actual test against IRIS.
+
 **If you needed to run the bounce speed test script, make sure you reconfigure the maximum time for running the test above again.**
 
 After 20 minutes, here are my results:
 
-| Database               | Machine      | Run time | Inserts/s ATEOT     | Tot Records Inserted | Avg Queries/s ATEOT | Tot Records Retrieved AEOT | Avg Query Response Time AEOT | CPU %  |
-|------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|--------|
-| InterSystems IRIS 2020 | m5.xlarge    | 1200s    | 117K/s              | 22,701,000           | 28K/s               | 4,869,238                  | 0.04126ms                    | 50%    |
-| AWS Aurora             | db.r5.xlarge | 1200s    | 7K/s                | 2,427,000            | 4.4K/s              | 1,432,194                  | 0.24155ms                    | 75%    |
+| Database                 | Machine      | Run time | Inserts/s ATEOT     | Tot Records Inserted | Queries/s ATEOT | Tot Records Retrieved AEOT | Query Response Time AEOT | 
+|--------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
+| InterSystems IRIS 2020.2 | m5.xlarge    | 1200s    | 130K rec/sec        | 141,637,000          | 28,659 rec/sec      | 30,453,442                 | 0.0349ms                     |
+| AWS Aurora MySQL         | db.r5.xlarge | 1200s    | 16K rec/sec         | 10,474,000           | 19,732 rec/sec      | 21,705,916                 | 0.0507ms                     |
 
-m5.xlarge has the same characteristics of db.r5.xlarge with the exception that m5.xlarge has only 16Gb of RAM while db.r5.xlarge has 32Gb of RAM. That means AWS Aurora has an advantage over InterSystems IRIS but it seems that this didn't help them much.
+InterSystems IRIS:					
+- Ingested 1252.3% more records	
+- Was ingesting them 712.5% faster	
+- Retrieved 40.4% more records	
+- Was retrieving them 45.3% faster
 
-**ATEOT = At the end of Test. Or "sustained" rate.**
-
-**The conclusion is that:**
-* InterSystems IRIS is 9.35x faster than AWS Aurora at ingestion (835% faster!)
-* InterSystems IRIS is 5.85x faster than AWS Aurora at querying (485% faster!)
+AWS Aurora has two advantages over InterSystems:
+- AWS Aurora had twice the amount of memory: m5.xlarge has the same characteristics of db.r5.xlarge with the exception that m5.xlarge has only 16Gb of RAM while db.r5.xlarge has 32Gb of RAM. 
+- We were redirecting the queries to AWS Aurora's replica so it could be faster. We could have done the same with IRIS, but it has a cost for both databases: The replica is always behind. So you would be fetching stale data. AWS Aurora has no way of fixing this. InterSystems IRIS offers the possibility of adding more [compute nodes](https://docs.intersystems.com/irislatest/csp/docbook/DocBook.UI.Page.cls?KEY=GSCALE_scalability) that are always consistent with transactional data. We will be doing another version of this test with ECP to show this concept in the future. 
 
 ## 9 - Unprovision everything
 
@@ -306,7 +315,7 @@ After ICM is done, make sure you:
 ## 10 - Screenshots
 
 Here is the end result of AWS Aurora's test:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_AWSAuroraMySql2.png?raw=true)
+![AWS Aurora MySQL Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_InterSystems_IRIS_2020.2_m5.xlarge_results.png?raw=true)
 
 Here is the end result of InterSystems IRIS test:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/IRIS_x_AWSAuroraMySql1.png?raw=true)
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_AWS_Aurora_MySQL_db.r5.xlarge_results.png?raw=true)
