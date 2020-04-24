@@ -244,24 +244,71 @@ public class WorkerDBUtils
 	    statement.close();
 	}
 
+	public String getFolderSeparatorForDBPlatform(Connection connection) throws SQLException
+	{
+		if (isRunningOnLinux(connection))
+		{
+			return "/";
+		}
+
+		return "\\";
+	}
+
+	public String getDataFolderName(Connection connection) throws SQLException, Exception
+	{		
+		String dataFolderName = "";
+
+		String folderSeparator = getFolderSeparatorForDBPlatform(connection);
+		logger.info("Folder separator for this platform is '" + folderSeparator + "'.");
+
+		Statement statement = connection.createStatement();
+
+		try
+		{
+			
+			ResultSet rs = statement.executeQuery("SELECT physical_name FROM sys.database_files");
+			if (rs.next())
+			{ 
+				String masterDatabaseFile = rs.getString(1);
+
+				int lastPositionOfFolderSeparator = masterDatabaseFile.lastIndexOf(folderSeparator)+1;
+
+				dataFolderName = masterDatabaseFile.substring(0, lastPositionOfFolderSeparator);
+				logger.info("Databases files must be created at: " + dataFolderName);
+			}
+			else
+			{
+				throw new Exception("Could not find where master database file is on this.");
+			}
+			
+		}
+		catch (SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			statement.close();
+		}
+		
+		return dataFolderName;
+	}
+
 	public void createDatabase(Connection connection, String databaseName,int initialDatabaseSize) throws Exception, SQLException
 	{
 		String folderName;
+		String folderSeparator;
+		String databaseFileName;
+		String logFileName;
+
 		int initialLogSize = initialDatabaseSize*3;
 
-		logger.info("Creating database " + databaseName + "...");
-		
-		if (isRunningOnLinux(connection))
-		{
-			folderName = "/tmp";
-		}
-		else
-		{
-			throw new Exception("Don't know where to put the database file and transaction logs on this platform.");
-		}
+		folderName = getDataFolderName(connection);
 
-		String databaseFileName=folderName+"/SPEEDTEST.mdf";
-		String logFileName=folderName+"/SPEEDTEST.ldf";
+		databaseFileName=folderName + "SPEEDTEST.mdf";
+		logFileName=folderName + "SPEEDTEST.ldf";
+
+		logger.info("Creating database " + databaseFileName + "...");
 
 		// We are in the MASTER database, so we are safe to do this
 		String sqlCommand = "CREATE DATABASE " + databaseName + " ON " +   
@@ -297,7 +344,7 @@ public class WorkerDBUtils
 	// transaction logs. 
 	// But if we are running on a proper server on AWS, we should pick the best 
 	// place possible for the database and transaction logs.
-	public boolean isRunningOnLinux(Connection connection) throws SQLException, Exception
+	public boolean isRunningOnLinux(Connection connection) throws SQLException
 	{
 		boolean isRunningOnLinux = false;
 		
