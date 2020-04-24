@@ -1,3 +1,6 @@
+## 2.4.13 (April 24, 2020)
+  - Finishing support for SQL Server on AWS
+
 ## 2.4.12 (April 23, 2020)
   - Correcting measurements of SAP HANA speed test.
   - Detecting where to create database file on SQL Server automatically
