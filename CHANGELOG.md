@@ -1,3 +1,7 @@
+## 2.4.12 (April 23, 2020)
+  - Correcting measurements of SAP HANA speed test.
+  - Detecting where to create database file on SQL Server automatically
+
 ## 2.4.11 (April 23, 2020)
   - Adding support for specifying how many keys query workers should be fetching
   - Updating SAP HANA's results
