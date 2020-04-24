@@ -112,7 +112,7 @@ Run the **deployiris.sh** script. It deploys InterSystems IRIS for you:
 
 This script will make ICM copy the InterSystems IRIS install kit to the machine on AWS and install it. So depending on your network, it may be very fast or take longer. On my PC, running from the office, it took 3 minutes.
 
-When done, you will notice that ICM will write on the screen the URL for the management portal. Save that. You will be able to open the management portal using the user **SuperUser** and the password **sys**. I actaully used it to open the management portal, navigate to **System > Configuration > Local Databases** and clicked on the SPEEDTEST database. I pre-expanded it to 190000MB.
+When done, you will notice that ICM will write on the screen the URL for the management portal. Save that. You can open the management portal using the user **SuperUser** and the password **sys**. You will notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run. 
 
 ## 5 - Deploy the Speed Test for InterSystems IRIS
 
@@ -365,16 +365,16 @@ After clicking on **Run Test**, it should immediately change to **Starting...**.
 
 Here are my results:
 
-| Database               | Machine   | Run time | Inserts/s ATEOT     | Tot Records Inserted | Queries/s ATEOT     | Tot Records Retrieved AEOT | Avg Query Response Time AEOT |
-|------------------------|-----------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
-| InterSystems IRIS 2020.2 | i3.xlarge | 1200s    | 126,000rec/s        | 100,819,000          | 23,158rec/s         |  25,184,261                | 0.0432                       |
-| SAP HANA Express 2.0   | i3.xlarge | 1201s    | 114,000rec/s        | 63,076,000           | 692rec/s            |  657,775                   | 1.4451                       |
+| Database                 | Machine   | Run time | Avg Inserts/s | Tot Records Inserted | Avg Queries/s | Tot Records Retrieved | Avg Query Response Time |
+|--------------------------|-----------|----------|---------------|----------------------|---------------|-----------------------|-------------------------|
+| InterSystems IRIS 2020.2 | i3.xlarge | 1200s    | 84,063rec/s   | 100,819,000          | 22,155rec/s   |  25,184,261           | 0.0432                  |
+| SAP HANA Express 2.0     | i3.xlarge | 1200s    | 52,601rec/s   | 63,076,000           | 782.30rec/s   |  657,775              | 1.4451                  |
 
 InterSystems IRIS:
 -	Ingested 59.9% more records	
-- Was ingesting them 10.6% faster
+- Was ingesting them 59.9% faster in average
 - Retrieved 2732.8% more records
-- Was retrieving them 3246.6% faster
+- Was retrieving them 2732.1% faster in average
 
 **ATEOT = At the end of Test. Or "sustained" rate.**
 
