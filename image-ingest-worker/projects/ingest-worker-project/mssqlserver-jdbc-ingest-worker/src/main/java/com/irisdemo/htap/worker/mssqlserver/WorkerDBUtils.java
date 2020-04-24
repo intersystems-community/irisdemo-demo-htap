@@ -179,18 +179,29 @@ public class WorkerDBUtils
     
 	public void createTable(Connection connection) throws SQLException, Exception
 	{
-		createDatabase(connection, "SPEEDTEST", config.getDatabaseSizeInGB());
-		changeDatabase(connection, "SPEEDTEST");
-		createSchema(connection);
+		PreparedStatement statement = null;
 		
-		logger.info("Creating table ...");
-		PreparedStatement statement = connection.prepareStatement(config.getTableCreateStatement());
-	    statement.execute();
-	    statement.close();
+		try
+		{
+			logger.info("Creating table ...");
+			statement = connection.prepareStatement(config.getTableCreateStatement());
+			statement.execute();
+		}
+		catch (SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
 	}
 
 	public void createSchema(Connection connection) throws Exception, SQLException
 	{
+		PreparedStatement statement = null;
+
 		logger.info("Creating schema...");
 		String schemaName;
 		
@@ -211,15 +222,12 @@ public class WorkerDBUtils
 		
 		try
 		{
-			//PreparedStatement statement = connection.prepareStatement("create schema " + schemaName + " authorization " + config.getIngestionJDBCUserName());
-			PreparedStatement statement = connection.prepareStatement("create schema " + schemaName);
+			statement = connection.prepareStatement("create schema " + schemaName);
 		    statement.execute();
-		    statement.close();
-			
 		}
 		catch (SQLException e)
 		{
-			if (e.getErrorCode()==386)
+			if (e.getMessage().contains("There is already an object named"))
 			{
 				// Good. It is there already.
 			}
@@ -228,20 +236,58 @@ public class WorkerDBUtils
 				throw e;
 			}
 		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
 	}
 
 	public void dropTable(Connection connection) throws SQLException
 	{
-		PreparedStatement statement = connection.prepareStatement(config.getTableDropStatement());
-	    statement.execute();
-	    statement.close();
+		PreparedStatement statement = null;
+
+		try
+		{
+			statement = connection.prepareStatement(config.getTableDropStatement());
+			statement.execute();
+		}
+		catch (SQLException exception)
+		{
+			if (exception.getMessage().contains("does not exist"))
+			{
+				
+			}
+			else
+			{
+				throw exception;
+			}
+		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
 	}
 	
 	public void truncateTable(Connection connection) throws SQLException, IOException
 	{
-		PreparedStatement statement = connection.prepareStatement(config.getTableTruncateStatement());
-	    statement.execute();
-	    statement.close();
+		PreparedStatement statement = null;
+
+		try
+		{
+			statement = connection.prepareStatement(config.getTableTruncateStatement());
+			statement.execute();
+		}
+		catch (SQLException exception)
+		{
+			throw exception;
+		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
 	}
 
 	public String getFolderSeparatorForDBPlatform(Connection connection) throws SQLException
@@ -288,7 +334,8 @@ public class WorkerDBUtils
 		}
 		finally
 		{
-			statement.close();
+			if (statement!=null)
+				statement.close();
 		}
 		
 		return dataFolderName;
@@ -300,6 +347,7 @@ public class WorkerDBUtils
 		String folderSeparator;
 		String databaseFileName;
 		String logFileName;
+		Statement statement = null;
 
 		int initialLogSize = initialDatabaseSize*3;
 
@@ -326,16 +374,39 @@ public class WorkerDBUtils
 		
 		logger.info("Creating database: " + sqlCommand);
 
-		Statement statement = connection.createStatement();
-		statement.execute(sqlCommand);
-	    statement.close();
+		try
+		{
+			statement = connection.createStatement();
+			statement.execute(sqlCommand);
+		}
+		catch (SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
 	}
 
 	public void changeDatabase(Connection connection, String databaseName) throws SQLException
 	{
 		logger.info("Changing to database " + databaseName + "...");
 		Statement statement = connection.createStatement();
-		statement.execute("USE " + databaseName);
+		try
+		{
+			statement.execute("USE " + databaseName);
+		}
+		catch (SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
 	}
 
 
@@ -367,9 +438,39 @@ public class WorkerDBUtils
 		}
 		finally
 		{
-			statement.close();
+			if (statement!=null)
+				statement.close();
 		}
 		
 		return isRunningOnLinux;
+	}
+
+	public boolean databaseExists(Connection connection, String databaseName) throws SQLException
+	{
+		boolean exists = false;
+		
+		Statement statement = connection.createStatement();
+
+		try
+		{
+			
+			ResultSet rs = statement.executeQuery("SELECT name FROM master.dbo.sysdatabases where name='" + databaseName +"'");
+
+			if (rs.next())
+			{
+				exists=true;
+			}
+		}
+		catch (SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
+		
+		return exists;
 	}
 }

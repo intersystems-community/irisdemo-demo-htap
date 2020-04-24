@@ -111,22 +111,16 @@ public class MSSQLWorker implements IWorker
 		
 		try
 		{
-			try
+			if ( ! workerDBUtils.databaseExists(connection, "SPEEDTEST"))
 			{
-				workerDBUtils.dropTable(connection);
+				workerDBUtils.createDatabase(connection, "SPEEDTEST", config.getDatabaseSizeInGB());
 			}
-			catch (SQLException exception)
-			{
-				if (exception.getMessage().contains("does not exist"))
-				{
-					
-				}
-				else
-				{
-					throw exception;
-				}
-				
-			}
+	
+			workerDBUtils.changeDatabase(connection, "SPEEDTEST");
+			
+			workerDBUtils.dropTable(connection);
+			
+			workerDBUtils.createSchema(connection);
 			
 			workerDBUtils.createTable(connection);
 		}
@@ -147,7 +141,9 @@ public class MSSQLWorker implements IWorker
 		Connection connection = workerDBUtils.getDataSource().getConnection();
 		
 		try
-		{
+		{	
+			workerDBUtils.changeDatabase(connection, "SPEEDTEST");
+			
 			workerDBUtils.truncateTable(connection);
 		}
 		catch (Exception e)

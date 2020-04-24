@@ -65,6 +65,9 @@ public class MSSQLWorker implements IWorker
 			//connectionProperties.setProperty("serverTimezone", "UTC");
         	//connectionProperties.setProperty("createDatabaseIfNotExist", "true");
 
+			// When the query workers start, SPEEDTEST database will have been created by one of the ingestion workers chosen by the master
+			connectionProperties.setProperty("databaseName", "SPEEDTEST");
+
 	        dataSourceCache = new DriverManagerDataSource(config.getConsumptionJDBCURL(), connectionProperties);
 		}
         
@@ -80,7 +83,6 @@ public class MSSQLWorker implements IWorker
 		ResultSet rs;
 		ResultSetMetaData rsmd;
 		Connection connection = getDataSource().getConnection();
-		changeDatabase(connection, "SPEEDTEST");
 
 		double t0, t1, t2, t3, rowCount;
 		int idIndex, rowSizeInBytes, colnumCount;
@@ -169,12 +171,4 @@ public class MSSQLWorker implements IWorker
 		
 		return null;
 	}
-	
-	public void changeDatabase(Connection connection, String databaseName) throws SQLException
-	{
-		logger.info("Changing to database " + databaseName + "...");
-		Statement statement = connection.createStatement();
-		statement.execute("USE " + databaseName);
-	}
-
 }
