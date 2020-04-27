@@ -19,6 +19,9 @@ import com.irisdemo.htap.workersrv.IWorker;
 import com.irisdemo.htap.workersrv.WorkerMetricsAccumulator;
 import com.irisdemo.htap.workersrv.WorkerSemaphore;
 
+import com.microsoft.sqlserver.jdbc.SQLServerConnection;
+
+
 @Component("worker")
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class MSSQLWorker implements IWorker 
@@ -47,8 +50,10 @@ public class MSSQLWorker implements IWorker
 		
 		logger.info("Ingestion worker #"+threadNum+" started.");
 
-		Connection connection = workerDBUtils.getDataSource().getConnection();
-    	workerDBUtils.changeDatabase(connection, "SPEEDTEST");
+		SQLServerConnection connection = (SQLServerConnection)workerDBUtils.getDataSource().getConnection();
+		workerDBUtils.changeDatabase(connection, "SPEEDTEST");
+		
+		workerDBUtils.setReadUncommitted(connection);
 		
 		connection.setAutoCommit(false);
 		
@@ -155,5 +160,6 @@ public class MSSQLWorker implements IWorker
 			connection.close();
 		}
     	
-    }
+	}
+	
 }

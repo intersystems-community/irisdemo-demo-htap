@@ -22,6 +22,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 
 import com.irisdemo.htap.config.Config;
+import com.microsoft.sqlserver.jdbc.SQLServerConnection;
+
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -181,10 +183,14 @@ public class WorkerDBUtils
 	{
 		PreparedStatement statement = null;
 		
+		// This primary key is unique, but not sequential. SQL Server performs very badly with
+		// clustered primary keys that are non sequential
+		String createTableStatement = config.getTableCreateStatement().replace("PRIMARY KEY", "PRIMARY KEY NONCLUSTERED");
+
 		try
 		{
 			logger.info("Creating table ...");
-			statement = connection.prepareStatement(config.getTableCreateStatement());
+			statement = connection.prepareStatement(createTableStatement);
 			statement.execute();
 		}
 		catch (SQLException e)
@@ -472,5 +478,25 @@ public class WorkerDBUtils
 		}
 		
 		return exists;
+	}
+
+	public void setReadUncommitted(SQLServerConnection connection) throws SQLException
+	{
+		PreparedStatement statement = null;
+		
+		try
+		{
+			logger.info("SET TRANSACTION ISOLATION LEVEL");
+			connection.setTransactionIsolation(SQLServerConnection.TRANSACTION_READ_UNCOMMITTED);
+		}
+		catch (SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
 	}
 }

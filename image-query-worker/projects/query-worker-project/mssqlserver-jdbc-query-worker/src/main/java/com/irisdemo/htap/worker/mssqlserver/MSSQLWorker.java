@@ -26,6 +26,8 @@ import com.irisdemo.htap.workersrv.WorkerSemaphore;
 import com.irisdemo.htap.workersrv.AccumulatedMetrics;
 import com.irisdemo.htap.workersrv.IWorker;
 
+import com.microsoft.sqlserver.jdbc.SQLServerConnection;
+
 @Component("worker")
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class MSSQLWorker implements IWorker 
@@ -74,6 +76,26 @@ public class MSSQLWorker implements IWorker
         return dataSourceCache;
     }
 
+	public void setReadUncommitted(SQLServerConnection connection) throws SQLException
+	{
+		PreparedStatement statement = null;
+		
+		try
+		{
+			logger.info("SET TRANSACTION ISOLATION LEVEL");
+			connection.setTransactionIsolation(SQLServerConnection.TRANSACTION_READ_UNCOMMITTED);
+		}
+		catch (SQLException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			if (statement!=null)
+				statement.close();
+		}
+	}
+
 	@Async
     public CompletableFuture<Long> startOneConsumer(int threadNum) throws IOException, SQLException, ClassNotFoundException
     {	
@@ -82,7 +104,9 @@ public class MSSQLWorker implements IWorker
 		PreparedStatement preparedStatement;
 		ResultSet rs;
 		ResultSetMetaData rsmd;
-		Connection connection = getDataSource().getConnection();
+		SQLServerConnection connection = (SQLServerConnection)getDataSource().getConnection();
+
+		setReadUncommitted(connection);
 
 		double t0, t1, t2, t3, rowCount;
 		int idIndex, rowSizeInBytes, colnumCount;
@@ -112,7 +136,7 @@ public class MSSQLWorker implements IWorker
 		
 		try 
 		{
-			preparedStatement = connection.prepareStatement(config.getQueryByIdStatement());
+			preparedStatement = connection.prepareStatement(getQueryStatementWithNOLOCK());
 			
 			while(workerSemaphore.green())
 			{
@@ -170,5 +194,14 @@ public class MSSQLWorker implements IWorker
 		}
 		
 		return null;
+	}
+
+	String getQueryStatementWithNOLOCK()
+	{
+		String query = config.getQueryByIdStatement().replace("from SpeedTest.Account", " from SpeedTest.Account with (NOLOCK) ");
+
+		logger.info("Query: " + query);
+
+		return query;
 	}
 }
