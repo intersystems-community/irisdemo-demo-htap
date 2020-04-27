@@ -1,4 +1,4 @@
-## 2.4.13 (April 24, 2020)
+## 2.4.14 (April 27, 2020)
   - Finishing support for SQL Server on AWS
 
 ## 2.4.12 (April 23, 2020)
