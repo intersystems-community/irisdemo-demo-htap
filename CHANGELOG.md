@@ -1,3 +1,6 @@
+## 2.4.15 (April 27, 2020)
+  - Adding dead lock optimizations to SQL Server
+
 ## 2.4.14 (April 27, 2020)
   - Finishing support for SQL Server on AWS
 
