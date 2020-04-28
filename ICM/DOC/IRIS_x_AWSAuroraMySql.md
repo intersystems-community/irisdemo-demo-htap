@@ -116,13 +116,7 @@ Run the **deployiris.sh** script. It deploys InterSystems IRIS for you:
 
 This script will make ICM copy the InterSystems IRIS install kit to the machine on AWS and install it. So depending on your network, it may be very fast or take longer. On my PC, running from the office, it took 3 minutes.
 
-When done, you will notice that ICM will write on the screen the URL for the management portal. Save that and open the management portal using the user **SuperUser** and the password **sys**. You will notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run. But now, let's use the management portal to pre-expand IRIS database. This is something that we must before running the speed test. This is a normal configuration on production systems. So, from the main menu of the management portal:
-- Choose option **System Administration > Configuration > System Configuration > Local Databases**. 
-- Click on database **SPEEDTEST*.
-- We have configured ICM's DataVolumeSize for this test with 100Gb. You can see this [here](../ICMDurable/Templates/AWS/m5.xlarge/defaults.json). But you will notice that the **Size (MB)** field on the screen is only showing a little bit more than 1Gb (~1671Mb). That is what we need to increase.
-- Change field **Size (MB)** to **97375** (~95GB). We don't want to take all available storage on that filesystem. Just pre-expand the database to use most of it.
-- Click on the **Save** button at the top of the screen. A warning will complain about taking more than 90% of the space on the file system. Just accept it.
-- You will be returned to the screen with the list of databases. You will notice that the SPEEDTEST database has its **Status** column displaying **Expanding**. You can continue with the procedure bellow to finish deploying AWS Aurora and the SpeedTest for it. **But come back here to check if expansion has finished BEFORE running the speed test.**.
+When done, you will notice that ICM will write on the screen the URL for the management portal. Save that. You can open the management portal using the user **SuperUser** and the password **sys**. You will notice that there is a namespace called SPEEDTEST. This is where the speed test table will be created. You will be able to look at its contents during and after the speed test is run. 
 
 ## 5 - Deploy the Speed Test for InterSystems IRIS
 
@@ -278,22 +272,36 @@ After clicking on **Run Test**, it should immediately change to **Starting...**.
 
 **If you needed to run the bounce speed test script, make sure you reconfigure the maximum time for running the test above again.**
 
-After 20 minutes, here are my results:
+After 20 minutes, here are my results when using AWS Aurora's replica for reading:
 
-| Database                 | Machine      | Run time | Inserts/s ATEOT     | Tot Records Inserted | Queries/s ATEOT | Tot Records Retrieved AEOT | Query Response Time AEOT | 
-|--------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
-| InterSystems IRIS 2020.2 | m5.xlarge    | 1200s    | 130K rec/sec        | 141,637,000          | 28,659 rec/sec      | 30,453,442                 | 0.0349ms                     |
-| AWS Aurora MySQL         | db.r5.xlarge | 1200s    | 16K rec/sec         | 10,474,000           | 19,732 rec/sec      | 21,705,916                 | 0.0507ms                     |
+
+| Database                         | Machine      | Run time | Avg Inserts/s       | Tot Records Inserted | Avg Queries/s       | Tot Records Retrieved AEOT | Query Response Time AEOT | 
+|----------------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
+| InterSystems IRIS 2020.2         | m5.xlarge    | 1200s    | 118K rec/sec        | 141,637,000          | 25,384 rec/sec      | 30,453,442                 | 0.0349ms                     |
+| AWS Aurora MySQL (using replica) | db.r5.xlarge | 1200s    | 8,733 rec/sec       | 10,474,000           | 18,100 rec/sec      | 21,705,916                 | 0.0507ms                     |
 
 InterSystems IRIS:					
 - Ingested 1252.3% more records	
-- Was ingesting them 712.5% faster	
+- Was ingesting them 1252% faster
 - Retrieved 40.4% more records	
-- Was retrieving them 45.3% faster
+- Was retrieving them 40.3% faster
 
 AWS Aurora has two advantages over InterSystems:
 - AWS Aurora had twice the amount of memory: m5.xlarge has the same characteristics of db.r5.xlarge with the exception that m5.xlarge has only 16Gb of RAM while db.r5.xlarge has 32Gb of RAM. 
 - We were redirecting the queries to AWS Aurora's replica so it could be faster. We could have done the same with IRIS, but it has a cost for both databases: The replica is always behind. So you would be fetching stale data. AWS Aurora has no way of fixing this. InterSystems IRIS offers the possibility of adding more [compute nodes](https://docs.intersystems.com/irislatest/csp/docbook/DocBook.UI.Page.cls?KEY=GSCALE_scalability) that are always consistent with transactional data. We will be doing another version of this test with ECP to show this concept in the future. 
+
+And here are the "apples to apples" result (Writing and Reading to the same box):
+
+| Database                             | Machine      | Run time | Avg Inserts/s       | Tot Records Inserted | Avg Queries/s       | Tot Records Retrieved AEOT | Query Response Time AEOT | 
+|--------------------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
+| InterSystems IRIS 2020.2             | m5.xlarge    | 1200s    | 118K rec/sec        | 141,637,000          | 25,384 rec/sec      | 30,453,442                 | 0.0349ms                     |
+| AWS Aurora MySQL (not using replica) | db.r5.xlarge | 1200s    | 7,586 rec/sec       |   9,099,000          |  5,510 rec/sec      |  6,608,734                 | 0.1795ms                     |
+
+InterSystems IRIS compared apple to apples to AWS Aurora:
+- Ingested 1456.7% more records
+- Was ingesting them 1456.3% faster
+- Was retrieving them 360.7% faster
+- Was retrieving them 414.4% faster
 
 ## 9 - Unprovision everything
 
@@ -318,6 +326,9 @@ After ICM is done, make sure you:
 
 Here is the end result of AWS Aurora's test:
 ![AWS Aurora MySQL Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_AWS_Aurora_MySQL_db.r5.xlarge_results.png?raw=true)
+
+Here is the end result of AWS Aurora's test "apple to apples":
+![AWS Aurora MySQL Results "apple to apples"](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_AWS_Aurora_MySQL_db.r5.xlarge_results_single_server.png?raw=true)
 
 Here is the end result of InterSystems IRIS test:
 ![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_InterSystems_IRIS_2020.2_m5.xlarge_results.png?raw=true)
