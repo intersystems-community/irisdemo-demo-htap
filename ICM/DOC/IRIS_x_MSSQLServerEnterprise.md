@@ -371,7 +371,7 @@ After ICM is done, make sure you:
 ## 10 - Screenshots
 
 Here is the end result of SQL Server's test:
-![SQL Server Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_AWS_Aurora_MySQL_db.r5.xlarge_results.png?raw=true)
+![SQL Server Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_AWS_RDS_SQL_Server_Enterprise_2017_results.png?raw=true)
 
 Here is the end result of InterSystems IRIS test:
 ![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_InterSystems_IRIS_2020.2_m5.xlarge_results.png?raw=true)
