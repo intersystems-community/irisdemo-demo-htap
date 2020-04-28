@@ -300,8 +300,8 @@ And here are the "apples to apples" result (Writing and Reading to the same box)
 InterSystems IRIS compared apple to apples to AWS Aurora:
 - Ingested 1456.7% more records
 - Was ingesting them 1456.3% faster
+- Retrieved 360.9% more records
 - Was retrieving them 360.7% faster
-- Was retrieving them 414.4% faster
 
 ## 9 - Unprovision everything
 

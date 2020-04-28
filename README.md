@@ -15,8 +15,8 @@ You can run the tests on AWS! Here are some results:
 * [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md). InterSystems IRIS:					
   - Ingested 1456.7% more records
   - Was ingesting them 1456.3% faster
+  - Retrieved 360.9% more records
   - Was retrieving them 360.7% faster
-  - Was retrieving them 414.4% faster
 
 You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:
