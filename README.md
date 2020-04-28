@@ -18,10 +18,10 @@ You can run the tests on AWS! Here are some results:
   - Retrieved 360.9% more records
   - Was retrieving them 360.7% faster
 * [InterSystems IRIS x AWS RDS SQL Server 2017](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_MSSQLServerEnterprise.md). InterSystems IRIS:					
-- Ingested 466% more records	
-- Was ingesting them 465.9% faster
-- Retrieved 3688164.7% more records!!
-- Was retrieving them 3567650.8% faster!! - clearly there is something wrong with SQL Server
+  - Ingested 466% more records	
+  - Was ingesting them 465.9% faster
+  - Retrieved 3688164.7% more records!!
+  - Was retrieving them 3567650.8% faster!! - clearly there is something wrong with SQL Server
 
 You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:
