@@ -96,16 +96,16 @@ public class MSSQLWorker implements IWorker
 		}
 	}
 
-	@Async
+	@Async("workerExecutor")
     public CompletableFuture<Long> startOneConsumer(int threadNum) throws IOException, SQLException, ClassNotFoundException
-    {	
-		logger.info("Starting Consumer thread "+threadNum+"...");
-		accumulatedMetrics.incrementNumberOfActiveQueryThreads();
-		
+    {			
 		PreparedStatement preparedStatement;
 		ResultSet rs;
 		ResultSetMetaData rsmd;
 		SQLServerConnection connection = (SQLServerConnection)getDataSource().getConnection();
+
+		accumulatedMetrics.incrementNumberOfActiveQueryThreads();
+		logger.info("Starting Consumer thread "+threadNum+"...");
 
 		setReadUncommitted(connection);
 

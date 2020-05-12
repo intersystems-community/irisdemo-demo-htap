@@ -65,7 +65,7 @@ public class IRISWorker implements IWorker
         return dataSourceCache;
     }
 
-	@Async
+	@Async("workerExecutor")
     public CompletableFuture<Long> startOneConsumer(int threadNum) throws IOException, SQLException
     {	
 		PreparedStatement preparedStatement;

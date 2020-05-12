@@ -27,6 +27,9 @@ import org.slf4j.LoggerFactory;
 import com.irisdemo.htap.config.Config;
 import com.irisdemo.htap.config.ConfigService;
 
+import java.util.concurrent.Executor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
 @EnableScheduling
 @SpringBootApplication
 @Configuration
@@ -36,6 +39,16 @@ public class App implements ApplicationRunner
 {	
 	Logger logger = LoggerFactory.getLogger(App.class);
 	
+	@Bean("workerExecutor")
+    public Executor taskExecutor(){
+        ThreadPoolTaskExecutor poolExecutor = new ThreadPoolTaskExecutor();
+        poolExecutor.setCorePoolSize(20);
+        poolExecutor.setMaxPoolSize(300);
+        poolExecutor.setQueueCapacity(0);
+        poolExecutor.setThreadNamePrefix("worker-");
+        return poolExecutor;
+	}
+
 	/*
 	 * This bean is used by the ConfigService to register with the master and get the configuration.
 	 * Every service that needs to call a REST service, just needs to have a RestTemplate injected in

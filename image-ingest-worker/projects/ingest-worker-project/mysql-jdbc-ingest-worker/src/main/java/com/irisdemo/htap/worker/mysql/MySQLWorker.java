@@ -39,7 +39,7 @@ public class MySQLWorker implements IWorker
     
 	protected static char[] prefixes = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
-	@Async
+	@Async("workerExecutor")
     public CompletableFuture<Long> startOneFeed(String nodePrefix, int threadNum) throws IOException, SQLException
     {	
 		long recordNum = 0;
