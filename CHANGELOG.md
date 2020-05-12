@@ -1,3 +1,11 @@
+## 2.4.16 (May 12, 2020)
+  - Assigning independent thread pool to workers so that a higher number of threads can be used per worker
+  - Adding more statistics. Fixing bug with avg metrics when throttling
+  - Fixing avg rec/s for SQL Server
+  - Fixing problem when avg curves for ingestion and query would be wrong if throttling was in use (adding ms wait time for batches and queries)
+  - Changing the settings UI to allow for specifying a number of ms to wait between every inserted batch
+  - Changing the report file to include the number of threads that were active on every second during the entire test
+
 ## 2.4.15 (April 27, 2020)
   - Adding dead lock optimizations to SQL Server
 
