@@ -11,6 +11,7 @@ public class AccumulatedIngestMetrics extends IngestMetrics
 	// Called to update the main bean that is a singleton
 	synchronized public void update(AccumulatedIngestMetrics accumulatedMetrics)
 	{
+		this.numberOfActiveIngestionThreads=accumulatedMetrics.getNumberOfActiveIngestionThreads();
 		this.MBIngested=accumulatedMetrics.getMBIngested();
 		this.MBIngestedPerSec=accumulatedMetrics.getMBIngestedPerSec();
 		this.avgMBIngestedPerSec=accumulatedMetrics.getAvgMBIngestedPerSec();
@@ -22,6 +23,7 @@ public class AccumulatedIngestMetrics extends IngestMetrics
 	// Used when accumulaing all measures from all workers before updating the main singloton bean
 	public void addToStats(IngestMetrics newMetrics)
 	{
+		this.numberOfActiveIngestionThreads+=newMetrics.getNumberOfActiveIngestionThreads();
 		this.MBIngested+=newMetrics.getMBIngested();
 		this.MBIngestedPerSec+=newMetrics.getMBIngestedPerSec();
 		this.avgMBIngestedPerSec+=newMetrics.getAvgMBIngestedPerSec();

@@ -51,6 +51,7 @@ export class AppConfigDialogComponent implements OnInit {
       'ingestionJDBCPassword': [null, [Validators.required]],
       'ingestionBatchSize': [1000, [Validators.required]],
       'ingestionNumThreadsPerWorker': [2, [Validators.required]],
+      'ingestionWaitTimeBetweenBatchesInMillis': [0, [Validators.required]],
 
       'consumptionJDBCURL': [null, [Validators.required]],
       'consumptionJDBCUserName': [null, [Validators.required]],
@@ -63,6 +64,7 @@ export class AppConfigDialogComponent implements OnInit {
   }
 
   updateFormWithConfigValue(config: any): void {
+    console.log(config);
     this.configFormGroup.setValue({
       maxTimeToRunInSeconds: config.maxTimeToRunInSeconds, 
       ingestionJDBCURL: config.ingestionJDBCURL, 
@@ -70,6 +72,7 @@ export class AppConfigDialogComponent implements OnInit {
       ingestionJDBCPassword: config.ingestionJDBCPassword,
       ingestionBatchSize: config.ingestionBatchSize,
       ingestionNumThreadsPerWorker: config.ingestionNumThreadsPerWorker,
+      ingestionWaitTimeBetweenBatchesInMillis: config.ingestionWaitTimeBetweenBatchesInMillis,
       consumptionJDBCURL: config.consumptionJDBCURL,
       consumptionJDBCUserName: config.consumptionJDBCUserName,
       consumptionJDBCPassword: config.consumptionJDBCPassword,

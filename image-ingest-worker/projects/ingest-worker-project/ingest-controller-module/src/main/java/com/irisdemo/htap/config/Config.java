@@ -20,6 +20,7 @@ public class Config
 	/*
 	WORKER CONFIGURATION COMING FROM THE MASTER
 	*/
+
 	private String masterHostName;
 	private String masterPort;
 	private String thisHostName;
@@ -36,6 +37,7 @@ public class Config
 	private String ingestionJDBCPassword;
 	private int ingestionBatchSize;
 	private int ingestionNumThreadsPerWorker;
+	private int ingestionWaitTimeBetweenBatchesInMillis;
 	
 	/*
 	 * Statements
@@ -50,6 +52,17 @@ public class Config
 	private String tableCreateStatement;
 	private String tableTruncateStatement;
 	
+	
+	public void setIngestionWaitTimeBetweenBatchesInMillis(int ingestionWaitTimeBetweenBatchesInMillis)
+	{
+		this.ingestionWaitTimeBetweenBatchesInMillis=ingestionWaitTimeBetweenBatchesInMillis;
+	}
+
+	public int getIngestionWaitTimeBetweenBatchesInMillis()
+	{
+		return this.ingestionWaitTimeBetweenBatchesInMillis;
+	}
+
 	public void setWorkerNodePrefix(String workerNodePrefix)
 	{
 		this.workerNodePrefix=workerNodePrefix;

@@ -11,6 +11,7 @@ public class AccumulatedQueryMetrics extends QueryMetrics
 	// Called to update the main bean that is a singleton
 	synchronized public void update(AccumulatedQueryMetrics accumulatedMetrics)
 	{
+		this.numberOfActiveQueryThreads=accumulatedMetrics.getNumberOfActiveQueryThreads();
 		this.MBConsumed=accumulatedMetrics.getMBConsumed();
 		this.MBConsumedPerSec=accumulatedMetrics.getMBConsumedPerSec();
 		this.avgMBConsumedPerSec=accumulatedMetrics.getAvgMBConsumedPerSec();
@@ -24,6 +25,7 @@ public class AccumulatedQueryMetrics extends QueryMetrics
 	// Used when accumulaing all measures from all workers before updating the main singloton bean
 	public void addToStats(QueryMetrics newMetrics)
 	{
+		this.numberOfActiveQueryThreads+=newMetrics.getNumberOfActiveQueryThreads();
 		this.MBConsumed+=newMetrics.getMBConsumed();
 		this.MBConsumedPerSec+=newMetrics.getMBConsumedPerSec();
 		this.avgMBConsumedPerSec+=newMetrics.getAvgMBConsumedPerSec();

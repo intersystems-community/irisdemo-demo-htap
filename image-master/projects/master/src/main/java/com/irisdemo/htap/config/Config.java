@@ -41,6 +41,8 @@ public class Config
 	private int ingestionBatchSize;
 	private int ingestionNumThreadsPerWorker;
 	private String insertStatement;
+	private int ingestionWaitTimeBetweenBatchesInMillis;
+	private int numberOfActiveIngestionThreads;
 
 	/* 
 	CONSUMPTION CONFIGURATION 
@@ -147,11 +149,23 @@ public class Config
 		{
 			logger.warn("Could not read statement from file IRIS_PROC_ENABLE_CALLIN.sql");
 		}
+
+		ingestionWaitTimeBetweenBatchesInMillis=0;
 	}
 
 	public int getConsumptionNumOfKeysToFetch()
 	{
 		return consumptionNumOfKeysToFetch;
+	}
+
+	public int getNumberOfActiveIngestionThreads()
+	{
+		return this.numberOfActiveIngestionThreads;
+	}
+
+	public void setNumberOfActiveIngestionThreads(int numberOfActiveIngestionThreads)
+	{
+		this.numberOfActiveIngestionThreads = numberOfActiveIngestionThreads;
 	}
 
 	@Value( "${CONSUMER_NUM_OF_KEYS_TO_FETCH:8}" )
@@ -168,6 +182,17 @@ public class Config
 	public void setMaxTimeToRunInSeconds(int maxTimeToRunInSeconds)
 	{
 		this.maxTimeToRunInSeconds=maxTimeToRunInSeconds;
+	}
+
+	public void setIngestionWaitTimeBetweenBatchesInMillis(int ingestionWaitTimeBetweenBatchesInMillis)
+	{
+		logger.info("Setting Wait Time between Batches to " + ingestionWaitTimeBetweenBatchesInMillis+ "ms.");
+		this.ingestionWaitTimeBetweenBatchesInMillis=ingestionWaitTimeBetweenBatchesInMillis;
+	}
+
+	public int getIngestionWaitTimeBetweenBatchesInMillis()
+	{
+		return this.ingestionWaitTimeBetweenBatchesInMillis;
 	}
 
 	@Value( "${MASTER_SPEEDTEST_TITLE:IRIS Speed Test}" )

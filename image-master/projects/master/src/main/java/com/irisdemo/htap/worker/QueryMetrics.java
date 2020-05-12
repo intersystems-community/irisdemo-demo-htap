@@ -4,6 +4,7 @@ public class QueryMetrics extends MetricsType
 {
 
     protected double numberOfRowsConsumed;
+    protected int numberOfActiveQueryThreads;
 
     protected double recordsConsumedPerSec;
     protected double avgRecordsConsumedPerSec;
@@ -14,6 +15,14 @@ public class QueryMetrics extends MetricsType
 
     protected double queryAndConsumptionTimeInMillis;
     protected double avgQueryAndConsumptionTimeInMillis;
+
+    synchronized public int getNumberOfActiveQueryThreads() {
+        return numberOfActiveQueryThreads;
+    }
+
+    synchronized public void setNumberOfActiveQueryThreads(int numberOfActiveQueryThreads) {
+        this.numberOfActiveQueryThreads = numberOfActiveQueryThreads;
+    }
 
     synchronized public double getNumberOfRowsConsumed() {
         return numberOfRowsConsumed;

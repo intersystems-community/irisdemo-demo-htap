@@ -2,6 +2,8 @@ package com.irisdemo.htap.worker;
 
 public class IngestMetrics extends MetricsType
 {
+    protected int numberOfActiveIngestionThreads;
+
     protected double numberOfRowsIngested;
 
     protected double recordsIngestedPerSec;
@@ -11,6 +13,16 @@ public class IngestMetrics extends MetricsType
 
     protected double MBIngestedPerSec;    
     protected double avgMBIngestedPerSec;
+
+    public int getNumberOfActiveIngestionThreads()
+    {
+        return this.numberOfActiveIngestionThreads;
+    }
+
+    public void setNumberOfActiveIngestionThreads(int numberOfActiveIngestionThreads)
+    {
+        this.numberOfActiveIngestionThreads = numberOfActiveIngestionThreads;
+    }
 
     public double getNumberOfRowsIngested() {
         return numberOfRowsIngested;

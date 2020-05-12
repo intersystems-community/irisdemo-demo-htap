@@ -82,6 +82,8 @@ public class HANAWorker implements IWorker
 		
 		logger.info("Starting Consumer thread "+threadNum+"...");
 		
+		accumulatedMetrics.incrementNumberOfActiveQueryThreads();
+
 		String[] IDs = new String[config.getConsumptionNumOfKeysToFetch()];
 
 		for (idIndex = 0; idIndex<config.getConsumptionNumOfKeysToFetch(); idIndex++)
@@ -147,7 +149,10 @@ public class HANAWorker implements IWorker
 					 accumulatedMetrics.addToStats(t3-t0, rowCount, rowSizeInBytes);
 				}
 				
-				Thread.sleep(config.getConsumptionTimeBetweenQueriesInMillis());				
+				if (config.getConsumptionTimeBetweenQueriesInMillis()>0)
+				{
+					Thread.sleep(config.getConsumptionTimeBetweenQueriesInMillis());
+				}
 			}
 		} 
 		catch (SQLException sqlException) 
@@ -157,13 +162,15 @@ public class HANAWorker implements IWorker
 		} 
 		catch (InterruptedException e) 
 		{
-			//Just return if interrupted.
+			logger.warn("Thread has been interrupted. Maybe the master asked it to stop: " + e.getMessage());
 		} 
 		finally
 		{
 			connection.close();
 		}
 		
+		accumulatedMetrics.decrementNumberOfActiveQueryThreads();
+
 		return null;
 	}
 	

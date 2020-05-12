@@ -45,6 +45,8 @@ public class MySQLWorker implements IWorker
 		long recordNum = 0;
 		long batchSizeInBytes;
 		
+		accumulatedMetrics.incrementNumberOfActiveIngestionThreads();
+
 		Connection connection = workerDBUtils.getDataSource().getConnection();
     	
 		logger.info("Ingestion worker #"+threadNum+" started.");
@@ -86,6 +88,11 @@ public class MySQLWorker implements IWorker
 					preparedStatement.clearBatch();
 					connection.commit();
 					accumulatedMetrics.addToStats(currentBatchSize, batchSizeInBytes);
+
+					if (config.getIngestionWaitTimeBetweenBatchesInMillis()>0)
+					{
+						Thread.sleep(config.getIngestionWaitTimeBetweenBatchesInMillis());
+					}	
 				}
 	    	}	
 			
@@ -94,11 +101,17 @@ public class MySQLWorker implements IWorker
     	{
 			throw sqlException;
 		} 
+		catch (InterruptedException e) 
+		{
+			logger.warn("Thread has been interrupted. Maybe the master asked it to stop: " + e.getMessage());
+		} 
     	finally
     	{
     		connection.close();
     	}
-    	
+		
+		accumulatedMetrics.decrementNumberOfActiveIngestionThreads();
+
     	logger.info("Ingestion worker #"+threadNum+" finished.");
     	return CompletableFuture.completedFuture(recordNum);
 	}

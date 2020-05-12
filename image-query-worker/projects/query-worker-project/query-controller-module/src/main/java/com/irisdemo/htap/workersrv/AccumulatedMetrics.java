@@ -16,8 +16,11 @@ public class AccumulatedMetrics
 	
 	@Autowired
 	WorkerSemaphore workerSemaphore;
-	
+
+	private int numberOfActiveQueryThreads = 0;
+
 	private double timeSpentOnWorkInMillis;
+	private double timeSinceLastAggInMillis;
 	private double startTimeInMillis;
 	
 	private double numberOfRowsConsumed;
@@ -66,9 +69,27 @@ public class AccumulatedMetrics
     	setQueryAndConsumptionTimeInMillis(0);
 
         previousNumberOfRowsConsumed=0;
-        previousMBConsumed=0;    			
+		previousMBConsumed=0;    
+		
+		this.numberOfActiveQueryThreads=0;
     }
+	
+	synchronized public void incrementNumberOfActiveQueryThreads()
+	{
+		numberOfActiveQueryThreads++;
+	}
+
+	synchronized public void decrementNumberOfActiveQueryThreads()
+	{
+		numberOfActiveQueryThreads--;
+    }
+
     
+    public int getNumberOfActiveQueryThreads()
+    {
+        return numberOfActiveQueryThreads;
+    }
+
     /**
      * Called by Worker threads to add to stats 
      * @param numberOfRowsIngested
@@ -93,20 +114,26 @@ public class AccumulatedMetrics
 			//if we are stopping the workers and no new records have been ingested.
 			if (deltaNumberOfRowsConsumed>0) 
 			{
-				double ellapsedTimeInMillis = (System.currentTimeMillis() - startTimeInMillis);
-				double ellapsedTimeInSeconds = ellapsedTimeInMillis/1000d;
-
-				previousNumberOfRowsConsumed = numberOfRowsConsumed;
-				this.setRecordsConsumedPerSec(deltaNumberOfRowsConsumed); // divided by 1 second				
+                double currentTimeInMillis = System.currentTimeMillis();
 				
-				this.setMBConsumedPerSec(MBConsumed - previousMBConsumed); // divided by 1 second
+				double ellapsedTimeSinceLastAggInMillis = currentTimeInMillis - timeSinceLastAggInMillis;
+                double ellapsedTimeSinceLastAggInSeconds = ellapsedTimeSinceLastAggInMillis/1000d;
+                timeSinceLastAggInMillis = currentTimeInMillis;
+
+	    		double ellapsedTimeInMillis = (currentTimeInMillis - startTimeInMillis);
+				double ellapsedTimeInSeconds = ellapsedTimeInMillis/1000d;
+				
+				previousNumberOfRowsConsumed = numberOfRowsConsumed;
+				this.setRecordsConsumedPerSec(deltaNumberOfRowsConsumed/ellapsedTimeSinceLastAggInSeconds); 
+				
+				this.setMBConsumedPerSec((MBConsumed - previousMBConsumed)/ellapsedTimeSinceLastAggInSeconds); 
 				previousMBConsumed = MBConsumed;
 				
 				setAvgRecordsConsumedPerSec(numberOfRowsConsumed / ellapsedTimeInSeconds); //total
 				
 				setAvgMBConsumedPerSec(MBConsumed / ellapsedTimeInSeconds); //total
 				
-				queryAndConsumptionTimeInMillis = 1000/deltaNumberOfRowsConsumed;
+				queryAndConsumptionTimeInMillis = ellapsedTimeSinceLastAggInMillis/deltaNumberOfRowsConsumed;
 				avgQueryAndConsumptionTimeInMillis = ellapsedTimeInMillis/numberOfRowsConsumed;
 			}
     	}

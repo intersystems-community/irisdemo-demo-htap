@@ -198,12 +198,6 @@ public class AppController {
         }
     }
 
-    @GetMapping(value = "/master/getActiveFeeds")
-    public int getActiveFeeds() {
-        final int activeFeeds = 0;
-        return activeFeeds;
-    }
-
     @GetMapping(value = "/master/getTitle")
     public RESTStringContainer getTitle() {
         return new RESTStringContainer(config.getTitle());
@@ -341,6 +335,7 @@ public class AppController {
     public Config getApplicationConfig(@RequestBody final Config newConfig) {
 
         /* Ingestion Settings */
+        config.setIngestionWaitTimeBetweenBatchesInMillis(newConfig.getIngestionWaitTimeBetweenBatchesInMillis());
         config.setIngestionBatchSize(newConfig.getIngestionBatchSize());
         config.setIngestionNumThreadsPerWorker(newConfig.getIngestionNumThreadsPerWorker());
 

@@ -58,12 +58,6 @@ public class AppController
     {
         workerService.stopSpeedTest();
     }
-
-    @GetMapping(value = "/worker/getActiveFeeds")
-    public int getActiveFeeds() 
-    {
-        return workerService.getNumberOfActiveFeeds();
-    }
     
     @GetMapping("/worker/getMetrics")
     public WorkerMetricsAccumulator getMetrics() 

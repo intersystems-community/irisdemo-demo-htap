@@ -13,7 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -46,6 +45,8 @@ public class MetricsFileManager {
 
         str.append("timeInSeconds");
         str.append(",");
+        str.append("numberOfActiveIngestionThreads");
+        str.append(",");
         str.append("numberOfRowsIngested");
         str.append(",");
         str.append("recordsIngestedPerSec");
@@ -59,6 +60,8 @@ public class MetricsFileManager {
     	str.append("avgMBIngestedPerSec");
     	str.append(",");
         str.append("numberOfRowsConsumed");
+        str.append(",");
+        str.append("numberOfActiveQueryThreads");
         str.append(",");
         str.append("recordsConsumedPerSec");
         str.append(",");

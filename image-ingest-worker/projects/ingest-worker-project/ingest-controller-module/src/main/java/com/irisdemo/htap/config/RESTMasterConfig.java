@@ -16,6 +16,7 @@ public class RESTMasterConfig
 	public boolean disableJournalForDropTable;
 	public boolean disableJournalForTruncateTable;
 	public int databaseSizeInGB;
+	public int ingestionWaitTimeBetweenBatchesInMillis;
 	
 	/*
 	 * Statements

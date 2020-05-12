@@ -7,6 +7,7 @@ public class Metrics
 {
     private int speedTestRunningStatus;
     private int runTimeInSeconds;
+    private int numberOfActiveIngestionThreads;
 
     private double numberOfRowsIngested;
     private double recordsIngestedPerSec;
@@ -17,6 +18,7 @@ public class Metrics
     private double avgMBIngestedPerSec;
 
     private double numberOfRowsConsumed;
+    private int numberOfActiveQueryThreads;
     private double recordsConsumedPerSec;
     private double avgRecordsConsumedPerSec;
 
@@ -42,6 +44,7 @@ public class Metrics
 
     private void populateMetrics(AccumulatedIngestMetrics accumulatedIngestMetrics, AccumulatedQueryMetrics accumulatedQueryMetrics)
     {
+        this.numberOfActiveIngestionThreads = accumulatedIngestMetrics.getNumberOfActiveIngestionThreads();
     	this.numberOfRowsIngested=accumulatedIngestMetrics.getNumberOfRowsIngested();
     	this.recordsIngestedPerSec=accumulatedIngestMetrics.getRecordsIngestedPerSec();
     	this.avgRecordsIngestedPerSec=accumulatedIngestMetrics.getAvgRecordsIngestedPerSec();
@@ -49,7 +52,8 @@ public class Metrics
     	this.MBIngested=accumulatedIngestMetrics.getMBIngested();
     	this.MBIngestedPerSec=accumulatedIngestMetrics.getMBIngestedPerSec();
     	this.avgMBIngestedPerSec=accumulatedIngestMetrics.getAvgMBIngestedPerSec();
-    	
+        
+        this.numberOfActiveQueryThreads = accumulatedQueryMetrics.getNumberOfActiveQueryThreads();
     	this.numberOfRowsConsumed=accumulatedQueryMetrics.getNumberOfRowsConsumed();
     	this.recordsConsumedPerSec=accumulatedQueryMetrics.getRecordsConsumedPerSec();
     	this.avgRecordsConsumedPerSec=accumulatedQueryMetrics.getAvgRecordsConsumedPerSec();
@@ -67,6 +71,8 @@ public class Metrics
         StringBuffer str = new StringBuffer();
         str.append(this.runTimeInSeconds);
         str.append(",");
+        str.append(this.numberOfActiveIngestionThreads);
+        str.append(",");
         str.append(this.numberOfRowsIngested);
         str.append(",");
         str.append(this.recordsIngestedPerSec);
@@ -80,6 +86,8 @@ public class Metrics
     	str.append(this.avgMBIngestedPerSec);
     	str.append(",");
         str.append(this.numberOfRowsConsumed);
+        str.append(",");
+        str.append(this.numberOfActiveQueryThreads);
         str.append(",");
         str.append(this.recordsConsumedPerSec);
         str.append(",");
@@ -96,6 +104,11 @@ public class Metrics
         str.append(this.avgQueryAndConsumptionTimeInMs);
 
         return str.toString();
+    }
+
+    public int getNumberOfActiveIngestionThreads()
+    {
+        return this.numberOfActiveIngestionThreads;
     }
 
     public int getRunTimeInSeconds()

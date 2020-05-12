@@ -12,9 +12,12 @@ public class WorkerMetricsAccumulator
 {
 	@Autowired
 	WorkerSemaphore workerSemaphore;
-	
+    
+    private int numberOfActiveIngestionThreads = 0;
+
 	private double startTimeInMillis;
-	
+    private double timeSinceLastAggInMillis;
+    
     private double numberOfRowsIngested;
     
     private double recordsIngestedPerSec;
@@ -43,7 +46,8 @@ public class WorkerMetricsAccumulator
      */
     public void reset()
     {
-    	this.startTimeInMillis=System.currentTimeMillis();
+        this.startTimeInMillis=System.currentTimeMillis();
+        this.timeSinceLastAggInMillis=this.startTimeInMillis;
     	this.numberOfRowsIngested=0;
     	this.recordsIngestedPerSec=0;
     	this.avgRecordsIngestedPerSec=0;
@@ -52,10 +56,25 @@ public class WorkerMetricsAccumulator
     	this.avgMBIngestedPerSec=0;
     	this.previousNumberOfRowsIngested=0;
     	this.previousMBIngested=0;
-    	this.bytesIngested=0;
-    			
+        this.bytesIngested=0;
+        this.numberOfActiveIngestionThreads=0;
+    }
+        
+	synchronized public void incrementNumberOfActiveIngestionThreads()
+	{
+		numberOfActiveIngestionThreads++;
+	}
+
+	synchronized public void decrementNumberOfActiveIngestionThreads()
+	{
+		numberOfActiveIngestionThreads--;
     }
     
+    public int getNumberOfActiveIngestionThreads()
+    {
+        return numberOfActiveIngestionThreads;
+    }
+
     public double getNumberOfRowsIngested() {
         return numberOfRowsIngested;
     }
@@ -101,14 +120,19 @@ public class WorkerMetricsAccumulator
 			//Just a second precaution to stop recomputing the metrics 
 			//if we are stopping the workers and no new records have been ingested.
 			if (deltaNumberOfRowsIngested>0) 
-			{
+			{	
+                double currentTimeInMillis = System.currentTimeMillis();
+                
+                double ellapsedTimeSinceLastAggInSeconds = (currentTimeInMillis - timeSinceLastAggInMillis)/1000d;
+                timeSinceLastAggInMillis = currentTimeInMillis;
+
+	    		double ellapsedTimeInMillis = (currentTimeInMillis - startTimeInMillis);
+                double ellapsedTimeInSeconds = ellapsedTimeInMillis/1000d;
+                
 				previousNumberOfRowsIngested = numberOfRowsIngested;
-				this.recordsIngestedPerSec = deltaNumberOfRowsIngested;
-	
-	    		double ellapsedTimeInMillis = (System.currentTimeMillis() - startTimeInMillis);
-				double ellapsedTimeInSeconds = ellapsedTimeInMillis/1000d;
+				this.recordsIngestedPerSec = deltaNumberOfRowsIngested / ellapsedTimeSinceLastAggInSeconds;
 						
-				this.MBIngestedPerSec = MBIngested - previousMBIngested;
+				this.MBIngestedPerSec = (MBIngested - previousMBIngested) / ellapsedTimeSinceLastAggInSeconds;
 				previousMBIngested = MBIngested;
 				
 				avgRecordsIngestedPerSec = numberOfRowsIngested / ellapsedTimeInSeconds;

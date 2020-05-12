@@ -56,6 +56,7 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 				config.setIngestionJDBCURL(workerConfig.config.ingestionJDBCURL);
 				config.setIngestionJDBCUserName(workerConfig.config.ingestionJDBCUserName);
 				config.setIngestionNumThreadsPerWorker(workerConfig.config.ingestionNumThreadsPerWorker);
+				config.setIngestionWaitTimeBetweenBatchesInMillis(workerConfig.config.ingestionWaitTimeBetweenBatchesInMillis);
 				
 				config.setInsertStatement(workerConfig.config.insertStatement);
 				config.setQueryStatement(workerConfig.config.queryStatement);
