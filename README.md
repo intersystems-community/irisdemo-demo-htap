@@ -300,6 +300,7 @@ Finally, just run the build.sh to rebuild the demo and you should be ready to go
 After running a test, the UI will allow you to download the test results as a CSV file. Here is what the columns on the Results CSV file mean:
 * Ingestion:
   - **timeInSeconds** - A point in time during the test given in seconds.
+  - **numberOfActiveIngestionThreads** - The total number of active ingestion threads sending data to the database.
   - **numberOfRowsIngested** - Total number of records inserted at a given point in time
   - **recordsIngestedPerSec** - Instantaneous ingestion rate expressed in number of records inserted per second (rec/s) at a given point in time. 
   - **avgRecordsIngestedPerSec** - Average number of records inserted per second up to a given point in time considering all records inserted up to that point in time.
@@ -308,6 +309,7 @@ After running a test, the UI will allow you to download the test results as a CS
   - **avgMBIngestedPerSec** - Average number of records inserted per second at a given point in time considering all records inserted up to that point in time.
 * Querying:
   - **numberOfRowsConsumed** - Total number of records fetched from the database at a given point in time
+  - **numberOfActiveQueryThreads** - The total number of active query threads fetching data from the database.
   - **recordsConsumedPerSec** Instantaneous query rate expressed in number of records fetched per second (rec/s) at a given point in time. 
   - **avgRecordsConsumedPerSec** - Average number of records fetched per second at a given point in time considering all records fetched up to that point in time.
   - **MBConsumed** - Total amount of MB (mega bytes) fetched from the database at a given point in time (as proof of work done by the querying workers)
