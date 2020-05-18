@@ -30,7 +30,7 @@
     "Region": "us-east-1",
     "Zone": "<Zone>",
     "DockerVersion": "18.06.1~ce~3-0~ubuntu",
-    "AMI": "ami-026c8acd92718196b",
+    "AMI": "ami-085925f297f89fce1",
     "InstanceType": "i3.xlarge",
     "Credentials": "/ICMDurable/aws.credentials",
     "SystemMode": "TEST",
