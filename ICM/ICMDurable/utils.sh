@@ -123,12 +123,12 @@ containerless_docker_pull() {
 # $1 must be machine name
 # Return on variable INTERNAL_IP
 containerless_internal_ip() {
-    MACHINE_GROUP=$(echo "$1" | egrep -o '[a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+')
+    MACHINE_GROUP=$(echo "$1" | egrep -o '[0-9a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+')
 
     # The following command will return something like ip-10-0-1-11
     icm ssh --machine $1 --command hostname
     # The following command will take ip-10-0-1-11, transform - into . and return from character 4 onward
-    INTERNAL_IP=$(cat ./State/${MACHINE_GROUP}/$1/ssh.out | sed -e 's/-/./g' - | cut -b 4-)
+    INTERNAL_IP=$(cat ./state/${MACHINE_GROUP}/$1/ssh.out | sed -e 's/-/./g' - | cut -b 4-)
 }
 
 # $1 must be machine name
@@ -185,7 +185,7 @@ deploy()
 
     find_iris_database_size
 
-    CN_MACHINE_GROUP=${ICM_LABEL}-CN-IRISSpeedTest
+    CN_MACHINE_GROUP="${ICM_LABEL}-CN-IRISSpeedTest"
 
     #
     # We need to count how many containers of type CN we are using. We need to do this
@@ -234,7 +234,7 @@ deploy()
         exit_if_error "Deploying HTAP Demo Master for ${MASTER_SPEEDTEST_TITLE} failed."
 
         icm exec --container htapmaster --machine ${MASTER_MACHINE_NAME} --command "cat /etc/hosts | grep htapmaster"
-        HTAP_MASTER_IP=$(cat ./State/${CN_MACHINE_GROUP}/${MASTER_MACHINE_NAME}/docker.out | awk '{print $1}')
+        HTAP_MASTER_IP=$(cat ./state/${CN_MACHINE_GROUP}/${MASTER_MACHINE_NAME}/docker.out | awk '{print $1}')
     fi
 
     if [ -z "$HTAP_MASTER_IP" ];
