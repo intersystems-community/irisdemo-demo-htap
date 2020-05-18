@@ -149,7 +149,9 @@ In our tests running the Speed Test on a VM, we found InterSystems IRIS to be 1.
 
 A video about this demo is in the works! In the meantime, [here](https://www.intersystems.com/resources/detail/a-superior-alternative-to-in-memory-databases-and-key-value-stores/) is an interesting article that talks about InterSystems IRIS architecture and what makes it faster.
 
-## 4 - How does this benchmark compare against standard benchmarks such as YCSB or TPC-H?
+## 4 - How does this benchmark compare against standard benchmarks such as sysbench, YCSB or TPC-H?
+
+The open source [sysbench](https://github.com/akopytov/sysbench) tool can certainly be extended but as of now it can only be used to test MySQL, PostgreSQL and other databases that are based on MySQL (ex.: AWS Aurora) or implement MySQL wire protocol. We could certainly modify it to test other databases but we wanted to use JDBC (not the C based driver) and we needed the tool to be less dependent of the backend database for metrics collection. Our tests are also simpler in the sense that we only have one single table. sysbench allows you to run INSERTS and SELECTS in parallel in multiple copies of the same table which is not fair for our use case. On financial services applications, data is coming in fast into a single table and how the data base deals with memory pressure and lock contention to avoid deadlocks is also important. Allowing the test to be run on multiple tables mitigates the lock contention problem and masks a serious problem.
 
 The open-source Yahoo Cloud Serving Benchmark ([YCSB](https://en.wikipedia.org/wiki/YCSB)) project aims to develop a framework and common set of workloads for evaluating the performance of different “key-value” and “cloud” serving stores. 
 
@@ -225,7 +227,7 @@ The default number of ingestion worker threads is 15. But it can be changed duri
 
 The query workers, on the other hand, also start multiple threads to query as many records as possible. But as we explained above, we are also providing **proof of work**. We are reading the columns returned and summing up the number of bytes read to make sure the data is actually traveling from the database, through the wire and into the query worker. That is to avoid optimizations implemented by some JDBC drivers that will only bring the data over the wire if it is actually used. We are actually consuming the data returned and providing a sum of MB read/s and total number of MB read as proof of it.
 
-## 7 - How much space does it take on disk?
+## 7 - How much space does InterSystems IRIS take on disk?
 
 I filled up a 70Gb DATA file system after ingesting 171,421,000 records. That would mean that each records would take an avergage of 439 bytes (rounding up).
 
