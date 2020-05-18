@@ -27,7 +27,7 @@ case $SPEED_TEST_TO_DEPLOY in
 
         deploy "iris" "SpeedTest | InterSystems IRIS"
 
-        VPC_ID=$(cat ./state/$ICM_LABEL-IRISSpeedTest/terraform.tfstate | grep vpc_id | head -1 | awk -F\" '{print $4}')
+        getVPC
 
         printf "\n\n${YELLOW}If you are planning on deploying SAP HANA, AWS Aurora or any other AWS database, deploy them on the VPC_ID $VPC_ID.${RESET}\n\n"
 
