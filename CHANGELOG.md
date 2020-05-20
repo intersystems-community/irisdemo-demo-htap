@@ -1,3 +1,11 @@
+## 2.4.17 (May 19, 2020)
+  - Fixing a dead lock when using more than one ingestion worker or query worker
+  - Using getVPC to get VPC info
+  - Using more recent amazon images
+  - Fixing a bug with the ICM code that was using wrong state dir
+  - Documentation - what is the difference against sysbench?
+  - Adding documentation for the 2 new columns in results csv file.
+
 ## 2.4.16 (May 12, 2020)
   - Assigning independent thread pool to workers so that a higher number of threads can be used per worker
   - Adding more statistics. Fixing bug with avg metrics when throttling
