@@ -40,7 +40,7 @@ public class App implements ApplicationRunner
 	Logger logger = LoggerFactory.getLogger(App.class);
 	
 	@Bean("workerExecutor")
-    public Executor taskExecutor(){
+    public Executor workerExecutor(){
         ThreadPoolTaskExecutor poolExecutor = new ThreadPoolTaskExecutor();
         poolExecutor.setCorePoolSize(20);
         poolExecutor.setMaxPoolSize(300);

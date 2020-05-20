@@ -54,21 +54,23 @@ public class WorkerRegistryService<W extends Worker>
      * This method is called by a REST service implementation on class WorkerController. That
      * service is called by Workers to register with this master.
      */
-    public WorkerConfig register(W worker)
+    public synchronized WorkerConfig register(W registeringWorker)
     {
-        int numWorkers = getNumOfWorkers();
+        W worker = workers.get(registeringWorker.getHostname());
 
-        if(!workers.containsKey(worker.getHostname())){
-            synchronized(this){
-                numWorkers = getNumOfWorkers() + 1;
-                logger.info("Registering " + worker.getWorkerType() + " Worker #" + (numWorkers) + " on host name '" + worker.getHostname() + "'.");
-                workers.put(worker.getHostname(), worker);
-            }
-        }else{
+        if(worker == null)
+        {
+            worker = registeringWorker;
+            worker.setWorkerNumber(getNumOfWorkers() + 1);
+            logger.info("Registering " + worker.getWorkerType() + " Worker #" + (worker.getWorkerNumber()) + " on host name '" + worker.getHostname() + "'.");
+            workers.put(worker.getHostname(), worker);            
+        }
+        else
+        {
             logger.info(worker.getHostname() + " Already Registered, Syncing the Config Only");
         }
 
-        return new WorkerConfig(this.config, "W"+numWorkers);
+        return new WorkerConfig(this.config, "W"+worker.getWorkerNumber());
     }
 
     public int getNumOfWorkers()
@@ -77,7 +79,7 @@ public class WorkerRegistryService<W extends Worker>
     }
     
     @Async
-    synchronized public void startSpeedTest()
+    public void startSpeedTest()
     {
     	
     	workers.forEach((hostname, worker) -> {
@@ -99,7 +101,7 @@ public class WorkerRegistryService<W extends Worker>
     }
     
     @Async
-    synchronized public void stopSpeedTest()
+    public void stopSpeedTest()
     {
     	workers.forEach((hostname, worker) -> {
     		

@@ -3,6 +3,8 @@ package com.irisdemo.htap.worker;
 public abstract class Worker
 {
     protected String hostname;
+
+    protected int workerNumber;
     
     private boolean isAvailable = true;
 
@@ -25,4 +27,13 @@ public abstract class Worker
     	return this.isAvailable;
     }
 
+    public int getWorkerNumber()
+    {
+        return this.workerNumber;
+    }
+
+    public void setWorkerNumber(int workerNumber)
+    {
+        this.workerNumber = workerNumber;
+    }
 }

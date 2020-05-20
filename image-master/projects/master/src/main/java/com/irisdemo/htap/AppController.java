@@ -132,7 +132,7 @@ public class AppController {
     }
     
     @PostMapping(value = "/master/startSpeedTest")
-    public synchronized void startSpeedTest() throws Exception {
+    public void startSpeedTest() throws Exception {
         
         // Are we stopped?
         if (speedTestRunningStatus==0) 
@@ -172,7 +172,7 @@ public class AppController {
     }
 
     @PostMapping(value = "/master/stopSpeedTest")
-    public synchronized void stopSpeedTest() throws Exception {
+    public void stopSpeedTest() throws Exception {
         
         // Are we running?
         if (speedTestRunningStatus==2) 

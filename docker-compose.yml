@@ -85,3 +85,29 @@ services:
     environment:
       - MASTER_HOSTNAME=htapmaster
       - MASTER_PORT=8080
+  
+  # ingest-worker2:
+  #   depends_on: 
+  #     - htapmaster
+  #   container_name: ingest-worker2
+  #   hostname: ingest-worker2
+  #   init: true
+  #   image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.4.16
+  #   ports:
+  #     - "10005:8080" # Where Springboot Will be listening
+  #   environment:
+  #     - MASTER_HOSTNAME=htapmaster
+  #     - MASTER_PORT=8080
+
+  # query-worker2:
+  #   depends_on: 
+  #     - htapmaster
+  #   container_name: query-worker2
+  #   hostname: query-worker2
+  #   init: true
+  #   image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.4.16
+  #   ports:
+  #     - "10006:8080" # Where Springboot Will be listening
+  #   environment:
+  #     - MASTER_HOSTNAME=htapmaster
+  #     - MASTER_PORT=8080

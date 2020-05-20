@@ -99,6 +99,7 @@ public class IRISWorker implements IWorker
 		} 
     	catch (SQLException sqlException) 
     	{
+			logger.error("Ingestion worker #"+threadNum+" crashed with the following error:" + sqlException.getMessage());
 			throw sqlException;
 		} 
 		catch (InterruptedException e) 
