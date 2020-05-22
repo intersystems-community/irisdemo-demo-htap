@@ -250,6 +250,9 @@ chmod +x $DEPLOYMENT_FOLDER/uninstall_iris.sh
 cp ./Templates/template_unprovision.sh $DEPLOYMENT_FOLDER/unprovision.sh
 chmod +x $DEPLOYMENT_FOLDER/unprovision.sh
 
+cp ./Templates/template_removespeedtest.sh.sh $DEPLOYMENT_FOLDER/removespeedtest.sh
+chmod +x $DEPLOYMENT_FOLDER/removespeedtest.sh
+
 #
 # Reminding user of the requirement for AWS credential files
 #

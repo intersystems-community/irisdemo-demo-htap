@@ -146,6 +146,31 @@ containerless_docker_run() {
     exit_if_error "Error when creating container $2 at machine $1 with image $3"
 }
 
+# $1 must be machine name
+# $2 must be container name
+containerless_remove_container() {
+    printf "\n${YELLOW}Stopping and removing container $2 at machine $1...${RESET}\n"
+        
+    icm ssh  \
+        --machine $1 \
+        --command "docker stop $2;docker rm $2; exit 0"
+}
+
+containerless_remove_all_containers() {
+    LABEL=${PWD##*/}
+    INVENTORY=$(icm inventory | awk "/$LABEL-CN-/ {print \$1}")
+    for MACHINE in $INVENTORY
+    do
+        printf "\n\n${PURPLE}Stopping and removing containers at machine $MACHINE...\n${RESET}"
+        containerless_remove_container $MACHINE htapmaster
+        containerless_remove_container $MACHINE htapui
+        containerless_remove_container $MACHINE htapIngestionWorker
+        containerless_remove_container $MACHINE htapQueryWorker
+    done
+
+    echo 0 > ./.CNcount
+}
+
 find_iris_database_size() {
     
     export DATABASE_SIZE_IN_GB=$(cat ./defaults.json | awk 'BEGIN { FS = "\"" } /"DataVolumeSize"/ { print $4 }')
