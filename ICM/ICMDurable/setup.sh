@@ -101,33 +101,30 @@ echo 0 >> $DEPLOYMENT_FOLDER/.CNcount
 #
 
 printf "\n\n${GREEN}Please enter with the AWS instance type: ${RESET}"
-printf "\n\n\t ${YELLOW}1${RESET} - m4.2xlarge"
-printf "\n\t ${YELLOW}2${RESET} - m5.xlarge"
-printf "\n\t ${YELLOW}3${RESET} - i3.xlarge"
-printf "\n\n"
 
-read instanceTypeNumber
-case $instanceTypeNumber in
-    1)
-        printf " ${GREEN}m4.2xlarge...${RESET}\n\n"
-        INSTANCE_TYPE=m4.2xlarge
+instanceList=$(ls /ICMDurable/Templates/AWS)
+instanceTypeNumber=0
+for instanceDesc in $instanceList;
+do 
+    instanceTypeNumber=$(($instanceTypeNumber+1))
+    printf "\n\t${YELLOW} ${instanceTypeNumber} ${RESET}- $instanceDesc\n"
+done
+
+printf "\nChoice: "
+read chosenInstanceTypeNumber
+
+INSTANCE_TYPE=""
+instanceTypeNumber=0
+for instanceDesc in $instanceList;
+do 
+    instanceTypeNumber=$(($instanceTypeNumber + 1))
+    if [ $instanceTypeNumber -eq $chosenInstanceTypeNumber ];
+    then
+        printf " ${GREEN}${instanceDesc}...${RESET}\n\n"
+        INSTANCE_TYPE=${instanceDesc}
         break
-        ;;
-    2)
-        printf " ${GREEN}m5.xlarge...${RESET}\n\n"
-        INSTANCE_TYPE=m5.xlarge
-        break
-        ;;
-    3)
-        printf " ${GREEN}i3.xlarge...${RESET}\n\n"
-        INSTANCE_TYPE=i3.xlarge
-        break
-        ;;
-    *)
-        printf "\n\n${PURPLE}Invalid option. Exiting.${RESET}\n\n"
-        exit 0
-        ;;
-esac
+    fi
+done
 
 #
 # Is this a container based deployment of IRIS or is it containerless?
@@ -250,7 +247,7 @@ chmod +x $DEPLOYMENT_FOLDER/uninstall_iris.sh
 cp ./Templates/template_unprovision.sh $DEPLOYMENT_FOLDER/unprovision.sh
 chmod +x $DEPLOYMENT_FOLDER/unprovision.sh
 
-cp ./Templates/template_removespeedtest.sh.sh $DEPLOYMENT_FOLDER/removespeedtest.sh
+cp ./Templates/template_removespeedtest.sh $DEPLOYMENT_FOLDER/removespeedtest.sh
 chmod +x $DEPLOYMENT_FOLDER/removespeedtest.sh
 
 #
