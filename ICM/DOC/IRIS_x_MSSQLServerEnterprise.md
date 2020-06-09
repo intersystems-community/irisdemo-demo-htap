@@ -273,12 +273,12 @@ After clicking on **Run Test**, it should immediately change to **Starting...**.
 
 **If you needed to run the bounce speed test script, make sure you reconfigure the maximum time for running the test above again.**
 
-After 20 minutes, here are my initial results:
+After 20 minutes, here are my initial results running on a m5.xlarge (16Gb of RAM):
 
-| Database                 | Machine      | Run time | Avg Inserts/s       | Tot Records Inserted | Avg Queries/s       | Tot Records Retrieved AEOT | Query Response Time AEOT     | 
-|--------------------------|--------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
-| InterSystems IRIS 2020.2 | m5.xlarge    | 1200s    | 134,173K rec/sec    | 160,911,000          | 21,928 rec/sec      | 26,297,327                 | 0.0459ms                     |
-| AWS RDS SQL Server 2017  | db.r5.xlarge | 1200s    | 23,710K rec/sec     | 28,432,000           | 0.61 rec/sec        | 713                        | 500ms                        |
+| Database                 | Machine       | Run time | Avg Inserts/s       | Tot Records Inserted | Avg Queries/s       | Tot Records Retrieved AEOT | Query Response Time AEOT     | 
+|--------------------------|---------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
+| InterSystems IRIS 2020.2 | m5.xlarge     | 1200s    | 134,173K rec/sec    | 160,911,000          | 21,928 rec/sec      | 26,297,327                 | 0.0459ms                     |
+| AWS RDS SQL Server 2017  | db.r5.xlarge  | 1200s    | 23,710K rec/sec     | 28,432,000           | 0.61 rec/sec        | 713                        | 500ms                        |
 
 InterSystems IRIS:					
 - Ingested 466% more records	
@@ -347,7 +347,11 @@ Running with NOLOCK is very acceptable for this scenario. It is time for us to m
 
 The database is pre-expanded, Ingestion is being run with READ_UNCOMMITTED, Queries are being run with READ_UNCOMITTED and WITH (NOLOCK), all verified with SQL Server system querires. I even tried using a NONCLUSTERED index on the primary key. Nothing made SQL Server behave better. It does ingestion relatively well, but query performance is very disapointing under ingestion pressure.
 
-After all these optimizations, the results were not too different... If anyone else out there can make SQL Server perform under pressure, I would appreciate the help.
+After all these optimizations, the results were not too different... 
+
+It seems that SQL Server requires a lot of RAM to perform so I tried it again on a m5.8xlarge with 128GB of RAM. The results were very similar in the sense that SQL Server query performance started at under 1K records/s and degraded to close to 0 records/s pretty quickly. Ingestion performance increased from 23,710K rec/sec (with 16Gb of RAM) to ~90K records/s (with 128Gb of RAM). 
+
+If anyone else out there can make SQL Server perform under pressure, I would appreciate the help.
 
 ## 9 - Unprovision everything
 
