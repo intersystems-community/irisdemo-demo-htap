@@ -1,3 +1,6 @@
+## 2.4.19 (June 10, 2020)
+  - Adding missing jdbc driver reference to Sybase.
+
 ## 2.4.18 (June 10, 2020)
   - Adding support for Sybase ASE
   - Adding more comments to SQL Server results
