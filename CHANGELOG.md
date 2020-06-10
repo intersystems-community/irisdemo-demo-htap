@@ -1,3 +1,9 @@
+## 2.4.18 (June 10, 2020)
+  - Adding support for Sybase ASE
+  - Adding more comments to SQL Server results
+  - Template for m5.8xlarge
+  - Adding script that removes all containers from AWS.
+
 ## 2.4.17 (May 19, 2020)
   - Fixing a dead lock when using more than one ingestion worker or query worker
   - Using getVPC to get VPC info
