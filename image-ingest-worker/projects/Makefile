@@ -14,4 +14,6 @@ build:
 	cp /usr/projects/ingest-worker-project/mysql-jdbc-ingest-worker/target/mysql-jdbc-ingest-worker-*.jar /usr/projects/mysql-jdbc-ingest-worker.jar
 	cp /usr/projects/ingest-worker-project/hana-jdbc-ingest-worker/target/hana-jdbc-ingest-worker-*.jar /usr/projects/hana-jdbc-ingest-worker.jar
 	cp /usr/projects/ingest-worker-project/mssqlserver-jdbc-ingest-worker/target/mssqlserver-jdbc-ingest-worker-*.jar /usr/projects/mssqlserver-jdbc-ingest-worker.jar
+	cp /usr/projects/ingest-worker-project/sybasease-jdbc-ingest-worker/target/sybasease-jdbc-ingest-worker-*.jar /usr/projects/sybasease-jdbc-ingest-worker.jar
+	
 	

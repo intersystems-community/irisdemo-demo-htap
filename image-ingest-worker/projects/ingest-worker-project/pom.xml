@@ -41,6 +41,8 @@
 		<module>mysql-jdbc-ingest-worker</module>
 		<module>hana-jdbc-ingest-worker</module>
 		<module>mssqlserver-jdbc-ingest-worker</module>
+		<module>sybasease-jdbc-ingest-worker</module>
+		
 	</modules>
   
     <build>

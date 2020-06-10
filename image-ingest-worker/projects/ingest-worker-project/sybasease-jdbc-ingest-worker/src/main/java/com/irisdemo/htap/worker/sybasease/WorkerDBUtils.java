@@ -1,4 +1,4 @@
-package com.irisdemo.htap.worker.mssqlserver;
+package com.irisdemo.htap.worker.sybasease;
 
 import java.io.IOException;
 import java.sql.CallableStatement;
@@ -58,7 +58,8 @@ public class WorkerDBUtils
 		{
 			logger.info("Creating data source for '" + config.getIngestionJDBCURL() + "'...");
 			
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			//jdbc:jtds:sybase://localhost:5000/myDB
+			Class.forName("net.sourceforge.jtds.jdbc.Driver");
 
 	        Properties connectionProperties = new Properties();
 	        connectionProperties.setProperty("user", config.getIngestionJDBCUserName());

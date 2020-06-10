@@ -1,4 +1,4 @@
-package com.irisdemo.htap.worker.mssqlserver;
+package com.irisdemo.htap.worker.sybasease;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -28,9 +28,9 @@ import com.irisdemo.htap.workersrv.IWorker;
 
 @Component("worker")
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class MSSQLWorker implements IWorker 
+public class SybaseASEWorker implements IWorker 
 {
-    Logger logger = LoggerFactory.getLogger(MSSQLWorker.class);
+    Logger logger = LoggerFactory.getLogger(SybaseASEWorker.class);
 
     @Autowired
     WorkerSemaphore workerSemaphore;
@@ -57,13 +57,12 @@ public class MSSQLWorker implements IWorker
 		{
 	        logger.info("Creating data source for '" + config.getConsumptionJDBCURL() + "'...");
 			
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			//jdbc:jtds:sybase://localhost:5000/myDB
+			Class.forName("net.sourceforge.jtds.jdbc.Driver");
 
 	        Properties connectionProperties = new Properties();
 	        connectionProperties.setProperty("user", config.getConsumptionJDBCUserName());
 	        connectionProperties.setProperty("password", config.getConsumptionJDBCPassword());
-			//connectionProperties.setProperty("serverTimezone", "UTC");
-        	//connectionProperties.setProperty("createDatabaseIfNotExist", "true");
 
 			// When the query workers start, SPEEDTEST database will have been created by one of the ingestion workers chosen by the master
 			connectionProperties.setProperty("databaseName", "SPEEDTEST");

@@ -1,4 +1,4 @@
-package com.irisdemo.htap.worker.mssqlserver;
+package com.irisdemo.htap.worker.sybasease;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -21,9 +21,9 @@ import com.irisdemo.htap.workersrv.WorkerSemaphore;
 
 @Component("worker")
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class MSSQLWorker implements IWorker 
+public class SybaseASEWorker implements IWorker 
 {
-	protected static Logger logger = LoggerFactory.getLogger(MSSQLWorker.class);
+	protected static Logger logger = LoggerFactory.getLogger(SybaseASEWorker.class);
 	
     @Autowired
     protected WorkerSemaphore workerSemaphore;
