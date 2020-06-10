@@ -60,10 +60,21 @@ case $SPEED_TEST_TO_DEPLOY in
         read_endpoint_and_credentials "$DB_TITLE" "admin"
         exit_if_error "We need all the information to proceed."
 
-        INGESTION_JDBC_URL="jdbc:sqlserver://$DB_HOSTNAME:1433;DatabaseName=model"
-        CONSUMER_JDBC_URL="jdbc:sqlserver://$DB_HOSTNAME:1433;DatabaseName=model"
+        INGESTION_JDBC_URL="jdbc:sqlserver://$DB_HOSTNAME:1433"
+        CONSUMER_JDBC_URL="jdbc:sqlserver://$DB_HOSTNAME:1433"
 
         deploy "mssqlserver" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
+        break
+        ;;
+    sybase)
+        DB_TITLE="AWS SAP Sybase ASE Enterprise"
+        read_endpoint_and_credentials "$DB_TITLE" "admin"
+        exit_if_error "We need all the information to proceed."
+
+        INGESTION_JDBC_URL="jdbc:jtds:sybase://$DB_HOSTNAME:5000"
+        CONSUMER_JDBC_URL="jdbc:jtds:sybase://$DB_HOSTNAME:5000"
+
+        deploy "sybase" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
         break
         ;;
     mysql)
