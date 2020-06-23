@@ -205,17 +205,15 @@ public class WorkerDBUtils
 
 	public void addSpeedTestUserToDatabase(Connection connection) throws SQLException, Exception
 	{
-		PreparedStatement statement = null;
-		
-		// This primary key is unique, but not sequential. SQL Server performs very badly with
-		// clustered primary keys that are non sequential
-		String execStatement = "EXEC sp_adduser('SpeedTest')";
+		CallableStatement sp_stmt = null;
 
 		try
 		{
 			logger.info("Adding SpeedTest user...");
-			statement = connection.prepareStatement(execStatement);
-			statement.execute();
+
+			sp_stmt = connection.prepareCall("{call sp_adduser('SpeedTest')}");
+
+			sp_stmt.execute();
 		}
 		catch (SQLException e)
 		{
@@ -223,8 +221,8 @@ public class WorkerDBUtils
 		}
 		finally
 		{
-			if (statement!=null)
-				statement.close();
+			if (sp_stmt!=null)
+				sp_stmt.close();
 		}
 	}
 
