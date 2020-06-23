@@ -203,51 +203,6 @@ public class WorkerDBUtils
 		}
 	}
 
-	public void createSchema(Connection connection) throws Exception, SQLException
-	{
-		PreparedStatement statement = null;
-
-		logger.info("Creating schema...");
-		String schemaName;
-		
-		String createTableStatement = config.getTableCreateStatement();
-		
-		Pattern p = Pattern.compile("CREATE +TABLE +((\\S)*)\\.");
-		Matcher m = p.matcher(createTableStatement);
-		if (m.find())
-		{
-			schemaName = m.group( 1 ); //group 0 is always the entire match   
-		}
-		else
-		{
-			throw new Exception("Could not find schema name on create table statement: " + createTableStatement);
-		}
-		
-		logger.info("Creating schema " + schemaName);
-		
-		try
-		{
-			statement = connection.prepareStatement("create schema " + schemaName);
-		    statement.execute();
-		}
-		catch (SQLException e)
-		{
-			if (e.getMessage().contains("There is already an object named"))
-			{
-				// Good. It is there already.
-			}
-			else 
-			{
-				throw e;
-			}
-		}
-		finally
-		{
-			if (statement!=null)
-				statement.close();
-		}
-	}
-
 	public void dropTable(Connection connection) throws SQLException
 	{
 		PreparedStatement statement = null;
