@@ -259,7 +259,11 @@ public class WorkerDBUtils
 		}
 		catch (SQLException exception)
 		{
-			if (exception.getMessage().contains("does not exist"))
+			if (exception.getMessage().contains("does not exist")) //SQL Server
+			{
+				
+			}
+			if (exception.getMessage().contains("doesn't exist")) //Sybase ASE
 			{
 				
 			}
