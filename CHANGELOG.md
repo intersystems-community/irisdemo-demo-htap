@@ -1,3 +1,6 @@
+## 2.4.20 (June 23, 2020)
+  - Sybase reports table does not exist differently from SQL Server
+
 ## 2.4.19 (June 10, 2020)
   - Adding missing jdbc driver reference to Sybase.
 
