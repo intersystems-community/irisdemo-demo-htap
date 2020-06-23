@@ -1,3 +1,9 @@
+## 2.4.22 (June 23, 2020)
+  - Sybase requires the SpeedTest user to exist on the database so we can create the table
+
+## 2.4.22 (June 23, 2020)
+
+
 ## 2.4.21 (June 23, 2020)
   - Improving documentation for using ICM with the HTAP demo.
   - Sybase does not need to have a schema created in advance
