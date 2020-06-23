@@ -1,3 +1,7 @@
+## 2.4.21 (June 23, 2020)
+  - Improving documentation for using ICM with the HTAP demo.
+  - Sybase does not need to have a schema created in advance
+
 ## 2.4.20 (June 23, 2020)
   - Sybase reports table does not exist differently from SQL Server
 
