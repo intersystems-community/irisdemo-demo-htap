@@ -134,6 +134,8 @@ public class SybaseASEWorker implements IWorker
 			workerDBUtils.changeDatabase(connection, "SPEEDTEST");
 			
 			workerDBUtils.dropTable(connection);
+
+			workerDBUtils.addSpeedTestUserToDatabase(connection);
 						
 			workerDBUtils.createTable(connection);
 		}
