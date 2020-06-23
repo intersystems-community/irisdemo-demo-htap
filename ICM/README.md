@@ -74,10 +74,20 @@ Copy the InterSystems IRIS install kit to the folder **ICM/ICMDurable/IRISKit/**
 ICM must be loaded into your local docker installation with the following commands:
 ```bash
 docker load --input ./icm-2020.2.0.196.0-docker.tar.gz
+
+...
+
 Loaded image: intersystems/icm:2020.2.0.196.0
 ```
 
-## 4. Configure CONF_IRISVERSION
+This last message is very important. It gives you the full name of the ICM image you just loaded: **intersystems/icm:2020.2.0.196.0**. This name has two parts: 
+- The repository name: intersystems/icm
+- The tag: 2020.2.0.196.0
+
+## 4. Configure CONF_IRISVERSION and CONF_DOCKERHUB_REPOSITORY
+
+Now that you have loaded ICM image into your local docker and you have its version (tag: 2020.2.0.196.0) and repository name (intersystems/icm),
+we can finish our configuration.
 
 Look inside the file **./irisdemo-demo-htap/ICM/ICMDurable/CONF_IRISVERSION**. You will see the version of IRIS/ICM we are using:
 
@@ -85,7 +95,16 @@ Look inside the file **./irisdemo-demo-htap/ICM/ICMDurable/CONF_IRISVERSION**. Y
 2020.2.0.196.0
 ```
 
-Make sure it matches the version of ICM you just loaded. You can change it to match the version of ICM you just downloaded.
+Make sure it matches the version of ICM (tag) you just loaded. 
+
+Now look inside file **./irisdemo-demo-htap/ICM/ICMDurable/CONF_DOCKERHUB_REPOSITORY**. You will see the name of the docker registry:
+
+```bash
+intersystems/icm
+```
+
+Make sure it matches with the name of the docker repository of your ICM image.
+
 
 ## Configuring AWS Credentials
 
