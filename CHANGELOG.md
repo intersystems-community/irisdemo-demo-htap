@@ -1,3 +1,6 @@
+## 2.4.24 (June 23, 2020)
+  - Must create a login before creating a user on the database
+
 ## 2.4.23 (June 23, 2020)
   - Calling Stored procedure the right way
 
