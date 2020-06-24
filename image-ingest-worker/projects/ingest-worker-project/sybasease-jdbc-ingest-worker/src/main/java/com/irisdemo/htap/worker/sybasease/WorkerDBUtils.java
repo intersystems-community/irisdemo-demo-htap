@@ -209,15 +209,35 @@ public class WorkerDBUtils
 
 		try
 		{
-			logger.info("Adding SpeedTest user...");
-
-			sp_stmt = connection.prepareCall("{call sp_adduser('SpeedTest')}");
-
+			logger.info("Creating SpeedTest login with a random password...");
+			sp_stmt = connection.prepareCall("{call sp_addlogin('SpeedTest','random')}");
 			sp_stmt.execute();
 		}
 		catch (SQLException e)
 		{
-			throw e;
+			if (! e.getMessage().contains("already exists")) 
+			{
+				throw e;
+			}
+		}
+		finally
+		{
+			if (sp_stmt!=null)
+				sp_stmt.close();
+		}
+
+		try
+		{
+			logger.info("Adding SpeedTest user...");
+			sp_stmt = connection.prepareCall("{call sp_adduser('SpeedTest')}");
+			sp_stmt.execute();
+		}
+		catch (SQLException e)
+		{
+			if (! e.getMessage().contains("already exists")) 
+			{
+				throw e;
+			}
 		}
 		finally
 		{
