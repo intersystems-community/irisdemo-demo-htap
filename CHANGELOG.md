@@ -1,3 +1,6 @@
+## 2.4.25 (June 23, 2020)
+  - Doing normal SELECT with Sybase, without NOLOCK
+
 ## 2.4.24 (June 23, 2020)
   - Must create a login before creating a user on the database
 
