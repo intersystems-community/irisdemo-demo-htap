@@ -134,7 +134,7 @@ public class SybaseASEWorker implements IWorker
 		
 		try 
 		{
-			preparedStatement = connection.prepareStatement(getQueryStatementWithNOLOCK());
+			preparedStatement = connection.prepareStatement(config.getQueryByIdStatement());
 			
 			while(workerSemaphore.green())
 			{
@@ -197,14 +197,5 @@ public class SybaseASEWorker implements IWorker
 		accumulatedMetrics.decrementNumberOfActiveQueryThreads();
 
 		return null;
-	}
-
-	String getQueryStatementWithNOLOCK()
-	{
-		String query = config.getQueryByIdStatement().replace("from SpeedTest.Account", " from SpeedTest.Account with (NOLOCK) ");
-
-		logger.info("Query: " + query);
-
-		return query;
 	}
 }
