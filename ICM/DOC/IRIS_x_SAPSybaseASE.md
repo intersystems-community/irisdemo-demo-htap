@@ -134,13 +134,13 @@ It will present you a menu asking which speed test you want to deploy. Choose th
 ```
 Please, specify which speedtest you want to deploy. Available options are:
 
-	 iris  - InterSystems IRIS
+   iris  - InterSystems IRIS
 
-	 hana  - Sybase ASE
+   hana  - Sybase ASE
 
-	 aurora  - Sybase ASE
+   aurora  - Sybase ASE
 
-	 sqlserver  - AWS RDS SQL Server
+   sqlserver  - AWS RDS SQL Server
 
    sybase - SAP Sybase ASE
 ```
