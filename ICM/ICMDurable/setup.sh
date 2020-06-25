@@ -104,6 +104,8 @@ printf "\n\n${GREEN}Please enter with the AWS instance type: ${RESET}"
 
 instanceList=$(ls /ICMDurable/Templates/AWS)
 instanceTypeNumber=0
+IFS='
+'
 for instanceDesc in $instanceList;
 do 
     instanceTypeNumber=$(($instanceTypeNumber+1))

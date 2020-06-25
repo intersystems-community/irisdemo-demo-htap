@@ -3,21 +3,21 @@
     "Label": "<Label>",
     "Tag": "IRISSpeedTest",
 
-    "DataVolumeType": "io1",
-    "DataVolumeSize": "70",
-    "DataVolumeIOPS": "3500",
+    "DataVolumeType": "gp2",
+    "DataVolumeSize": "1000",
+    "DataVolumeIOPS": "3000",
 
     "WIJVolumeType": "io1",
     "WIJVolumeSize": "70",
     "WIJVolumeIOPS": "3500",
 
-    "Journal1VolumeType": "io1",
-    "Journal1VolumeSize": "200",
-    "Journal1VolumeIOPS": "3500",
+    "Journal1VolumeType": "gp2",
+    "Journal1VolumeSize": "2000",
+    "Journal1VolumeIOPS": "6000",
     
-    "Journal2VolumeType": "io1",
-    "Journal2VolumeSize": "200",
-    "Journal2VolumeIOPS": "3500",
+    "Journal2VolumeType": "gp2",
+    "Journal2VolumeSize": "10",
+    "Journal2VolumeIOPS": "100",
     
     "SSHUser": "ubuntu",
     "SSHPublicKey": "/ICMDurable/keys/insecure-ssh2.pub",
@@ -31,14 +31,14 @@
     "Zone": "<Zone>",
     "DockerVersion": "18.06.1~ce~3-0~ubuntu",
     "AMI": "ami-085925f297f89fce1",
-    "InstanceType": "m5.8xlarge",
+    "InstanceType": "m5.12xlarge",
     "Credentials": "/ICMDurable/aws.credentials",
     "SystemMode": "TEST",
     "ISCPassword": "sys",
     "Namespace": "SPEEDTEST",
     "Mirror": "<Mirror>",
     "UserCPF": "<UserCPF>",
+    "ISCglobals": "0,0,184320,0,0,0",
     "Containerless": "<Containerless>",
-    "ISCglobals": "0,0,23552,0,0,0",
     "KitURL": "<KitURL>"
 }

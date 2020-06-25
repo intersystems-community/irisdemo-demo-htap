@@ -17,6 +17,7 @@ printf "\n\n\t ${YELLOW}iris${RESET}  - InterSystems IRIS"
 printf "\n\n\t ${YELLOW}hana${RESET}  - SAP HANA"
 printf "\n\n\t ${YELLOW}aurora${RESET}  - AWS Aurora"
 printf "\n\n\t ${YELLOW}mssqlserver${RESET}  - AWS RDS SQL Server"
+printf "\n\n\t ${YELLOW}sybase${RESET}  - SAP Sybase ASE"
 
 printf "\n\n${RESET}"
 
@@ -68,13 +69,13 @@ case $SPEED_TEST_TO_DEPLOY in
         ;;
     sybase)
         DB_TITLE="AWS SAP Sybase ASE Enterprise"
-        read_endpoint_and_credentials "$DB_TITLE" "admin"
+        read_endpoint_and_credentials "$DB_TITLE" "sa"
         exit_if_error "We need all the information to proceed."
 
         INGESTION_JDBC_URL="jdbc:jtds:sybase://$DB_HOSTNAME:5000"
         CONSUMER_JDBC_URL="jdbc:jtds:sybase://$DB_HOSTNAME:5000"
 
-        deploy "sybase" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
+        deploy "sybasease" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
         break
         ;;
     mysql)
