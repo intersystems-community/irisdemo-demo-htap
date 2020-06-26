@@ -23,10 +23,10 @@ You can run the tests on AWS! Here are some results:
   - Retrieved 3688164.7% more records!!
   - Was retrieving them 3567650.8% faster!! - clearly there is something wrong with SQL Server
 * [InterSystems IRIS x Sybase ASE 16.0 SP03 PL08, public cloud edition, premium version](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPSybaseASE.md). InterSystems IRIS:					
-  - Ingested 4699.4% more records
-  - Was ingesting them 4696.4% faster
-  - Retrieved 5713.5% more records
-  - Was retrieving them 9487.2% faster AEOT
+  - Ingested 4862.8% more records
+  - Was ingesting them 6733.4% faster AEOT
+  - Retrieved 3282% more records
+  - Was retrieving them 5654.6% faster AEOT
 
 You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:

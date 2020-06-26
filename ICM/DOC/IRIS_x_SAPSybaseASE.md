@@ -356,14 +356,14 @@ After 20 minutes, here are my initial results running on a m5.xlarge (16Gb of RA
 
 | Database                           | Machine    | Run time | Avg Inserts/s  | Tot Records Inserted | Avg Queries/s    | Tot Records Retrieved AEOT | Query Response Time AEOT | 
 |------------------------------------|------------|----------|----------------|----------------------|------------------|----------------------------|--------------------------|
-| InterSystems IRIS 2020.2           | m5.2xlarge | 1200s    | 215,806rec/sec | 258,927,000          | 51,767.78rec/sec | 62,111,451.00              | 0.0196ms                 |
+| InterSystems IRIS 2020.2           | m5.2xlarge | 1200s    | 223,151rec/sec | 267,740,000          | 30,091.71rec/sec | 36,133,102.00              | 0.0327ms                 |
 | AWS RDS Sybase ASE 16.0 SP03 PL08  | m5.2xlarge | 1200s    |   4,499rec/sec | 5,395,000            | 891.08rec/sec    | 1,068,405.00               | 1.8832ms                 |
 
 InterSystems IRIS:					
-- Ingested 4699.4% more records
-- Was ingesting them 4696.4% faster
-- Retrieved 5713.5% more records
-- Was retrieving them 9487.2% faster AEOT
+- Ingested 4862.8% more records
+- Was ingesting them 6733.4% faster AEOT
+- Retrieved 3282% more records
+- Was retrieving them 5654.6% faster AEOT
 
 ## 9 - Unprovision everything
 
