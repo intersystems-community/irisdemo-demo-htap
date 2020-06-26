@@ -354,7 +354,7 @@ After clicking on **Run Test**, it should immediately change to **Starting...**.
 
 After 20 minutes, here are my initial results running on a m5.2xlarge (8 cores and 16Gb of RAM):
 
-| Database                           | Machine    | Run time | Avg Inserts/s  | Tot Records Inserted | Avg Queries/s    | Tot Records Retrieved AEOT | Query Response Time AEOT | CPU utilization |
+| Database                           | Machine    | Run time | Avg Inserts/s  | Records Inserted | Avg Queries/s    | Records Retrieved | Query Resp Time AEOT | CPU utilization |
 |------------------------------------|------------|----------|----------------|----------------------|------------------|----------------------------|--------------------------|-----------------|
 | InterSystems IRIS 2020.2           | m5.2xlarge | 1200s    | 223,151rec/sec | 267,740,000          | 30,091.71rec/sec | 36,133,102.00              | 0.0327ms                 | 70% |
 | AWS RDS Sybase ASE 16.0 SP03 PL08  | m5.2xlarge | 1200s    |   4,499rec/sec | 5,395,000            | 891.08rec/sec    | 1,068,405.00               | 1.8832ms                 | 100% |
