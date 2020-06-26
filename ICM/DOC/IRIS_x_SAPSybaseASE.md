@@ -352,7 +352,7 @@ After clicking on **Run Test**, it should immediately change to **Starting...**.
 
 **If you needed to run the bounce speed test script, make sure you reconfigure the maximum time for running the test above again.**
 
-After 20 minutes, here are my initial results running on a m5.2xlarge (8 cores and 16Gb of RAM):
+After 20 minutes, here are my initial results running on a m5.2xlarge (8 cores and 32Gb of RAM):
 
 | Database                  | Machine    | Time | Avg Inserts/s  | Records Inserted | Avg Queries/s    | Records Retrieved | Query Resp Time AEOT | CPU utilization |
 |---------------------------|------------|----------|----------------|----------------------|------------------|----------------------------|--------------------------|-----------------|
