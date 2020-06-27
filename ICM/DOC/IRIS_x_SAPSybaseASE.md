@@ -354,16 +354,18 @@ After clicking on **Run Test**, it should immediately change to **Starting...**.
 
 After 20 minutes, here are my initial results running on a m5.2xlarge (8 cores and 32Gb of RAM):
 
-| Database                  | Machine    | Time | Avg Inserts/s  | Records Inserted | Avg Queries/s    | Records Retrieved | Query Resp Time AEOT | CPU utilization |
-|---------------------------|------------|----------|----------------|----------------------|------------------|----------------------------|--------------------------|-----------------|
-| InterSystems IRIS 2020.2  | m5.2xlarge | 1200s    | 223,151rec/sec | 267,740,000          | 30,091.71rec/sec | 36,133,102.00              | 0.0327ms                 | 70% |
-| Sybase ASE 16.0 SP03 PL08 | m5.2xlarge | 1200s    |   4,499rec/sec | 5,395,000            | 891.08rec/sec    | 1,068,405.00               | 1.8832ms                 | 100% |
+| Database                  | Machine    | Time  | Avg Inserts/s  | Records Inserted | Avg Queries/s    | Records Retrieved          | Query Resp Time AEOT     | CPU utilization   |
+|---------------------------|------------|-------|----------------|------------------|------------------|----------------------------|--------------------------|------|
+| InterSystems IRIS 2020.2  | m5.2xlarge | 1200s | 219,991rec/sec | 263,919,000      | 43,602.01rec/sec | 52,352,382.00              | 0.0230ms                 | 70%  |
+| Sybase ASE 16.0 SP03 PL08 | m5.2xlarge | 1200s |   4,499rec/sec | 5,395,000        | 891.08rec/sec    | 1,068,405.00               | 1.8832ms                 | 100% |
 
 InterSystems IRIS:					
-- Ingested 4862.8% more records
-- Was ingesting them 6733.4% faster AEOT
-- Retrieved 3282% more records
-- Was retrieving them 5654.6% faster AEOT
+- Ingested 4792% more records
+- Was ingesting them 7166.7% faster AEOT
+- Retrieved 4800.1% more records
+- Was retrieving them 8070.3% faster AEOT
+
+AEOT = At End of Test
 
 ## 9 - Unprovision everything
 
