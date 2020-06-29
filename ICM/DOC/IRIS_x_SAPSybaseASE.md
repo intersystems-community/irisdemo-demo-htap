@@ -199,7 +199,7 @@ Click [here](https://aws.amazon.com/marketplace/pp/B07N927YMC?qid=1591830164991&
   * Latch-Free Indexes: enable
   * Simplified Native Access Plan (SNAP): enable
   * Transactional Memory: enable
-  * IMRS - DRC/MVCC/HCB: disable
+  * IMRS - DRC/MVCC/HCB: **disable** (we tried a test with this enabled. It didn't make a difference for ingestion, but made query performance 8 times slower)
   * IMRS - On-Disk MVCC: disable
   * IMDB database size: 0
   * IMDB database name: empty
