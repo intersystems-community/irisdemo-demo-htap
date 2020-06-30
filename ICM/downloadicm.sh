@@ -1,17 +1,14 @@
 #!/bin/bash
 #
-# #################################### 
-# ########### DEPRECATED #############
-# ####################################
+# 1. This script is used by InterSystems employees so they can easily download ICM
+# from InterSystems' internal docker registry. It is not meant for public usage.
 #
-# This script is used by InterSystems employees so they can easily download ICM and IRIS images
-# from their internal docker registry. It is not meant for public usage.
+# 2. This script is only useful today to download ICM from docker.iscinternal.com and retag it 
+# from its full name (i.e: "docker.iscinternal.com/intersystems/icm:2020.2.0.204.0") to the same name
+# used when downloading ICM from WRC (i.e.: "intersystems/icm:2020.2.0.204.0"). So, if you are following
+# instructions on README.md on this folder and you are downloading ICM from WRC, you should not need this
+# script! But you are free to use if you are confortable with using docker.iscinternal.com.
 #
-#
-
-export IRIS_PRIVATE_REPO=$(cat ./ICMDurable/CONF_IRIS_PRIVATE_REPO)
-export IRIS_TAG=$(cat ./ICMDurable/CONF_IRIS_TAG)
-export IRIS_PRIVATE_REPO_TAG=$(cat ./ICMDurable/CONF_IRIS_PRIVATE_REPO_TAG) 
 
 export ICM_REPO=$(cat ./ICMDurable/CONF_ICM_REPO)
 export ICM_TAG=$(cat ./ICMDurable/CONF_ICM_TAG) 
@@ -90,31 +87,13 @@ function dockerLogin() {
 printf "\n\n${YELLOW}Loggin into docker.iscinternal.com (VPN Required!) to download newer images...${NC}\n"
 dockerLogin docker.iscinternal.com
 
-printf "\n\n${YELLOW}Pulling image docker.iscinternal.com/intersystems/iris:$IRIS_TAG...${NC}\n"
-
-docker pull docker.iscinternal.com/intersystems/iris:$IRIS_TAG
-checkError "IRIS Pull failed." "Pull successful!"
-
 printf "\n\n${YELLOW}Pulling image docker.iscinternal.com/intersystems/icm:$ICM_TAG...${NC}\n"
-
 docker pull docker.iscinternal.com/intersystems/icm:$ICM_TAG
 checkError "ICM Pull failed." "Pull successful!"
 
-printf "\n${YELLOW}Tagging image docker.iscinternal.com/intersystems/iris:$IRIS_TAG as $IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG...${NC}\n"
-
-# Retagging the image so that we can upload it to the user's private docker registry
-docker tag docker.iscinternal.com/intersystems/iris:$IRIS_TAG $IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG
-checkError "IRIS Tagging failed." "IRIS Tagging successful!"
 
 # InterSystems' internal docker registry tags the images with the full name of the docker registry on it. 
 # Let's retag it to just intersystems/icm so that it will match the tag used by WRC
-docker tag docker.iscinternal.com/intersystems/icm:$IRIS_TAG $CONF_ICM_REPO:$CONF_ICM_TAG
+printf "\n${YELLOW}Tagging image docker.iscinternal.com/intersystems/icm:$ICM_TAG to $ICM_REPO:$ICM_TAG...${NC}\n"
+docker tag docker.iscinternal.com/intersystems/icm:$ICM_TAG $ICM_REPO:$ICM_TAG
 checkError "IRIS Tagging failed." "IRIS Tagging successful!"
-
-printf "\n\n${YELLOW}Loggin into Docker Hub:${NC}\n"
-dockerLogin
-
-printf "\n${YELLOW}Uploading $IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG image...${NC}\n"
-
-docker push $IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG
-checkError "IRIS Upload failed." "IRIS Upload successful!"

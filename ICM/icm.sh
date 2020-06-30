@@ -1,10 +1,11 @@
 #!/bin/bash
 
-IRIS_TAG=$(cat ./ICMDurable/CONF_IRISVERSION) 
-IRIS_PRIVATE_REPO=$(cat ./ICMDurable/CONF_DOCKERHUB_REPOSITORY)
+ICM_TAG=$(cat ./ICMDurable/CONF_ICM_TAG) 
+ICM_REPO=$(cat ./ICMDurable/CONF_ICM_REPO)
 
 clear
 
-docker run --rm -it -v $PWD/ICMDurable:/ICMDurable --cap-add SYS_TIME $IRIS_PRIVATE_REPO:$IRIS_TAG
+printf "\nStarting ICM with $ICM_REPO:$ICM_TAG..."
+docker run --rm -it -v $PWD/ICMDurable:/ICMDurable --cap-add SYS_TIME $ICM_REPO:$ICM_TAG
 printf "\nExited icm container\n"
 

@@ -81,32 +81,14 @@ Loaded image: intersystems/icm:2020.2.0.196.0
 ```
 
 This last message is very important. It gives you the full name of the ICM image you just loaded: **intersystems/icm:2020.2.0.196.0**. This name has two parts: 
-- The repository name: intersystems/icm
-- The tag: 2020.2.0.196.0
+- ICM Repository: intersystems/icm
+- ICM Tag: 2020.2.0.196.0
 
-## 4. Configure CONF_IRISVERSION and CONF_DOCKERHUB_REPOSITORY
+Make sure that the file **ICM/ICMDurable/CONF_ICM_TAG** contains the same tag above (i.e: 2020.2.0.204.0) so that when you try to run the **icm.sh** script (or the **icm.ps1** script on Powershell), it will use the right ICM version.
 
-Now that you have loaded ICM image into your local docker and you have its version (tag: 2020.2.0.196.0) and repository name (intersystems/icm),
-we can finish our configuration.
+We are going to deploy a container-less IRIS on AWS, so no additional configuration is needed beyond your AWS credentials (next topic). 
 
-Look inside the file **./irisdemo-demo-htap/ICM/ICMDurable/CONF_IRISVERSION**. You will see the version of IRIS/ICM we are using:
-
-```bash
-2020.2.0.196.0
-```
-
-Make sure it matches the version of ICM (tag) you just loaded. 
-
-Now look inside file **./irisdemo-demo-htap/ICM/ICMDurable/CONF_DOCKERHUB_REPOSITORY**. You will see the name of the docker registry:
-
-```bash
-intersystems/icm
-```
-
-Make sure it matches with the name of the docker repository of your ICM image.
-
-
-## Configuring AWS Credentials
+## 4. Configuring AWS Credentials
 
 You must add your AWS Credential to file ICM/ICMDurable/aws.credentials. It looks like this:
 
@@ -117,7 +99,7 @@ aws_secret_access_key = dsfsDFSDFSDSD4534534FDG4FDGD
 aws_session_token = A_VERY_LARGE_STRING_ENDED_WITH==
 ```
 
-# Deploying and Running the Speed Test
+## 5. Deploying and Running the Speed Test
 
 Al right! You are ready to go! :)
 

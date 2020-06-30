@@ -133,9 +133,14 @@ done
 #
 
 CONTAINERLESS=false
-printf "\n\n${GREEN}Is this going to be a containerless installation of IRIS (answer yes or something else if not)?: ${RESET}"
-read containerLessInstall
-exit_if_empty $containerLessInstall
+#
+# Forcing container-less installation of IRIS. 
+#
+# printf "\n\n${GREEN}Is this going to be a containerless installation of IRIS (answer yes or something else if not)?: ${RESET}"
+# read containerLessInstall
+# exit_if_empty $containerLessInstall
+
+containerLessInstall="yes"
 
 if [ "$containerLessInstall" == "yes" ];
 then
