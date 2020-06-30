@@ -45,7 +45,7 @@ Follow [this link](/ICM/README.md) to see instructions on how to run this Speed 
 
 The pre-requisites for running the speed test on your PC are:
 * Docker and Docker Compose
-* Git (so you can clone this source code)
+* Git - If you want to run all the the tests on your PC or in AWS. If you just want to run the test with IRIS, you may not need git.
 
 You can currently run this demo on your PC with InterSystems IRIS, MySQL, SqlServer and SAP HANA.
 
@@ -58,9 +58,14 @@ wget https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap
 docker-compose up
 ```
 
-If you are runing on Windows, download the [docker-compose.yml](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose.yml) file to a folder. Open a command prompt and change to that folder. Then run **docker-compose up**.
+If you are runing on Windows, download the [docker-compose.yml](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/docker-compose.yml) file to a folder. 
+Open a command prompt and change to that folder. Then type:
 
-You can also clone this repository to your local machine to get the entire source code. You will need git installed and you would need to be on your git folder:
+```BAT
+c:\MyFolder\docker-compose up
+```
+
+You can also clone this repository to your local machine using git to get the entire source code. You will need git installed and you would need to be on your git folder:
 
 ```bash
 git clone https://github.com/intersystems-community/irisdemo-demo-htap
