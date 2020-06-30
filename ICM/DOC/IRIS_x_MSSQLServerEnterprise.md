@@ -278,7 +278,7 @@ After 20 minutes, here are my initial results running on a m5.xlarge (16Gb of RA
 | Database                 | Machine       | Run time | Avg Inserts/s       | Tot Records Inserted | Avg Queries/s       | Tot Records Retrieved AEOT | Query Response Time AEOT     | 
 |--------------------------|---------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
 | InterSystems IRIS 2020.2 | m5.xlarge     | 1200s    | 134,173K rec/sec    | 160,911,000          | 21,928 rec/sec      | 26,297,327                 | 0.0459ms                     |
-| AWS RDS SQL Server 2017  | db.r5.xlarge  | 1200s    | 23,710K rec/sec     | 28,432,000           | 0.61 rec/sec        | 713                        | 500ms                        |
+| AWS RDS SQL Server 2017  | db.m5.xlarge  | 1200s    | 23,710K rec/sec     | 28,432,000           | 0.61 rec/sec        | 713                        | 500ms                        |
 
 InterSystems IRIS:					
 - Ingested 466% more records	
