@@ -100,7 +100,7 @@ docker-compose rm
 
 This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other (say MySQL).
 
-### 2.2 - MySQL on your PC
+### 2.2 - MySQL or MariaDB on your PC
 
 To run this demo against MySQL:
 
@@ -121,6 +121,8 @@ docker-compose -f ./docker-compose-mysql.yml rm
 This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other.
 
 In our tests, we found InterSystems IRIS to ingest data 25X faster than MySQL and Amazon Aurora.
+
+There is a **docker-compose-mariadb.yml** file for **MariaDB** as well.
 
 ### 2.3 - SQL Server 2019-GA-ubuntu-16.04 on your PC
 
