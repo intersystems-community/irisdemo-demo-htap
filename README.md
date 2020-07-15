@@ -7,12 +7,12 @@ This demo shows how InterSystems IRIS can ingest thousands of records per second
 The same demo can be run on SAP HANA, MySQL, SqlServer and Amazon Aurora to compare performance and resource utilization in “apples-to-apples” comparisons. 
 
 You can run the tests on AWS! Here are some results:
-* [InterSystems IRIS x SAP HANA run on AWS](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md). InterSystems IRIS:
+* [InterSystems IRIS x SAP HANA Express 2.0 run on AWS](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPHANA.md). InterSystems IRIS:
   -	Ingested 59.9% more records	
   - Was ingesting them 59.9% faster in average
   - Retrieved 2732.8% more records
   - Was retrieving them 2732.1% faster in average
-* [InterSystems IRIS x AWS Aurora (MySQL)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md). InterSystems IRIS:					
+* [InterSystems IRIS x AWS Aurora (MySQL) 5.6.10a (parallel query)](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSAuroraMySql.md). InterSystems IRIS:					
   - Ingested 1456.7% more records
   - Was ingesting them 1456.3% faster
   - Retrieved 360.9% more records
@@ -353,10 +353,27 @@ There are other InterSystems IRIS demo applications that touch different subject
 * [HL7 Appointments and SMS (text messages) application](https://github.com/intersystems-community/irisdemo-demo-appointmentsms) -  Shows how InterSystems IRIS for Health can be used to parse HL7 appointment messages to send SMS (text messages) appointment reminders to patients. It also shows real time dashboards based on appointments data stored in a normalized data lake.
 * [The Readmission Demo](https://github.com/intersystems-community/irisdemo-demo-readmission) - Patient Readmissions are said to be the "Hello World of Machine Learning" in Healthcare. On this demo, we use this problem to show how InterSystems IRIS can be used to **safely build and operationalize** ML models for real time predictions and how this can be integrated into a random application. This **InterSystems IRIS for Health** demo seeks to show how a full solution for this problem can be built.
 
-## 11 - Report any Issues
+## 11 - Supported Databases
+
+Here is the list of the supported databases so far:
+
+* **Runing on your PC with docker-compose (NO mirroring/replication)**
+  - InterSystems IRIS 2020.2
+  - MySQL 8.0
+  - MariaDB 10.5.4-focal
+  - MS SQL Server 2019-GA-ubuntu-16.04
+  - SAP HANA Express 2.0 (on Linux VM only)
+* **Running on AWS:**
+  - InterSystems IRIS (with or without mirroring)
+  - AWS Aurora (MySql) 5.6.10a (parallel query) with replication 
+  - SAP HANA Express Edition 2.0 without replication
+  - SAP Sybase ASE 16.0 SP03 PL08, public cloud edition, premium version, without replication
+  - SQL Server 2017 Enterprise Edition (production deployment) with replication
+
+## 12 - Report any Issues
   
 Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).
 
-## 12 - Check the Change Log
+## 13 - Check the Change Log
 
 All the changes to this project are logged [here](CHANGELOG.md).
