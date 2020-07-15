@@ -1,4 +1,4 @@
-# InterSystems IRIS x AWS Aurora (MySQL)
+# InterSystems IRIS x AWS Aurora (MySQL) 5.6.10a (parallel query)
 
 This document explains how to use the scripts we provide to quickly deploy the Speed Test against InterSystems IRIS and AWS Aurora. If you haven't done so yet, please follow instructions [here](../README.md) for the initial setup. There you will also find a diagram of how this is going to work.
 

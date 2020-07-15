@@ -1,4 +1,4 @@
-# InterSystems IRIS x SQL Server 2017 on AWS
+# InterSystems IRIS x SQL Server Enterprise 2017 on AWS
 
 This document explains how to use the scripts we provide to quickly deploy the Speed Test against InterSystems IRIS and SQL Server. If you haven't done so yet, please follow instructions [here](../README.md) for the initial setup. There you will also find a diagram of how this is going to work.
 
