@@ -233,7 +233,7 @@ After connecting to the Sybase machine with SSH, you can use isql to run some SQ
 
 ```bash
 source /opt/sap/SYBASE.sh
-./isql -Usa -Padmin123 -S[Sybase_Private_IP_Address]:5000
+isql -Usa -Padmin123 -S[Sybase_Private_IP_Address]:5000
 ```
 
 On the -S clause above, "127.0.0.1" or "localhost" won't work. You have to use the IP address.
