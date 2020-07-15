@@ -12,37 +12,39 @@ exit_if_error() {
 build_java_project() {
 
 	PROJECTS_FOLDER=$PWD/$1/projects
+	
+	compilerContainer=$1-htap
 
 	echo ""
 	echo "---------------------------------------------------------------------------"
-	echo "BEGIN building $1..."
+	echo "BEGIN building $compilerContainer..."
 	echo "---------------------------------------------------------------------------"
 	echo ""
 
-	[[ -z "${1}" ]] && echo "Environment variable $1 not set. Need name of the java project to build." && exit 1
+	[[ -z "${1}" ]] && echo "Environment variable $compilerContainer not set. Need name of the java project to build." && exit 1
 
 	# Removing existing app.jar. A new one should be produced bellow. That is what is going to be
 	# cooked inside the IMAGE_NAME
 	rm -f $PROJECTS_FOLDER/app.jar
 
 	echo "#" 
-	echo "# Starting container $1 to recompile jar..."
+	echo "# Starting container $compilerContainer to recompile jar..."
 	echo "#" 
-	docker ps -a | grep $1 > /dev/null
+	docker ps -a | grep $compilerContainer > /dev/null
 
 	if [ $? -eq 0 ]; then
 		# This will reuse the mavenc container that we used previously to compile the project
 		# This way, we avoid redownloading all the depedencies!
 
-		docker start -i $1
-		exit_if_error "Could not start container $1"
+		docker start -i $compilerContainer
+		exit_if_error "Could not start container $compilerContainer"
 	else
 		# First tiem trying to compile a project, let's create the mavenc container
 		# It will download all the dependencies of the project
 		docker run -i \
 			-v ${PROJECTS_FOLDER}:/usr/projects \
-			--name $1 intersystemsdc/irisdemo-base-mavenc:version-1.2.0
-		exit_if_error "Could not create and run container $1"
+			--name $compilerContainer intersystemsdc/irisdemo-base-mavenc:version-1.2.0
+		exit_if_error "Could not create and run container $compilerContainer"
 	fi
 
 	# There should be one or more jar files available for us to build images with
