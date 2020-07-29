@@ -266,9 +266,9 @@ Now just hit the **Run Test** button. If you get an error after pressing the Run
 
 This will restart the containers for the Speed Test application for both InterSystems IRIS and Aurora. Try again and it should work. 
 
-After clicking on **Run Test**, it should immediately change to **Starting...**. For IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So IRIS still needs to have its disk database properly expanded. Just wait for it. We could not find a way of doing the same for AWS Aurora, so what we did was to run the Speed Test once on AWS Aurora to "warm it up". Then we did the actual test against IRIS.
+After clicking on **Run Test**, it should immediately change to **Starting...**. For InterSystems IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). InterSystems IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So InterSystems IRIS still needs to have its disk database properly expanded. Just wait for it. We could not find a way of doing the same for AWS Aurora, so what we did was to run the Speed Test once on AWS Aurora to "warm it up". Then we did the actual test against InterSystems IRIS.
 
-**Warning**: IRIS Database expansion can take a long time. We have given a lot of disk to IRIS so we can let the test running for more than 20min without filling up the disk. Just be patient. You may want to go to the InterSystems IRIS Management portal to check the expansion status.
+**Warning**: InterSystems IRIS Database expansion can take a long time. We have given a lot of disk to InterSystems IRIS so we can let the test running for more than 20min without filling up the disk. Just be patient. You may want to go to the InterSystems IRIS Management portal to check the expansion status.
 
 **If you needed to run the bounce speed test script, make sure you reconfigure the maximum time for running the test above again.**
 
@@ -288,7 +288,7 @@ InterSystems IRIS:
 
 AWS Aurora has two advantages over InterSystems:
 - AWS Aurora had twice the amount of memory: m5.xlarge has the same characteristics of db.r5.xlarge with the exception that m5.xlarge has only 16Gb of RAM while db.r5.xlarge has 32Gb of RAM. 
-- We were redirecting the queries to AWS Aurora's replica so it could be faster. We could have done the same with IRIS, but it has a cost for both databases: The replica is always behind. So you would be fetching stale data. AWS Aurora has no way of fixing this. InterSystems IRIS offers the possibility of adding more [compute nodes](https://docs.intersystems.com/irislatest/csp/docbook/DocBook.UI.Page.cls?KEY=GSCALE_scalability) that are always consistent with transactional data. We will be doing another version of this test with ECP to show this concept in the future. 
+- We were redirecting the queries to AWS Aurora's replica so it could be faster. We could have done the same with InterSystems IRIS, but it has a cost for both databases: The replica is always behind. So you would be fetching stale data. AWS Aurora has no way of fixing this. InterSystems IRIS offers the possibility of adding more [compute nodes](https://docs.intersystems.com/irislatest/csp/docbook/DocBook.UI.Page.cls?KEY=GSCALE_scalability) that are always consistent with transactional data. We will be doing another version of this test with ECP to show this concept in the future. 
 
 And here are the "apples to apples" result (Writing and Reading to the same box):
 
