@@ -359,9 +359,9 @@ Now just hit the **Run Test** button. If you get an error after pressing the Run
 
 This will restart the containers for the Speed Test application for both InterSystems IRIS and SAP HANA. Try again and it should work.
 
-After clicking on **Run Test**, it should immediately change to **Starting...**. For IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). SAP HANA doesn't care too much about this since it is an **"In Memory"** database. IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So IRIS still needs to have its disk database properly expanded. Just wait for it.
+After clicking on **Run Test**, it should immediately change to **Starting...**. For InterSystems IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). SAP HANA doesn't care too much about this since it is an **"In Memory"** database. InterSystems IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So InterSystems IRIS still needs to have its disk database properly expanded. Just wait for it.
 
-**Warning**: IRIS Database expansion can take a long time. We have given a lot of disk to IRIS so we can let the test running for more than 20min without filling up the disk. Just be patient. You may want to go to the InterSystems IRIS Management portal to check the expansion status.
+**Warning**: InterSystems IRIS Database expansion can take a long time. We have given a lot of disk to InterSystems IRIS so we can let the test running for more than 20min without filling up the disk. Just be patient. You may want to go to the InterSystems IRIS Management portal to check the expansion status.
 
 Here are my results:
 

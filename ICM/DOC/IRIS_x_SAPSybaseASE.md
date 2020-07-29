@@ -160,7 +160,7 @@ Done!
 
 Please notice that we have just told you the **AWS VPC_ID**. Take note of that! When deploying Sybase ASE, you must deploy it on this VPC!
 
-Also, take note of this URL we provided. It is the Speed Test UI for IRIS. Open it right now on a browser. On the SpeedTest UI that appears, press the **Settings** button. Change the maximum time to run the speed test for 5 seconds. Now just hit the **Run Test** button. It will take a long time to start since it is pre-expanding the database and we have configured a very big database for this test. Just leave it there. When it is finished expanding the database, it will run a 5 seconds test and automatically stop.
+Also, take note of this URL we provided. It is the Speed Test UI for InterSystems IRIS. Open it right now on a browser. On the SpeedTest UI that appears, press the **Settings** button. Change the maximum time to run the speed test for 5 seconds. Now just hit the **Run Test** button. It will take a long time to start since it is pre-expanding the database and we have configured a very big database for this test. Just leave it there. When it is finished expanding the database, it will run a 5 seconds test and automatically stop.
 
 In the meanwhile, let's proceed with Sybase's instalation. 
 
@@ -192,7 +192,7 @@ Click [here](https://aws.amazon.com/marketplace/pp/B07N927YMC?qid=1591830164991&
 * You can name SAP ASE Server Name to be your label as well: **asamarySybaseASE**
 * Set the master password to be **admin123**
 * Set the user database name to be **SPEEDTEST**. 
-* Set the User Database Data Device Size to 500 GB. This CloudFormation is going to deploy Sybase using gp2, which gives 3 IOPS per provisioned GB. So 500GB = 1500 IOPS. We are deploying IRIS database with gp2 and 1500IOPS as well. For some reason that I can't figure out, I can't give to Sybase's user database more than 1000 GB. If I do it, Sybase will not mount the volume and will let the database file and its log file on the root file system of the instance. That is why I am working with such a small instance. So I will give 500GB for the database and 1000GB for the database log (transaction journal file).
+* Set the User Database Data Device Size to 500 GB. This CloudFormation is going to deploy Sybase using gp2, which gives 3 IOPS per provisioned GB. So 500GB = 1500 IOPS. We are deploying InterSystems IRIS database with gp2 and 1500IOPS as well. For some reason that I can't figure out, I can't give to Sybase's user database more than 1000 GB. If I do it, Sybase will not mount the volume and will let the database file and its log file on the root file system of the instance. That is why I am working with such a small instance. So I will give 500GB for the database and 1000GB for the database log (transaction journal file).
 * Set the User Database Log Device Size to 1000 GB (=3000 IOPS). See observation above.
 * Disable SAP ASE Configuration Auto Backup feature
 * Under **SAP ASE Configuration - MemScale Option** we must configure:
@@ -205,7 +205,7 @@ Click [here](https://aws.amazon.com/marketplace/pp/B07N927YMC?qid=1591830164991&
   * IMDB database name: empty
 * Click on **Next**.
 
-SAP Sybase ASE in-memory technology is not the same as SAP HANA's in memory technology (or IRIS's in-memory caching). When using SAP Sybase ASE IMDB databases, data is NEVER persisted on disk. It is 100% in memory which is great for some use cases but it is not fully ACID like IRIS. So, in order to compare "apples to apples", do not configure IMDB. See more about SAP Sybase ASE IMDB [here](https://help.sap.com/viewer/a1237e466dba417da6f0e5504cf9fb83/16.0.3.3/en-US/abbe4beabc2b10149dafe7ac6d63d81d.html). That is why we are letting IMDB database size 0.
+SAP Sybase ASE in-memory technology is not the same as SAP HANA's in memory technology (or InterSystems IRIS's in-memory caching). When using SAP Sybase ASE IMDB databases, data is NEVER persisted on disk. It is 100% in memory which is great for some use cases but it is not fully ACID like InterSystems IRIS. So, in order to compare "apples to apples", do not configure IMDB. See more about SAP Sybase ASE IMDB [here](https://help.sap.com/viewer/a1237e466dba417da6f0e5504cf9fb83/16.0.3.3/en-US/abbe4beabc2b10149dafe7ac6d63d81d.html). That is why we are letting IMDB database size 0.
 
 Now you can configure some options for this stack we are deploying. I have added a **Name** tag with the value **asamarySybaseASE**.
 
@@ -262,7 +262,7 @@ You should see two file systems mounted with the sizes we requested:
 - /ase/data/userdata_dbs - Where our SPEEDTEST user database file is
 - /ase/data/userlog_dbs - Where our SPEEDTEST user database log file is
 
-Take note of how much space is available on these two file systems. If you are doing this right after you have provisioned Sybase, you will notice that there will be plenty of space available on both file systems. It seems that Sybase automatically starts pre-expanding the log and database files on these file systems and that this process takes a lot of CPU. If your file systems are still bellow 100% use, you can run a **top** command to check that your CPU will be at 100%. We should wait Sybase finish this before running our test just like we are waiting for IRIS to pre-expand its database file.
+Take note of how much space is available on these two file systems. If you are doing this right after you have provisioned Sybase, you will notice that there will be plenty of space available on both file systems. It seems that Sybase automatically starts pre-expanding the log and database files on these file systems and that this process takes a lot of CPU. If your file systems are still bellow 100% use, you can run a **top** command to check that your CPU will be at 100%. We should wait Sybase finish this before running our test just like we are waiting for InterSystems IRIS to pre-expand its database file.
 
 On the other hand, if you don't see these two file systems, that is because you probably tried to give your user database or log file more space than we are suggesting on this guide. As I explained above, I don't know why, when the volumes are bigger, Sybase will not mount the provisioned filesystems and put our database file and log file there. 
 
@@ -346,9 +346,9 @@ Now just hit the **Run Test** button. If you get an error after pressing the Run
 
 This will restart the containers for the Speed Test application for both InterSystems IRIS and Sybase. Try again and it should work. 
 
-After clicking on **Run Test**, it should immediately change to **Starting...**. For IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So IRIS still needs to have its disk database properly expanded. Just wait for it. We could not find a way of doing the same for Sybase ASE, so what we did was to run the Speed Test once on Sybase ASE to "warm it up". Then we did the actual test against IRIS.
+After clicking on **Run Test**, it should immediately change to **Starting...**. For InterSystems IRIS, this may take a long time since we are pre-expanding the database to its full capacity before starting the test (something that we would normally do on any production system). InterSystems IRIS is a hybrid database (In Memory performance with all the benefits of traditional databases). So InterSystems IRIS still needs to have its disk database properly expanded. Just wait for it. We could not find a way of doing the same for Sybase ASE, so what we did was to run the Speed Test once on Sybase ASE to "warm it up". Then we did the actual test against InterSystems IRIS.
 
-**Warning**: IRIS Database expansion can take a long time. We have given a lot of disk to IRIS so we can let the test running for more than 20min without filling up the disk. Just be patient. You may want to go to the InterSystems IRIS Management portal to check the expansion status.
+**Warning**: InterSystems IRIS Database expansion can take a long time. We have given a lot of disk to InterSystems IRIS so we can let the test running for more than 20min without filling up the disk. Just be patient. You may want to go to the InterSystems IRIS Management portal to check the expansion status.
 
 **If you needed to run the bounce speed test script, make sure you reconfigure the maximum time for running the test above again.**
 
