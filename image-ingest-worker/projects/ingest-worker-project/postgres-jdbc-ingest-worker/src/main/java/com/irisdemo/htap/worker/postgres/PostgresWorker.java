@@ -137,9 +137,9 @@ public class PostgresWorker implements IWorker
 
 			workerDBUtils.createSchema(connection);
 
-			workerDBUtils.alterRole(connection);
-
 			workerDBUtils.createDomain(connection);
+
+			workerDBUtils.alterRole(connection);
 			
 			workerDBUtils.createTable(connection);
 		}

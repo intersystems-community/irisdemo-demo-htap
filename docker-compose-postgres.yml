@@ -41,7 +41,7 @@ services:
       - "10002:8080" # Where Springboot Will be listening
     environment:
       - MASTER_SPEEDTEST_TITLE=SpeedTest | PostgreSQL 12.3
-      - START_CONSUMERS=false
+      - START_CONSUMERS=true
       - INGESTION_THREADS_PER_WORKER=2
       - INGESTION_BATCH_SIZE=1000
       - INGESTION_JDBC_URL=jdbc:postgresql://postgres:5432/
@@ -67,15 +67,15 @@ services:
       - MASTER_HOSTNAME=htapmaster
       - MASTER_PORT=8080
 
-  #query-worker1:
-  #  depends_on: 
-  #    - htapmaster
-  #  container_name: query-worker1
-  #  hostname: query-worker1
-  #  init: true
-  #  image: intersystemsdc/irisdemo-demo-htap:mssqlserver-jdbc-query-worker-version-2.4.25
-  #  ports:
-  #    - "10004:8080" # Where Springboot Will be listening
-  #  environment:
-  #    - MASTER_HOSTNAME=htapmaster
-  #    - MASTER_PORT=8080
+  query-worker1:
+    depends_on: 
+      - htapmaster
+    container_name: query-worker1
+    hostname: query-worker1
+    init: true
+    image: intersystemsdc/irisdemo-demo-htap:postgres-jdbc-query-worker-version-2.4.25
+    ports:
+      - "10004:8080" # Where Springboot Will be listening
+    environment:
+      - MASTER_HOSTNAME=htapmaster
+      - MASTER_PORT=8080

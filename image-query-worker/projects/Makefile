@@ -14,4 +14,5 @@ build:
 	cp /usr/projects/query-worker-project/hana-jdbc-query-worker/target/hana-jdbc-query-worker-*.jar /usr/projects/hana-jdbc-query-worker.jar
 	cp /usr/projects/query-worker-project/mssqlserver-jdbc-query-worker/target/mssqlserver-jdbc-query-worker-*.jar /usr/projects/mssqlserver-jdbc-query-worker.jar
 	cp /usr/projects/query-worker-project/sybasease-jdbc-query-worker/target/sybasease-jdbc-query-worker-*.jar /usr/projects/sybasease-jdbc-query-worker.jar
+	cp /usr/projects/query-worker-project/postgres-jdbc-query-worker/target/postgres-jdbc-query-worker-*.jar /usr/projects/postgres-jdbc-query-worker.jar
 	
