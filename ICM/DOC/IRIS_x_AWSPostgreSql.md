@@ -312,7 +312,7 @@ After ICM is done, make sure you:
 ## 10 - Screenshots
 
 Here is the end result of AWS RDS PostgreSQL's test:
-![AWS RDS PostgreSQL Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_AWS_RDS_PostgreSQL_results.png?raw=true)
+![AWS RDS PostgreSQL Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/adding-postgresql/ICM/DOC/SpeedTest_AWS_RDS_PostgreSQL_results.png?raw=true)
 
 Here is the end result of InterSystems IRIS test:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_Intersystems_IRIS_2020.2_on_m2xlarge_oi1_500GB_2500_IOPS_results.png?raw=true)
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/adding-postgresql/ICM/DOC/SpeedTest_Intersystems_IRIS_2020.2_on_m2xlarge_oi1_500GB_2500_IOPS_results.png?raw=true)
