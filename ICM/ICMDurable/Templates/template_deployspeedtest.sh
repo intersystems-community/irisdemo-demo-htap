@@ -18,6 +18,7 @@ printf "\n\n\t ${YELLOW}hana${RESET}  - SAP HANA"
 printf "\n\n\t ${YELLOW}aurora${RESET}  - AWS Aurora"
 printf "\n\n\t ${YELLOW}mssqlserver${RESET}  - AWS RDS SQL Server"
 printf "\n\n\t ${YELLOW}sybase${RESET}  - SAP Sybase ASE"
+printf "\n\n\t ${YELLOW}postgres${RESET}  - AWS RDS PostgreSQL"
 
 printf "\n\n${RESET}"
 
@@ -76,6 +77,17 @@ case $SPEED_TEST_TO_DEPLOY in
         CONSUMER_JDBC_URL="jdbc:jtds:sybase://$DB_HOSTNAME:5000"
 
         deploy "sybasease" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
+        break
+        ;;
+    postgres)
+        DB_TITLE="AWS RDS PostgreSQL"
+        read_endpoint_and_credentials "$DB_TITLE" "postgresuser"
+        exit_if_error "We need all the information to proceed."
+
+        INGESTION_JDBC_URL="jdbc:postgresql://$DB_HOSTNAME:5432/SPEEDTEST"
+        CONSUMER_JDBC_URL="jdbc:postgresql://$DB_HOSTNAME:5432/SPEEDTEST"
+
+        deploy "postgres" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
         break
         ;;
     mysql)

@@ -93,8 +93,11 @@ terraform_aws_open_ports() {
         # for AWS SQL Server
         ingress1433='ingress \{\n from_port=1433 \# HTAP \n to_port=1433 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
 
+        # for AWS PostgreSQL
+        ingress5432='ingress \{\n from_port=5432 \# HTAP \n to_port=5432 \n protocol=\"tcp\"\n cidr_blocks = \[var\.allow_cidr\]\n\}'
+
         # /a is used for appending after the pattern
-        sed -E -i  "/ *vpc_id *= *var.aws_vpc_default_id *$/a $ingress8080 \n $ingress39013 \n $ingress3306 \n $ingress1433" /ICM/etc/Terraform/AWS/Instance/infrastructure.tf
+        sed -E -i  "/ *vpc_id *= *var.aws_vpc_default_id *$/a $ingress8080 \n $ingress39013 \n $ingress3306 \n $ingress1433 \n $ingress5432" /ICM/etc/Terraform/AWS/Instance/infrastructure.tf
          
     fi
 }
