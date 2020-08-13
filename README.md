@@ -27,6 +27,11 @@ You can run the tests on AWS! Here are some results:
   - Was ingesting them 6733.4% faster AEOT
   - Retrieved 3282% more records
   - Was retrieving them 5654.6% faster AEOT
+* [InterSystems IRIS x AWS RDS PostgreSQL 12.3](https://github.com/intersystems-community/irisdemo-demo-htap/blob/adding-postgresql/ICM/DOC/IRIS_x_AWSPostgreSql.md). InterSystems IRIS:					
+  - Ingested 110.2% more records
+  - Was ingesting them 108.2% faster AEOT
+  - Retrieved 592.7% more records
+  - Was retrieving them 718% faster AEOT
 
 You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:

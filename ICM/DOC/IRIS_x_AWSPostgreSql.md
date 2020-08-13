@@ -286,7 +286,7 @@ After 20 minutes, here are my results when using AWS RDS PostgreSQL:
 
 InterSystems IRIS:					
 - Ingested 110.2% more records	
-- Was ingesting them 110.2% faster
+- Was ingesting them 108.2% faster
 - Retrieved 592.7% more records	
 - Was retrieving them 718% faster
 
