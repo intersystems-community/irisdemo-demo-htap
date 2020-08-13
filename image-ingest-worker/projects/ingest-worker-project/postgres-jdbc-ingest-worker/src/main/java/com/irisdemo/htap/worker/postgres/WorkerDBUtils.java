@@ -67,7 +67,7 @@ public class WorkerDBUtils
 			// All connections will be created on the master database. That will be used to setup the SPEEDTEST
 			// database, SpeedTest Schema and SpeedTest.Account table. The database will be pre-expanded.
 			// The MSSQLWorker.java class will USE SPEEDTEST to do the inserts on the right database.
-			connectionProperties.setProperty("databaseName", "master");
+			connectionProperties.setProperty("databaseName", "SPEEDTEST");
 
 	        dataSourceCache = new DriverManagerDataSource(config.getIngestionJDBCURL(), connectionProperties);
 		}
@@ -223,7 +223,7 @@ public class WorkerDBUtils
 
 		try
 		{
-			statement = connection.prepareStatement("CREATE DOMAIN " + schemaName + ".DATETIME TIMESTAMP;");
+			statement = connection.prepareStatement("CREATE DOMAIN DATETIME AS TIMESTAMP;");
 			statement.execute();
 		}
 		catch (SQLException e)
@@ -429,31 +429,13 @@ public class WorkerDBUtils
 		String folderName;
 		String folderSeparator;
 		String databaseFileName;
-		String logFileName;
 		Statement statement = null;
-
-		int initialLogSize = initialDatabaseSize*3;
 
 		folderName = getDataFolderName(connection);
 
 		databaseFileName=folderName + "SPEEDTEST.mdf";
-		logFileName=folderName + "SPEEDTEST.ldf";
 
 		logger.info("Creating database " + databaseFileName + "...");
-
-		// We are in the MASTER database, so we are safe to do this
-		/*String sqlCommand = "CREATE DATABASE " + databaseName + " ON " +   
-		"( NAME = SPEEDTEST_DAT,  " +
-		"	FILENAME = '"+ databaseFileName +"', "+
-		"	SIZE = "+initialDatabaseSize+"GB, "+
-		"	MAXSIZE = UNLIMITED, "+  
-		"	FILEGROWTH = 50 MB)  "+ 
-		"LOG ON   "+
-		"( NAME = SPEEDTEST_LOG,   "+
-		"	FILENAME = '"+logFileName+"', "+
-		"	SIZE = "+initialLogSize+"GB, "+
-		"	MAXSIZE = UNLIMITED, "+ 
-		"	FILEGROWTH = 5MB );";*/
 
 		String sqlCommand = "CREATE DATABASE " + databaseName;
 		

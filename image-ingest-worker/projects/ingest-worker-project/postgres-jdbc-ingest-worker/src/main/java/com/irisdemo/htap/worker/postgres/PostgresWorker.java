@@ -135,9 +135,9 @@ public class PostgresWorker implements IWorker
 
 			workerDBUtils.dropTable(connection);
 
-			workerDBUtils.createSchema(connection);
-
 			workerDBUtils.createDomain(connection);
+
+			workerDBUtils.createSchema(connection);
 
 			workerDBUtils.alterRole(connection);
 			
@@ -160,10 +160,7 @@ public class PostgresWorker implements IWorker
 		Connection connection = workerDBUtils.getDataSource().getConnection();
 		
 		try
-		{	
-			//Phil Change
-			//workerDBUtils.changeDatabase(connection, "SPEEDTEST");
-			
+		{				
 			workerDBUtils.truncateTable(connection);
 		}
 		catch (Exception e)
