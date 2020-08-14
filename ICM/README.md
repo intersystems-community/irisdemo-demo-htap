@@ -108,3 +108,4 @@ Proceed with one of the comparisons bellow:
 * [InterSystems IRIS x AWS Aurora](/ICM/DOC/IRIS_x_AWSAuroraMySql.md)
 * [InterSystems IRIS x Sybase ASE 16.0 SP03 PL08, public cloud edition, premium version](/ICM/DOC/IRIS_x_SAPSybaseASE.md)	
 * [InterSystems IRIS x AWS RDS SQLServer](/ICM/DOC/IRIS_x_MSSQLServerEnterprise.md)
+* [InterSystems IRIS x AWS MariaDB](/ICM/DOC/IRIS_x_AWSMariaDB.md)
