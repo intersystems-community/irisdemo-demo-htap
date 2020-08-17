@@ -27,6 +27,11 @@ You can run the tests on AWS! Here are some results:
   - Was ingesting them 6733.4% faster AEOT
   - Retrieved 3282% more records
   - Was retrieving them 5654.6% faster AEOT
+  * [InterSystems IRIS x AWS MariaDB](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_AWSMariaDB.md). InterSystems IRIS:					
+  - Ingested 620.9% more records
+  - Was ingesting them 717.3% faster AEOT
+  - Retrieved 313.6% more records
+  - Was retrieving them 296.5% faster AEOT
 
 You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here are some results:
 * InterSystems IRIS x MySQL 8.0:
