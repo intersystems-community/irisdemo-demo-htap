@@ -314,7 +314,7 @@ After ICM is done, make sure you:
 ## 10 - Screenshots
 
 Here is the end result of AWS MariaDB's test:
-![AWS MariaDB Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_AWS_MariaDB_db.m5.2xlarge_results.png?raw=true)
+![AWS MariaDB Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/adding-mariadb/ICM/DOC/SpeedTest_AWS_MariaDB_db.m5.2xlarge_results.png)
  
 Here is the end result of InterSystems IRIS test:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_InterSystems_IRIS_2020.2_m5.2xlarge_results.png?raw=true)
+![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/adding-mariadb/ICM/DOC/SpeedTest_InterSystems_IRIS_2020.2_m5.2xlarge_results.png)
