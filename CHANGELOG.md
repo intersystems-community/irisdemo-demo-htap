@@ -1,27 +1,8 @@
-## 2.4.25 (June 23, 2020)
-  - Doing normal SELECT with Sybase, without NOLOCK
-
-## 2.4.24 (June 23, 2020)
-  - Must create a login before creating a user on the database
-
-## 2.4.23 (June 23, 2020)
-  - Calling Stored procedure the right way
-
-## 2.4.22 (June 23, 2020)
-  - Sybase requires the SpeedTest user to exist on the database so we can create the table
-
-## 2.4.22 (June 23, 2020)
-
-
+## 2.4.26 (August 23, 2020)
+  - Adding mariadb and postgres results
+  
 ## 2.4.21 (June 23, 2020)
   - Improving documentation for using ICM with the HTAP demo.
-  - Sybase does not need to have a schema created in advance
-
-## 2.4.20 (June 23, 2020)
-  - Sybase reports table does not exist differently from SQL Server
-
-## 2.4.19 (June 10, 2020)
-  - Adding missing jdbc driver reference to Sybase.
 
 ## 2.4.18 (June 10, 2020)
   - Adding support for Sybase ASE
