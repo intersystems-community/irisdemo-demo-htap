@@ -373,12 +373,15 @@ Here is the list of the supported databases so far:
   - MariaDB 10.5.4-focal
   - MS SQL Server 2019-GA-ubuntu-16.04
   - SAP HANA Express 2.0 (on Linux VM only)
+  - Postgres 12.3
 * **Running on AWS:**
   - InterSystems IRIS (with or without mirroring)
-  - AWS Aurora (MySql) 5.6.10a (parallel query) with replication 
+  - AWS RDS Aurora (MySql) 5.6.10a (parallel query) with replication 
+  - AWS RDS SQL Server 2017 Enterprise Edition (production deployment) with replication
+  - AWS RDS Postgres (production deployment) with replication
+  - AWS RDS MariaDB (production deployment) with replication
   - SAP HANA Express Edition 2.0 without replication
   - SAP Sybase ASE 16.0 SP03 PL08, public cloud edition, premium version, without replication
-  - SQL Server 2017 Enterprise Edition (production deployment) with replication
 
 ## 12 - Report any Issues
   
