@@ -108,8 +108,8 @@ checkError "IRIS Tagging failed." "IRIS Tagging successful!"
 
 # InterSystems' internal docker registry tags the images with the full name of the docker registry on it. 
 # Let's retag it to just intersystems/icm so that it will match the tag used by WRC
-docker tag docker.iscinternal.com/intersystems/icm:$IRIS_TAG $CONF_ICM_REPO:$CONF_ICM_TAG
-checkError "IRIS Tagging failed." "IRIS Tagging successful!"
+docker tag docker.iscinternal.com/intersystems/icm:$ICM_TAG $ICM_REPO:$ICM_TAG
+checkError "ICM Tagging failed." "ICM Tagging successful!"
 
 printf "\n\n${YELLOW}Loggin into Docker Hub:${NC}\n"
 dockerLogin
