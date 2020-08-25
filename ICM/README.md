@@ -56,7 +56,9 @@ git clone https://github.com/intersystems-community/irisdemo-demo-htap
 
 ## 2. Copy the InterSystems IRIS license key
 
-Put the iris.key file on the folder **./irisdemo-demo-htap/ICM/ICMDurable/license/**. Make sure there is only one license key file there. If you let more than one key file there, you may have problems.
+Put the iris.key file on the folder **./irisdemo-demo-htap/ICM/ICMDurable/license/**. You will see that there is a file there called "replace_this_file_with_your_iris_key". Make sure to:
+1. Delete the file "replace_this_file_with_your_iris_key"
+2. There is only one license key file on the folder. If you let more than one key file there, you may have problems.
 
 ## 3. Preparing ICM to be run and InterSystems IRIS to be deployed
 
