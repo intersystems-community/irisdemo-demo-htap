@@ -29,7 +29,7 @@
     "LicenseDir": "/ICMDurable/license/",
     "Region": "us-east-1",
     "Zone": "<Zone>",
-    "DockerVersion": "18.06.1~ce~3-0~ubuntu",
+    "DockerVersion": "5:19.03.8~3-0~ubuntu-bionic",
     "AMI": "ami-085925f297f89fce1",
     "InstanceType": "r5.4xlarge",
     "Credentials": "/ICMDurable/aws.credentials",
