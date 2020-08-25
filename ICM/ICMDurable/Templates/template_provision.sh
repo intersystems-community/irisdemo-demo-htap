@@ -2,6 +2,8 @@
 source ./env.sh
 source /ICMDurable/utils.sh
 
+rm -f /ICMDurable/license/.DS_Store
+
 provisionWorkarounds
 
 if [ ! -f ./defaults.json ];
