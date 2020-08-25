@@ -167,8 +167,8 @@ containerless_remove_all_containers() {
         printf "\n\n${PURPLE}Stopping and removing containers at machine $MACHINE...\n${RESET}"
         containerless_remove_container $MACHINE htapmaster
         containerless_remove_container $MACHINE htapui
-        containerless_remove_container $MACHINE htapIngestionWorker
-        containerless_remove_container $MACHINE htapQueryWorker
+        containerless_remove_container $MACHINE ingw
+        containerless_remove_container $MACHINE qryW
     done
 
     echo 0 > ./.CNcount
@@ -325,15 +325,15 @@ deploy()
         then
             INGESTION_WORKER_MACHINE_DNS=$(icm inventory | awk "/$INGESTION_WORKER_MACHINE/{ print \$3 }")    
 
-            containerless_docker_rm ${INGESTION_WORKER_MACHINE} htapIngestionWorker
+            containerless_docker_rm ${INGESTION_WORKER_MACHINE} ingw
             
             containerless_docker_pull ${INGESTION_WORKER_MACHINE} intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-ingest-worker-${HTAP_DEMO_VERSION}
 
-            containerless_docker_run ${INGESTION_WORKER_MACHINE} htapIngestionWorker intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-ingest-worker-${HTAP_DEMO_VERSION} "-p 8080:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
+            containerless_docker_run ${INGESTION_WORKER_MACHINE} ingw intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-ingest-worker-${HTAP_DEMO_VERSION} "-p 8080:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
         else
             icm run  \
                 --machine ${INGESTION_WORKER_MACHINE} \
-                --container htapIngestionWorker \
+                --container ingw \
                 --image intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-ingest-worker-${HTAP_DEMO_VERSION} \
                 --options "-p 80:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
             
@@ -358,15 +358,15 @@ deploy()
         then
             QUERY_WORKER_MACHINE_DNS=$(icm inventory | awk "/$QUERY_WORKER_MACHINE/{ print \$3 }")    
 
-            containerless_docker_rm ${QUERY_WORKER_MACHINE} htapQueryWorker
+            containerless_docker_rm ${QUERY_WORKER_MACHINE} qryW
 
             containerless_docker_pull ${QUERY_WORKER_MACHINE} intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-query-worker-${HTAP_DEMO_VERSION}
 
-            containerless_docker_run ${QUERY_WORKER_MACHINE} htapQueryWorker intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-query-worker-${HTAP_DEMO_VERSION} "-p 8080:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
+            containerless_docker_run ${QUERY_WORKER_MACHINE} qryW intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-query-worker-${HTAP_DEMO_VERSION} "-p 8080:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
         else
         icm run  \
             --machine ${QUERY_WORKER_MACHINE} \
-            --container htapQueryWorker \
+            --container qryW \
             --image intersystemsdc/irisdemo-demo-htap:${IMAGE_PREFIX}-jdbc-query-worker-${HTAP_DEMO_VERSION} \
             --options "-p 80:8080 --add-host htapmaster:$HTAP_MASTER_IP -e JAVA_OPTS=-Xmx${JAVA_XMX} -e MASTER_HOSTNAME=htapmaster -e MASTER_PORT=8080"
 
