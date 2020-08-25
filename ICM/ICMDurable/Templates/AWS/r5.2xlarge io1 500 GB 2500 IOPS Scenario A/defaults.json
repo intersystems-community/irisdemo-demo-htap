@@ -1,0 +1,44 @@
+{
+    "Provider": "AWS",
+    "Label": "<Label>",
+    "Tag": "IRISSpeedTest",
+
+    "DataVolumeType": "io1",
+    "DataVolumeSize": "500",
+    "DataVolumeIOPS": "2500",
+
+    "WIJVolumeType": "io1",
+    "WIJVolumeSize": "70",
+    "WIJVolumeIOPS": "2500",
+
+    "Journal1VolumeType": "io1",
+    "Journal1VolumeSize": "1000",
+    "Journal1VolumeIOPS": "2500",
+    
+    "Journal2VolumeType": "io1",
+    "Journal2VolumeSize": "10",
+    "Journal2VolumeIOPS": "100",
+    
+    "SSHUser": "ubuntu",
+    "SSHPublicKey": "/ICMDurable/keys/insecure-ssh2.pub",
+    "SSHPrivateKey": "/ICMDurable/keys/insecure",
+    "TLSKeyDir": "/ICMDurable/keys/",
+    "DockerImage": "<IRISDockerImage>",
+    "DockerUsername": "<DockerUsername>",
+    "DockerPassword": "<DockerPassword>",
+    "LicenseDir": "/ICMDurable/license/",
+    "Region": "us-east-1",
+    "Zone": "<Zone>",
+    "DockerVersion": "18.06.1~ce~3-0~ubuntu",
+    "AMI": "ami-085925f297f89fce1",
+    "InstanceType": "r5.2xlarge",
+    "Credentials": "/ICMDurable/aws.credentials",
+    "SystemMode": "TEST",
+    "ISCPassword": "sys",
+    "Namespace": "SPEEDTEST",
+    "Mirror": "<Mirror>",
+    "UserCPF": "<UserCPF>",
+    "Containerless": "<Containerless>",
+    "ISCglobals": "0,0,32768,0,0,0",
+    "KitURL": "<KitURL>"
+}
