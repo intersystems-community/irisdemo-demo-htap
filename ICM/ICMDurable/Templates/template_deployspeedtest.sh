@@ -89,6 +89,7 @@ case $SPEED_TEST_TO_DEPLOY in
         CONSUMER_JDBC_URL="jdbc:postgresql://$DB_HOSTNAME:5432/SPEEDTEST"
 
         deploy "postgres" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
+        ;;
     mariadb)
         DB_TITLE="AWS MariaDB"
         read_endpoint_and_credentials "$DB_TITLE" "admin"
