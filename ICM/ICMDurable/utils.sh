@@ -176,7 +176,7 @@ containerless_remove_all_containers() {
 
 find_iris_database_size() {
     
-    export DATABASE_SIZE_IN_GB=$(cat ./defaults.json | awk 'BEGIN { FS = "\"" } /"DataVolumeSize"/ { print $4 }')
+    export DATABASE_SIZE_IN_GB=`expr $(cat ./defaults.json | awk 'BEGIN { FS = "\"" } /"DataVolumeSize"/ { print $4 }') - 10`
 }
 
 deploy()
