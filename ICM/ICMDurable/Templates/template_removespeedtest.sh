@@ -14,5 +14,5 @@
 source ./env.sh
 source /ICMDurable/utils.sh
 
-containerless_remove_all_containers
+remove_all_containers
 
