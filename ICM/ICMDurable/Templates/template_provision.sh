@@ -29,13 +29,13 @@ then
 
     printf "\n\n${GREEN}Containerless installation require us to manually install docker on the CN nodes...${RESET}"
     printf "\n\n${GREEN}Running preInstallDocker.sh...\n${RESET}"
-    icm ssh --role CN --command "./ICM/preInstallDocker.sh"
+    icm ssh --role VM --command "./ICM/preInstallDocker.sh"
     exit_if_error "preInstallDocker.sh failed on CN machines"
     
     sleep 5
 
     printf "\n\n${GREEN}Running installDockerCE.sh...\n${RESET}"
-    icm ssh --role CN --command "export DOCKER_STORAGE_DRIVER=devicemapper && ./ICM/installDockerCE.sh"
+    icm ssh --role VM --command "export DOCKER_STORAGE_DRIVER=devicemapper && ./ICM/installDockerCE.sh"
     exit_if_error "installDockerCE.sh failed on CN machines"
 else
     icm provision

@@ -14,7 +14,7 @@ iMASTER=1
 while [ ! $iMASTER -gt $iLAST_MASTER ]
 do
 
-    MASTER_MACHINE_NAME=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $iMASTER)
+    MASTER_MACHINE_NAME=${ICM_LABEL}-VM-IRISSpeedTest-$(printf %04d $iMASTER)
 
     bounce_container_at_machine htapmaster $MASTER_MACHINE_NAME
 
@@ -22,7 +22,7 @@ do
     let iLAST_INGESTION_WORKER="$iMASTER + $HTAP_INGESTION_WORKERS"
     while [ ! $iINGESTION_WORKER -gt $iLAST_INGESTION_WORKER ]
     do
-        WORKER_MACHINE_NAME=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $iINGESTION_WORKER)
+        WORKER_MACHINE_NAME=${ICM_LABEL}-VM-IRISSpeedTest-$(printf %04d $iINGESTION_WORKER)
 
         bounce_container_at_machine htapIngestionWorker $WORKER_MACHINE_NAME
 
@@ -34,7 +34,7 @@ do
     
     while [ ! $iQUERY_WORKER -gt $iLAST_QUERY_WORKER ]
     do
-        WORKER_MACHINE_NAME=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $iQUERY_WORKER)
+        WORKER_MACHINE_NAME=${ICM_LABEL}-VM-IRISSpeedTest-$(printf %04d $iQUERY_WORKER)
 
         bounce_container_at_machine htapQueryWorker $WORKER_MACHINE_NAME
 
