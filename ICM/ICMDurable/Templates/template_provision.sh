@@ -3,6 +3,7 @@ source ./env.sh
 source /ICMDurable/utils.sh
 
 rm -f /ICMDurable/license/.DS_Store
+rm -f /ICMDurable/license/replace_this_file_with_your_iris_key
 
 provisionWorkarounds
 
