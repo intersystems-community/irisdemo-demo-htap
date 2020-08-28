@@ -161,7 +161,7 @@ containerless_remove_container() {
 
 containerless_remove_all_containers() {
     LABEL=${PWD##*/}
-    INVENTORY=$(icm inventory | awk "/$LABEL-CN-/ {print \$1}")
+    INVENTORY=$(icm inventory | awk "/$LABEL-VM-/ {print \$1}")
     for MACHINE in $INVENTORY
     do
         printf "\n\n${PURPLE}Stopping and removing containers at machine $MACHINE...\n${RESET}"
@@ -213,7 +213,7 @@ deploy()
 
     find_iris_database_size
 
-    CN_MACHINE_GROUP="${ICM_LABEL}-CN-IRISSpeedTest"
+    CN_MACHINE_GROUP="${ICM_LABEL}-VM-IRISSpeedTest"
 
     #
     # We need to count how many containers of type CN we are using. We need to do this
@@ -318,7 +318,7 @@ deploy()
         iIW=`expr $iIW + 1`
         CNi=`expr $CNi + 1`
 
-        INGESTION_WORKER_MACHINE=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $CNi)        
+        INGESTION_WORKER_MACHINE=${ICM_LABEL}-VM-IRISSpeedTest-$(printf %04d $CNi)        
 
         printf "\n\n${GREEN}Deploying ${MASTER_SPEEDTEST_TITLE} Ingestion Worker #${iIW}...\n\n${RESET}"
         if [ "$CONTAINERLESS" == "true" ];
@@ -351,7 +351,7 @@ deploy()
         iQW=`expr $iQW + 1`
         CNi=`expr $CNi + 1`
 
-        QUERY_WORKER_MACHINE=${ICM_LABEL}-CN-IRISSpeedTest-$(printf %04d $CNi)
+        QUERY_WORKER_MACHINE=${ICM_LABEL}-VM-IRISSpeedTest-$(printf %04d $CNi)
 
         printf "\n\n${GREEN}Deploying ${MASTER_SPEEDTEST_TITLE} Query Worker #${iQW}...\n\n${RESET}"
         if [ "$CONTAINERLESS" == "true" ];

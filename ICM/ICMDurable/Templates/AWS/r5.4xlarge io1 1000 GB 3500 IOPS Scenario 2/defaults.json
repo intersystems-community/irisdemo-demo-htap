@@ -8,7 +8,7 @@
     "DataVolumeIOPS": "3500",
 
     "WIJVolumeType": "io1",
-    "WIJVolumeSize": "70",
+    "WIJVolumeSize": "1000",
     "WIJVolumeIOPS": "3500",
 
     "Journal1VolumeType": "io1",

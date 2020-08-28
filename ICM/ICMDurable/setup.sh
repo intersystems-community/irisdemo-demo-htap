@@ -221,7 +221,7 @@ if [ $MAX_CN -gt 0 ];
 then
     echo ",
         {
-            \"Role\": \"CN\",
+            \"Role\": \"VM\",
             \"Count\": \"${MAX_CN}\",
             \"DataVolumeType\": \"io1\",
             \"DataVolumeSize\": \"30\",
