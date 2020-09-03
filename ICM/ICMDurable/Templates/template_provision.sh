@@ -2,6 +2,9 @@
 source ./env.sh
 source /ICMDurable/utils.sh
 
+rm -f /ICMDurable/license/.DS_Store
+rm -f /ICMDurable/license/replace_this_file_with_your_iris_key
+
 provisionWorkarounds
 
 if [ ! -f ./defaults.json ];
@@ -11,33 +14,27 @@ then
 fi
 
 
-if [ "$CONTAINERLESS" == "true" ];
-then
-    # 
-    # Verify if our ports are configured before provisioning.
-    # 
-    terraform_aws_open_ports
+# 
+# Verify if our ports are configured before provisioning.
+# 
+terraform_aws_open_ports
 
-    #
-    # Now we can provision
-    #
-    icm provision
-    exit_if_terraform_error "Provisioning the infrastructure failed."
+#
+# Now we can provision
+#
+icm provision
+exit_if_terraform_error "Provisioning the infrastructure failed."
 
-    printf "\n\n${GREEN}Containerless installation require us to manually install docker on the CN nodes...${RESET}"
-    printf "\n\n${GREEN}Running preInstallDocker.sh...\n${RESET}"
-    icm ssh --role CN --command "./ICM/preInstallDocker.sh"
-    exit_if_error "preInstallDocker.sh failed on CN machines"
-    
-    sleep 5
+printf "\n\n${GREEN}Installing docker on the VM nodes...${RESET}"
+printf "\n\n${GREEN}Running preInstallDocker.sh...\n${RESET}"
+icm ssh --role VM --command "./ICM/preInstallDocker.sh"
+exit_if_error "preInstallDocker.sh failed on VM machines"
 
-    printf "\n\n${GREEN}Running installDockerCE.sh...\n${RESET}"
-    icm ssh --role CN --command "export DOCKER_STORAGE_DRIVER=devicemapper && ./ICM/installDockerCE.sh"
-    exit_if_error "installDockerCE.sh failed on CN machines"
-else
-    icm provision
-    exit_if_terraform_error "Provisioning the infrastructure failed."
-fi
+sleep 5
+
+printf "\n\n${GREEN}Running installDockerCE.sh...\n${RESET}"
+icm ssh --role VM --command "export DOCKER_STORAGE_DRIVER=devicemapper && ./ICM/installDockerCE.sh"
+exit_if_error "installDockerCE.sh failed on VM machines"
 
 touch ./.provisionHasBeenRun
 
