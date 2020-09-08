@@ -20,6 +20,7 @@ printf "\n\n\t ${YELLOW}mssqlserver${RESET}  - AWS RDS SQL Server"
 printf "\n\n\t ${YELLOW}sybase${RESET}  - SAP Sybase ASE"
 printf "\n\n\t ${YELLOW}postgres${RESET}  - AWS RDS PostgreSQL"
 printf "\n\n\t ${YELLOW}mariadb${RESET}  - AWS MariaDB"
+printf "\n\n\t ${YELLOW}oracle${RESET}  - AWS Oracle"
 
 printf "\n\n${RESET}"
 
@@ -99,6 +100,17 @@ case $SPEED_TEST_TO_DEPLOY in
         CONSUMER_JDBC_URL="jdbc:mysql://$DB_HOSTNAME:3306/SpeedTest"
 
         deploy "mysql" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
+        break
+        ;;
+    oracle)
+        DB_TITLE="AWS RDS Oracle"
+        read_endpoint_and_credentials "$DB_TITLE" "admin"
+        exit_if_error "We need all the information to proceed."
+
+        INGESTION_JDBC_URL="jdbc:oracle:thin:$DB_JDBC_USERNAME/$DB_JDBC_PASSWORD@//$DB_HOSTNAME:1521/SPEED"
+        CONSUMER_JDBC_URL="jdbc:oracle:thin:$DB_JDBC_USERNAME/$DB_JDBC_PASSWORD@//$DB_HOSTNAME:1521/SPEED"
+
+        deploy "oracle" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
         break
         ;;
     mysql)

@@ -43,6 +43,7 @@
 		<module>mssqlserver-jdbc-ingest-worker</module>
 		<module>sybasease-jdbc-ingest-worker</module>
 		<module>postgres-jdbc-ingest-worker</module>
+		<module>oracle-jdbc-ingest-worker</module>
 	</modules>
   
     <build>

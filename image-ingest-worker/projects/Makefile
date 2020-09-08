@@ -15,5 +15,6 @@ build:
 	cp /usr/projects/ingest-worker-project/hana-jdbc-ingest-worker/target/hana-jdbc-ingest-worker-*.jar /usr/projects/hana-jdbc-ingest-worker.jar
 	cp /usr/projects/ingest-worker-project/mssqlserver-jdbc-ingest-worker/target/mssqlserver-jdbc-ingest-worker-*.jar /usr/projects/mssqlserver-jdbc-ingest-worker.jar
 	cp /usr/projects/ingest-worker-project/sybasease-jdbc-ingest-worker/target/sybasease-jdbc-ingest-worker-*.jar /usr/projects/sybasease-jdbc-ingest-worker.jar
-	cp /usr/projects/ingest-worker-project/postgres-jdbc-ingest-worker/target/postgres-jdbc-ingest-worker-*.jar /usr/projects/postgres-jdbc-ingest-worker.jar	
+	cp /usr/projects/ingest-worker-project/postgres-jdbc-ingest-worker/target/postgres-jdbc-ingest-worker-*.jar /usr/projects/postgres-jdbc-ingest-worker.jar
+	cp /usr/projects/ingest-worker-project/oracle-jdbc-ingest-worker/target/oracle-jdbc-ingest-worker-*.jar /usr/projects/oracle-jdbc-ingest-worker.jar	
 	
