@@ -1,3 +1,11 @@
+## 2.5.0 (September 02, 2020)
+  - Normalizing code so that both container and containerless speedtests are deployed in the same way using VM ICM roles.
+  - Making sure that ICMDurable/license/replace_this_file_with_your_iris_key is not there when it is time to provision
+  - Leaving 10Gb left on the data folder when pre-expanding IRIS database
+  - Making speedtest container image names shorter because of new ICM version
+  - Using newer version of docker. Fixing missing ;; on deployspeedtest.sh
+  - Changing ICM and IRIS version to 2020.3.0.200.0
+
 ## 2.4.26 (August 23, 2020)
   - Adding mariadb and postgres results
   
