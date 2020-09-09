@@ -42,6 +42,7 @@
 		<module>mssqlserver-jdbc-query-worker</module>
 		<module>sybasease-jdbc-query-worker</module>
 		<module>postgres-jdbc-query-worker</module>
+		<module>oracle-jdbc-query-worker</module>
 	</modules>
   
     <build>
