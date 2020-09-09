@@ -112,4 +112,4 @@ Proceed with one of the comparisons bellow:
 * [InterSystems IRIS x AWS RDS SQLServer](/ICM/DOC/IRIS_x_MSSQLServerEnterprise.md)
 * [InterSystems IRIS x AWS PostgreSQL](/ICM/DOC/IRIS_x_AWSPostgreSQL.md)
 * [InterSystems IRIS x AWS MariaDB](/ICM/DOC/IRIS_x_AWSMariaDB.md)
-* [InterSystems IRIS x AWS MariaDB](/ICM/DOC/IRIS_x_AWSOracle.md)
+* [InterSystems IRIS x AWS Oracle](/ICM/DOC/IRIS_x_AWSOracle.md)
