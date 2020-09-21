@@ -387,6 +387,7 @@ Here is the list of the supported databases so far:
   - AWS RDS MariaDB (production deployment) with replication
   - SAP HANA Express Edition 2.0 without replication
   - SAP Sybase ASE 16.0 SP03 PL08, public cloud edition, premium version, without replication
+  - AWS RDS Oracle (production deployment) with replication
 
 ## 12 - Report any Issues
   
