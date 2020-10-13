@@ -74,7 +74,8 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 		}
 		catch (RestClientException restException)
 		{
-			logger.info("Worker on " + config.getThisHostName() + " is not responding. Marking worker as unavailablebecause of: " + restException.getMessage());
+			logger.info("Could not register: " + restException.getMessage());
+			System.exit(-1);
 		}
     	
 	} 
