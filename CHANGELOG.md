@@ -1,3 +1,9 @@
+## 2.5.1 (October 13, 2020)
+  - Improving error message given by workers when it is not possible to register with the master. In that case, the workers will also not exit instead of staying there doing nothing.
+  - Bumping IRIS version to 2020.3.0.200.0
+  - Update README.md
+  - Adding support for Oracle on AWS
+
 ## 2.5.0 (September 02, 2020)
   - Normalizing code so that both container and containerless speedtests are deployed in the same way using VM ICM roles.
   - Making sure that ICMDurable/license/replace_this_file_with_your_iris_key is not there when it is time to provision
