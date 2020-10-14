@@ -1,0 +1,90 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: ingestion-worker
+# spec:
+#   clusterIP: None
+#   selector:
+#     app: ingestion-worker-pod
+#   ports:
+#     - protocol: TCP
+#       port: 8080
+#       targetPort: 8080
+
+# ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingestion-worker-deployment
+  labels:
+    app: ingestion-worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingestion-worker-pod
+  template:
+    metadata:
+      labels:
+        app: ingestion-worker-pod
+    spec:
+      containers:
+      - name: ingestion-worker-container
+        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.5.1
+        resources:
+          requests:
+              cpu: 0.5
+              memory: 512M
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MASTER_HOSTNAME
+          value: "htapmaster"
+        - name: MASTER_PORT
+          value: "8080"
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: query-worker
+# spec:
+#   clusterIP: None
+#   selector:
+#     app: query-worker-pod
+#   ports:
+#     - protocol: TCP
+#       port: 8080
+#       targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-worker-deployment
+  labels:
+    app: query-worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: query-worker-pod
+  template:
+    metadata:
+      labels:
+        app: query-worker-pod
+    spec:
+      containers:
+      - name: query-worker-container
+        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.5.1
+        resources:
+          requests:
+              cpu: 0.5
+              memory: 512M
+
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MASTER_HOSTNAME
+          value: "htapmaster"
+        - name: MASTER_PORT
+          value: "8080"

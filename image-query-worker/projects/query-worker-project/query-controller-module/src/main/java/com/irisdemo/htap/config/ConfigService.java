@@ -1,6 +1,9 @@
 package com.irisdemo.htap.config;
 
 import org.springframework.stereotype.Service;
+
+import java.net.InetAddress;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +44,16 @@ public class ConfigService implements ApplicationListener<ServletWebServerInitia
 	}
 	
     public void registerWithMasterAndGetConfig() throws Exception
-    {
-    	String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/queryworker/register/" + config.getThisHostName() + ":" + config.getThisServerPort();
-    	
-		logger.info("Registering with " + registrationUrl);
-		
+    {	
 		try
-		{    			
-			RESTWorkerConfig workerConfig = restTemplate.getForObject(
-				registrationUrl
-				, RESTWorkerConfig.class);
+		{
+			InetAddress inet = InetAddress.getByName(config.getThisHostName());
+			String hostIP = inet.getHostAddress();
+	
+			String registrationUrl = "http://" + config.getMasterHostName()+":"+config.getMasterPort()+"/master/queryworker/register/" + hostIP + ":" + config.getThisServerPort();    	
+			logger.info("Registering with " + registrationUrl);
+	
+			RESTWorkerConfig workerConfig = restTemplate.getForObject(registrationUrl, RESTWorkerConfig.class);
 
 			config.setWorkerNodePrefix(workerConfig.workerNodePrefix);
 			config.setConsumptionJDBCPassword(workerConfig.config.consumptionJDBCPassword);

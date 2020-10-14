@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: iris
+spec:
+  selector:
+    app: iris-pod
+  ports:
+    - protocol: TCP
+      port: 1972
+      targetPort: 1972
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-deployment
+  labels:
+    app: iris-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iris-pod
+  template:
+    metadata:
+      labels:
+        app: iris-pod
+    spec:
+      containers:
+      - name: iris-container
+        image: intersystemsdc/irisdemo-base-irisdb-community:version-1.7.0
+        resources:
+          requests:
+              cpu: 0.5
+              memory: 512M
+        ports:
+        - containerPort: 1972

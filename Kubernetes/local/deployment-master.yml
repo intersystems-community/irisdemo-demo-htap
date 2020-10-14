@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: htapmaster
+spec:
+  selector:
+    app: master-pod
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: master-deployment
+  labels:
+    app: master-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: master-pod
+  template:
+    metadata:
+      labels:
+        app: master-pod
+    spec:
+      containers:
+      - name: master-container
+        image: intersystemsdc/irisdemo-demo-htap:master-version-2.5.1
+        resources:
+          requests:
+              cpu: 0.5
+              memory: 512M
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MASTER_SPEEDTEST_TITLE
+          value: "SpeedTest | IRIS Community 2020.3.0.200.0"
+        - name: START_CONSUMERS
+          value: "true"
+        - name: DISABLE_JOURNAL_FOR_DROP_TABLE
+          value: "true"
+        - name: DISABLE_JOURNAL_FOR_TRUNCATE_TABLE
+          value: "true"
+        - name: INGESTION_THREADS_PER_WORKER
+          value: "2"
+        - name: INGESTION_BATCH_SIZE
+          value: "1000"
+        - name: INGESTION_JDBC_URL
+          value: "jdbc:IRIS://iris:1972/USER"
+        - name: INGESTION_JDBC_USERNAME
+          value: "SuperUser"
+        - name: INGESTION_JDBC_PASSWORD
+          value: "sys"
+        - name: CONSUMER_JDBC_URL
+          value: "jdbc:IRIS://iris:1972/USER"
+        - name: CONSUMER_JDBC_USERNAME
+          value: "SuperUser"
+        - name: CONSUMER_JDBC_PASSWORD
+          value: "sys"
+        - name: CONSUMER_THREADS_PER_WORKER
+          value: "1"
+        - name: CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS
+          value: "0"
+        - name: DATABASE_SIZE_IN_GB
+          value: "1"
