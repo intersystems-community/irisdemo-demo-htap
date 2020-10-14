@@ -1,3 +1,6 @@
+## 2.5.2 (October 14, 2020)
+  - Making workers register with their IP addresses so that HTAP Demo can work on Kubernetes.
+
 ## 2.5.1 (October 13, 2020)
   - Improving error message given by workers when it is not possible to register with the master. In that case, the workers will also not exit instead of staying there doing nothing.
   - Bumping IRIS version to 2020.3.0.200.0
