@@ -54,7 +54,7 @@ You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here
 
 ## 1 - Running the Speed Test on AWS
 
-Follow [this link](/ICM/README.md) to see instructions on how to run this Speed Test on AWS comparing InterSystems IRIS with other databases such as SAP HANA and AWS Aurora.
+Follow [this link](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/README.md) to see instructions on how to run this Speed Test on AWS comparing InterSystems IRIS with other databases such as SAP HANA and AWS Aurora.
 
 ## 2 - How to run it on your PC
 
