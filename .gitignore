@@ -59,3 +59,7 @@ images_built
 # VSCode
 .metals
 .vscode
+
+#IKO
+**/iris_operator-2.0.0.222.0
+**.key
