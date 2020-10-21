@@ -52,13 +52,13 @@ spec:
         - name: INGESTION_BATCH_SIZE
           value: "1000"
         - name: INGESTION_JDBC_URL
-          value: "jdbc:IRIS://iris:1972/USER"
+          value: "jdbc:IRIS://htapirisdb:1972/USER"
         - name: INGESTION_JDBC_USERNAME
           value: "SuperUser"
         - name: INGESTION_JDBC_PASSWORD
           value: "sys"
         - name: CONSUMER_JDBC_URL
-          value: "jdbc:IRIS://iris:1972/USER"
+          value: "jdbc:IRIS://htapirisdb:1972/USER"
         - name: CONSUMER_JDBC_USERNAME
           value: "SuperUser"
         - name: CONSUMER_JDBC_PASSWORD

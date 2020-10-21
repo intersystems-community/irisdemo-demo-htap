@@ -18,7 +18,7 @@ spec:
         node-label: ingest
       containers:
       - name: ingestion-worker-container
-        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.5.1
+        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.5.2
         # resources:
         #   requests:
         #       cpu: 0.5
@@ -52,7 +52,7 @@ spec:
         node-label: query
       containers:
       - name: query-worker-container
-        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.5.1
+        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.5.2
         # resources:
         #   requests:
         #       cpu: 0.5
