@@ -29,7 +29,7 @@ spec:
         app: ui-pod
     spec:
       nodeSelector:
-        node-labels: master-ui
+        node-label: master-ui
       containers:
       - name: ui-container
         image: intersystemsdc/irisdemo-demo-htap:ui-version-2.5.1

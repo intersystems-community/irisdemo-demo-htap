@@ -11,14 +11,16 @@ spec:
     data:
       shards: 1
       mirrored: false
-     image: intersystemsicm/iris:2020.3.0AA.331.0
+      image: intersystemsicm/iris:2020.3.0AA.331.0
       podTemplate:
         spec:
+          nodeSelector:
+            node-label: iris
           imagePullSecrets:
-            - name: dockerhub-secret
-         selector:
-           matchLabels:
-             app: htapirisdb
+          - name: dockerhub-secret
+          selector:
+            matchLabels:
+              app: htapirisdb
           tolerations:
           - key: "iris-group"
             operator: "Equal"
@@ -32,10 +34,7 @@ spec:
         resources:
           requests:
             storage: 100G
-        storageClassName: storage-class-iris-r5-2xlarge
+        storageClassName: data-storage-class
   serviceTemplate:
     spec:
       type: LoadBalancer
-
-
-
