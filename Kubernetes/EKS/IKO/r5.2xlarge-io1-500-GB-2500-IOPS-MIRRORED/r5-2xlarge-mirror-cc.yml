@@ -7,9 +7,9 @@ nodeGroups:
 - name: iris-nodes
   labels: { node-label: iris }
   instanceType: r5.2xlarge
-  minSize: 2
-  maxSize: 2
-  desiredCapacity: 2
+  minSize: 8
+  maxSize: 8
+  desiredCapacity: 8
 - name: masterui-group
   labels: { node-label: master-ui }
   instanceType: c5.xlarge
