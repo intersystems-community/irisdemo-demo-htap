@@ -10,7 +10,7 @@ spec:
   topology:
     data:
       shards: 1
-      mirrored: true
+      mirrored: false
       image: intersystemsicm/iris:2020.3.0AA.331.0
       podTemplate:
         spec:
@@ -28,7 +28,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 100G
+            storage: 1000G
         storageClassName: data-storage-class
   # serviceTemplate:
   #   spec:
