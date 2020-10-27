@@ -1,0 +1,31 @@
+apiVersion: intersystems.com/v1alpha1
+kind: IrisCluster
+metadata:
+  name: htapirisdb
+spec:
+  passwordHash: '071e3aa0c8810f91eefd8f074e3768b06c66308a,v7mf8dt5'
+  licenseKeySecret:
+    name: iris-key-secret
+  topology:
+    data:
+      shards: <SHARDS>
+      mirrored: <MIRRORED>
+      image: intersystemsicm/iris:2020.3.0AA.331.0
+      podTemplate:
+        spec:
+          nodeSelector:
+            node-label: iris
+          imagePullSecrets:
+          - name: dockerhub-secret
+          selector:
+            matchLabels:
+              app: htapirisdb
+      updateStrategy:
+        type: RollingUpdate
+      storage:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: <STORAGE_SIZE>
+        storageClassName: data-storage-class
