@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ingestion-worker-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: ingestion-worker-pod
