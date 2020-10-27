@@ -28,7 +28,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 1000G
+            storage: 100G
         storageClassName: data-storage-class
   # serviceTemplate:
   #   spec:

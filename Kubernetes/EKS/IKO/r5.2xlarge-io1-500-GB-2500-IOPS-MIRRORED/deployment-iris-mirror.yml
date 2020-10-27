@@ -17,11 +17,11 @@ spec:
             node-label: iris
           imagePullSecrets:
           - name: dockerhub-secret
-          resources:
-            requests:
-              cpu: 6
-            limit:
-              cpu: 8
+          # resources:
+          #   requests:
+          #     cpu: 6
+          #   limit:
+          #     cpu: 8
           selector:
             matchLabels:
               app: htapirisdb
