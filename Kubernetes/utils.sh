@@ -16,3 +16,14 @@ exit_if_empty() {
         exit 0
     fi
 }
+
+exit_if_error() {
+
+	if [ $? -ne 0 ];
+	then
+		printf "\n\n${RED}"
+		echo "ERROR: $1"
+		printf "\n\n${RESET}"
+		exit 1
+	fi
+}

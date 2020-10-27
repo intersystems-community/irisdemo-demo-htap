@@ -8,7 +8,7 @@ spec:
     data:
       shards: <SHARDS>
       mirrored: <MIRROR>
-      image: intersystemsicm/iris:2020.3.0AA.331.0
+      image: intersystemsdc/irisdemo-base-irisdb-community:version-1.4
       podTemplate:
         spec:
           nodeSelector:

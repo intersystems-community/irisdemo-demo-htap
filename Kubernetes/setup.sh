@@ -146,6 +146,13 @@ chmod +x $DEPLOYMENT_FOLDER/cluster-config.yaml
 cp ./Templates/template-storage-class.yaml $DEPLOYMENT_FOLDER/storage-class.yaml
 chmod +x $DEPLOYMENT_FOLDER/storage-class.yaml
 
+cp ./Templates/template-provision.sh $DEPLOYMENT_FOLDER/provision.sh
+chmod +x $DEPLOYMENT_FOLDER/provision.sh
+
+cp ./Templates/template-unprovision.sh $DEPLOYMENT_FOLDER/unprovision.sh
+chmod +x $DEPLOYMENT_FOLDER/unprovision.sh
+
+
 if [ "$COMMUNITY" == "true" ];
 then
     cp ./Templates/template-community-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
@@ -176,5 +183,4 @@ sed -E -i '' "s;<IOPS_PER_GB>;$IOPS_PER_GB;g" $DEPLOYMENT_FOLDER/storage-class.y
 
 
 
-
-
+printf "\n\n${YELLOW}You can now change to $DEPLOYMENT_FOLDER and run ./provision.sh to provision the infrastructure on EKS.\n\n${RESET}"
