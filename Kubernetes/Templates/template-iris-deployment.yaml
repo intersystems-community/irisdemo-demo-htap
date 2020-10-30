@@ -9,7 +9,7 @@ spec:
   topology:
     data:
       shards: <SHARDS>
-      mirrored: <MIRRORED>
+      mirrored: <MIRROR>
       image: intersystemsicm/iris:2020.3.0AA.331.0
       podTemplate:
         spec:

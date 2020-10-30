@@ -1,5 +1,5 @@
 source ./env.sh
-source /Kubernetes/utils.sh
+source ../../utils.sh
 
 #
 #Iris Deployment uninstalled as per https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls?KEY=AIKO

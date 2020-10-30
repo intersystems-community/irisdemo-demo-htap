@@ -1,5 +1,5 @@
 source ./env.sh
-source /Kubernetes/utils.sh
+source ../../utils.sh
 #PROVISIONING STRUCTURE:
 #use eks to create cluster on AWS (this automatically makes kubectl point at this new cluster) we need to read AWS creds from somewhere
 
@@ -11,7 +11,8 @@ exit_if_error "Failure to create cluster on EKS"
 #use helm install to install IKO on cluster (for now we depend on the user to have the file from which to install)
 
 printf "\n\n${GREEN}Installing IKO on the cluster using Helm...${RESET}"
-helm install intersystems ../../IKO/iris_operator*/chart/iris-iris_operator
+helm uninstall intersystems
+helm install intersystems ../../IKO/iris_operator*/chart/iris-operator
 exit_if_error "Helm IKO installation failed"
 
 
