@@ -37,5 +37,6 @@ kubectl apply -f ../../common/deployment-workers.yml
 exit_if_error "Could not deploy workers"
 kubectl apply -f ./storage-class.yaml
 exit_if_error "Could not deploy storage class"
+sleep 8
 kubectl apply -f ./iris-deployment.yaml
 exit_if_error "Could not deploy iris"

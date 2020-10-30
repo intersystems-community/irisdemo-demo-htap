@@ -68,7 +68,7 @@ else
     else
         SHARDING=false
         SHARDS=1
-        INSTANCES=mirrors
+        INSTANCES=$mirrors
     fi
 
 fi
