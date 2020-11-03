@@ -11,12 +11,9 @@ spec:
     data:
       shards: 1
       mirrored: false
-      image: intersystemsicm/iris:2020.3.0AA.331.0
-      # image: intersystemsdc/irisdemo-base-irisdb-community:version-1.4
+      image: store/intersystems/iris-community:2020.4.0.521.0 
       podTemplate:
         spec:
-          nodeSelector:
-            node-label: iris
           imagePullSecrets:
           - name: dockerhub-secret
           selector:
@@ -29,8 +26,5 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 100G
+            storage: 20G
         storageClassName: data-storage-class
-  # serviceTemplate:
-  #   spec:
-  #     type: LoadBalancer

@@ -23,13 +23,24 @@ mkdir $DEPLOYMENT_FOLDER
 
 
 #
+#Will you be deploying locally or AWS? (no license key needed)
+#
+printf "\n\n${GREEN}Are you going to deploy the demo locally (answer yes or something else if not)?: ${RESET}"
+read irisLocalAnswer
+exit_if_empty $irisLocalAnswer
+
+#
 #Will you be using IRIS community? (no license key needed)
 #
-printf "\n\n${GREEN}Are you using IRIS Community (answer yes or something else if not)?: ${RESET}"
-read irisCommunityAnswer
-exit_if_empty $irisCommunityAnswer
+if [ "$irisLocalAnswer" != "yes" ];
+then
+    LOCAL=false
+    printf "\n\n${GREEN}Are you using IRIS Community (answer yes or something else if not)?: ${RESET}"
+    read irisCommunityAnswer
+    exit_if_empty $irisCommunityAnswer
+fi
 
-if [ "$irisCommunityAnswer" == "yes" ];
+if [ "$irisCommunityAnswer" == "yes" ] || [ "$irisLocalAnswer" == "yes" ];
 then
     #DON'T NEED TO ASK ABOUT MIRRORING
     #DON'T NEED TO ASK ABOUT SHARDING
@@ -78,19 +89,19 @@ printf "\n\n${GREEN}How many Ingestion Workers?: ${RESET}"
 read HTAP_INGESTION_WORKERS
 exit_if_empty $HTAP_INGESTION_WORKERS
 
-echo "export HTAP_INGESTION_WORKERS=$HTAP_INGESTION_WORKERS" >> $DEPLOYMENT_FOLDER/env.sh
+echo "export HTAP_INGESTION_WORKERS=$HTAP_INGESTION_WORKERS" >> $DEPLOYMENT_FOLDER/envar.sh
 
 printf "\n\n${GREEN}How many Query Workers?: ${RESET}"
 read HTAP_QUERY_WORKERS
 exit_if_empty $HTAP_QUERY_WORKERS
 
-echo "export HTAP_QUERY_WORKERS=$HTAP_QUERY_WORKERS" >> $DEPLOYMENT_FOLDER/env.sh
+echo "export HTAP_QUERY_WORKERS=$HTAP_QUERY_WORKERS" >> $DEPLOYMENT_FOLDER/envar.sh
 
 
 
 #
 #
-#Choosing template to initialize env.sh from where default values will be loaded (for the 
+#Choosing template to initialize envar.sh from where default values will be loaded (for the 
 #instance type of the machines, storage, etc)
 #
 #
@@ -98,7 +109,7 @@ echo "export HTAP_QUERY_WORKERS=$HTAP_QUERY_WORKERS" >> $DEPLOYMENT_FOLDER/env.s
 
 printf "\n\n${GREEN}Please enter with the AWS instance type: ${RESET}"
 
-instanceList=$(ls ./Templates/AWS)
+instanceList=$(ls ./Templates/AWS/instances)
 instanceTypeNumber=0
 IFS='
 '
@@ -125,31 +136,32 @@ do
 done
 
 
-cp ./Templates/AWS/$INSTANCE_TYPE/env.sh $DEPLOYMENT_FOLDER/env.sh
-source $DEPLOYMENT_FOLDER/env.sh
+cp ./Templates/AWS/instances/$INSTANCE_TYPE/envar.sh $DEPLOYMENT_FOLDER/envar.sh
+source $DEPLOYMENT_FOLDER/envar.sh
 
 
 
 
+echo "LOCAL=$LOCAL" >> $DEPLOYMENT_FOLDER/envar.sh
+echo "CLUSTER_LABEL=$CLUSTER_LABEL" >> $DEPLOYMENT_FOLDER/envar.sh
+echo "COMMUNITY=$COMMUNITY" >> $DEPLOYMENT_FOLDER/envar.sh
+echo "MIRROR=$MIRROR" >> $DEPLOYMENT_FOLDER/envar.sh
+echo "SHARDING=$SHARDING" >> $DEPLOYMENT_FOLDER/envar.sh
+echo "SHARDS=$SHARDS" >> $DEPLOYMENT_FOLDER/envar.sh
+echo "INSTANCES=$INSTANCES" >> $DEPLOYMENT_FOLDER/envar.sh
 
-echo "CLUSTER_LABEL=$CLUSTER_LABEL" >> $DEPLOYMENT_FOLDER/env.sh
-echo "COMMUNITY=$COMMUNITY" >> $DEPLOYMENT_FOLDER/env.sh
-echo "MIRROR=$MIRROR" >> $DEPLOYMENT_FOLDER/env.sh
-echo "SHARDING=$SHARDING" >> $DEPLOYMENT_FOLDER/env.sh
-echo "SHARDS=$SHARDS" >> $DEPLOYMENT_FOLDER/env.sh
-echo "INSTANCES=$INSTANCES" >> $DEPLOYMENT_FOLDER/env.sh
 
+cp ./Templates/AWS/template-cluster-config.yaml $DEPLOYMENT_FOLDER/cluster-config.yaml
+cp ./Templates/AWS/template-storage-class.yaml $DEPLOYMENT_FOLDER/storage-class.yaml
+cp ./Templates/AWS/template-service-ui.yaml $DEPLOYMENT_FOLDER/service-ui.yaml
 
-cp ./Templates/template-cluster-config.yaml $DEPLOYMENT_FOLDER/cluster-config.yaml
-chmod +x $DEPLOYMENT_FOLDER/cluster-config.yaml
+cp ./Templates/common/deployment-master.yaml $DEPLOYMENT_FOLDER/deployment-master.yaml
+cp ./Templates/common/deployment-ui.yaml $DEPLOYMENT_FOLDER/deployment-ui.yaml
+cp ./Templates/common/deployment-workers.yaml $DEPLOYMENT_FOLDER/deployment-workers.yaml
 
-cp ./Templates/template-storage-class.yaml $DEPLOYMENT_FOLDER/storage-class.yaml
-chmod +x $DEPLOYMENT_FOLDER/storage-class.yaml
-
-cp ./Templates/template-provision.sh $DEPLOYMENT_FOLDER/provision.sh
+cp ./Templates/AWS/template-provision.sh $DEPLOYMENT_FOLDER/provision.sh
 chmod +x $DEPLOYMENT_FOLDER/provision.sh
-
-cp ./Templates/template-unprovision.sh $DEPLOYMENT_FOLDER/unprovision.sh
+cp ./Templates/AWS/template-unprovision.sh $DEPLOYMENT_FOLDER/unprovision.sh
 chmod +x $DEPLOYMENT_FOLDER/unprovision.sh
 
 
@@ -160,7 +172,6 @@ else
     cp ./Templates/template-iris-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
 fi
 
-chmod +x $DEPLOYMENT_FOLDER/iris-deployment.yaml
 
 
 
@@ -181,6 +192,18 @@ sed -E -i '' "s;<MIRROR>;$MIRROR;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 
 sed -E -i '' "s;<IOPS_PER_GB>;$IOPS_PER_GB;g" $DEPLOYMENT_FOLDER/storage-class.yaml
 
+if [ "$LOCAL" != false ];
+then
+    sed -E -i '' '/nodeSelector/d' $DEPLOYMENT_FOLDER/deployment-workers.yaml
+    sed -E -i '' '/node-label/d' $DEPLOYMENT_FOLDER/deployment-workers.yaml
 
+    sed -E -i '' '/nodeSelector/d' $DEPLOYMENT_FOLDER/deployment-master.yaml
+    sed -E -i '' '/node-label/d' $DEPLOYMENT_FOLDER/deployment-master.yaml
+
+    sed -E -i '' '/nodeSelector/d' $DEPLOYMENT_FOLDER/deployment-ui.yaml
+    sed -E -i '' '/node-label/d' $DEPLOYMENT_FOLDER/deployment-ui.yaml
+    
+
+fi
 
 printf "\n\n${YELLOW}You can now change to $DEPLOYMENT_FOLDER and run ./provision.sh to provision the infrastructure on EKS.\n\n${RESET}"

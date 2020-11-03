@@ -1,29 +1,38 @@
-apiVersion: intersystems.com/v1alpha1
-kind: IrisCluster
+apiVersion: v1
+kind: Service
 metadata:
   name: htapirisdb
 spec:
-  passwordHash: '071e3aa0c8810f91eefd8f074e3768b06c66308a,v7mf8dt5'
-  topology:
-    data:
-      shards: <SHARDS>
-      mirrored: <MIRROR>
-      image: intersystemsdc/irisdemo-base-irisdb-community:version-1.4
-      podTemplate:
-        spec:
-          nodeSelector:
-            node-label: iris
-          imagePullSecrets:
-          - name: dockerhub-secret
-          selector:
-            matchLabels:
-              app: htapirisdb
-      updateStrategy:
-        type: RollingUpdate
-      storage:
-        accessModes:
-          - ReadWriteOnce
+  selector:
+    app: iris-pod
+  ports:
+    - protocol: TCP
+      port: 1972
+      targetPort: 1972
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-deployment
+  labels:
+    app: iris-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iris-pod
+  template:
+    metadata:
+      labels:
+        app: iris-pod
+    spec:
+      containers:
+      - name: iris-container
+        image: store/intersystems/iris-community:2020.4.0.521.0 
         resources:
           requests:
-            storage: <STORAGE_SIZE>
-        storageClassName: data-storage-class
+              cpu: 0.5
+              memory: 512M
+        ports:
+        - containerPort: 1972
