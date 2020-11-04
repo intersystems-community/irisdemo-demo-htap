@@ -6,6 +6,8 @@ spec:
   passwordHash: '071e3aa0c8810f91eefd8f074e3768b06c66308a,v7mf8dt5'
   licenseKeySecret:
     name: iris-key-secret
+  configSource:
+    name: iris-cpf
   topology:
     data:
       shards: <SHARDS>
@@ -22,6 +24,7 @@ spec:
               app: htapirisdb
       updateStrategy:
         type: RollingUpdate
+      #storageDB:
       storage:
         accessModes:
           - ReadWriteOnce
@@ -29,3 +32,18 @@ spec:
           requests:
             storage: <STORAGE_SIZE>
         storageClassName: data-storage-class
+      # storageWIJ:
+      #   resources:
+      #     requests:
+      #       storage: <WIJ_STORAGE_SIZE>
+      #   storageClassName: data-storage-class
+      # storageJournal1:
+      #   resources:
+      #     requests:
+      #       storage: <J1_STORAGE_SIZE>
+      #   storageClassName: data-storage-class
+      # storageJournal2:
+      #   resources:
+      #     requests:
+      #       storage: <J2_STORAGE_SIZE>
+      #   storageClassName: data-storage-class

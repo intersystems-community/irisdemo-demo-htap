@@ -27,3 +27,8 @@ exit_if_error() {
 		exit 1
 	fi
 }
+
+
+wait_pod_ready() {
+	echo 1
+}

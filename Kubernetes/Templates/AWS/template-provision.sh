@@ -32,6 +32,10 @@ then
 
     kubectl apply -f ./storage-class.yaml
     exit_if_error "Could not deploy storage class"
+
+    kubectl delete cm/iris-cpf
+    kubectl create cm iris-cpf --from-file data.cpf 
+    exit_if_error "could not create cpf file"
 fi
 
 printf "\n\n${GREEN}Deploying pods on the nodes...${RESET}"

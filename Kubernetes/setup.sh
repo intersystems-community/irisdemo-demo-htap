@@ -99,46 +99,51 @@ echo "export HTAP_QUERY_WORKERS=$HTAP_QUERY_WORKERS" >> $DEPLOYMENT_FOLDER/envar
 
 
 
-#
-#
-#Choosing template to initialize envar.sh from where default values will be loaded (for the 
-#instance type of the machines, storage, etc)
-#
-#
+
+if [ "$irisLocalAnswer" != "yes" ];
+then 
+    #
+    #
+    #Choosing template to initialize envar.sh from where default values will be loaded (for the 
+    #instance type of the machines, storage, etc)
+    #
+    #
 
 
-printf "\n\n${GREEN}Please enter with the AWS instance type: ${RESET}"
+    printf "\n\n${GREEN}Please enter with the AWS instance type: ${RESET}"
 
-instanceList=$(ls ./Templates/AWS/instances)
-instanceTypeNumber=0
-IFS='
+    instanceList=$(ls ./Templates/AWS/instances)
+    instanceTypeNumber=0
+    IFS='
 '
-for instanceDesc in $instanceList;
-do 
-    instanceTypeNumber=$(($instanceTypeNumber+1))
-    printf "\n\t${YELLOW} ${instanceTypeNumber} ${RESET}- $instanceDesc\n"
-done
+    for instanceDesc in $instanceList;
+    do 
+        instanceTypeNumber=$(($instanceTypeNumber+1))
+        printf "\n\t${YELLOW} ${instanceTypeNumber} ${RESET}- $instanceDesc\n"
+    done
 
-printf "\nChoice: "
-read chosenInstanceTypeNumber
+    printf "\nChoice: "
+    read chosenInstanceTypeNumber
 
-INSTANCE_TYPE=""
-instanceTypeNumber=0
-for instanceDesc in $instanceList;
-do 
-    instanceTypeNumber=$(($instanceTypeNumber + 1))
-    if [ $instanceTypeNumber -eq $chosenInstanceTypeNumber ];
-    then
-        printf " ${GREEN}${instanceDesc}...${RESET}\n\n"
-        INSTANCE_TYPE=${instanceDesc}
-        break
-    fi
-done
+    INSTANCE_TYPE=""
+    instanceTypeNumber=0
+    for instanceDesc in $instanceList;
+    do 
+        instanceTypeNumber=$(($instanceTypeNumber + 1))
+        if [ $instanceTypeNumber -eq $chosenInstanceTypeNumber ];
+        then
+            printf " ${GREEN}${instanceDesc}...${RESET}\n\n"
+            INSTANCE_TYPE=${instanceDesc}
+            break
+        fi
+    done
 
 
-cp ./Templates/AWS/instances/$INSTANCE_TYPE/envar.sh $DEPLOYMENT_FOLDER/envar.sh
-source $DEPLOYMENT_FOLDER/envar.sh
+    cp ./Templates/AWS/instances/$INSTANCE_TYPE/envar.sh $DEPLOYMENT_FOLDER/envar.sh
+    source $DEPLOYMENT_FOLDER/envar.sh
 
+    cp ./Templates/AWS/instances/$INSTANCE_TYPE/data.cpf $DEPLOYMENT_FOLDER/data.cpf
+fi
 
 
 
