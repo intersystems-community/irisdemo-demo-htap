@@ -193,6 +193,7 @@ sed -E -i '' "s;<HTAP_QUERY_WORKERS>;$HTAP_QUERY_WORKERS;g" $DEPLOYMENT_FOLDER/c
 sed -E -i '' "s;<SHARDS>;$SHARDS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<STORAGE_SIZE>;$STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<MIRROR>;$MIRROR;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
+sed -E -i '' "s;<CPUS>;$CPUS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 
 
 sed -E -i '' "s;<IOPS_PER_GB>;$IOPS_PER_GB;g" $DEPLOYMENT_FOLDER/storage-class.yaml

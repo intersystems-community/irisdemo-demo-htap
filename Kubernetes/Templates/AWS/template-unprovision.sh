@@ -41,7 +41,7 @@ kubectl delete -f ./deployment-workers.yaml
 exit_if_error "Could not delete workers"
 
 
-if [ "$LOCAL" == "true" ];
+if [ "$LOCAL" != "true" ];
 then
     printf "\n\n${GREEN}Using EKS to unprovision the cluster...${RESET}"
     eksctl delete cluster -f ./cluster-config.yaml

@@ -3,7 +3,7 @@ source ../../utils.sh
 #PROVISIONING STRUCTURE:
 
 
-if [ "$LOCAL" == "true" ];
+if [ "$LOCAL" != "true" ];
 then
     #use eks to create cluster on AWS (this automatically makes kubectl point at this new cluster) we need to read AWS creds from somewhere
     printf "\n\n${GREEN}Initializing cluster on EKS..${RESET}"
@@ -12,7 +12,7 @@ then
 fi
 
 
-
+ 
 
 #kubectl apply each one of the deployment yamls
 
@@ -22,7 +22,7 @@ then
     #use helm install to install IKO on cluster (for now we depend on the user to have the file from which to install)
     printf "\n\n${GREEN}Installing IKO on the cluster using Helm...${RESET}"
     helm uninstall intersystems
-    helm install intersystems ../../IKO/iris_operator*/chart/iris-operator
+    helm install intersystems ../../IKO/iris_operator-2.0.0.222.0/chart/iris-operator
     exit_if_error "Helm IKO installation failed"
 
     printf "\n\n${GREEN}Creating iris-key-secret on the cluster...${RESET}"
@@ -48,7 +48,7 @@ kubectl apply -f ./deployment-workers.yaml
 exit_if_error "Could not deploy workers"
 kubectl apply -f ./service-ui.yaml
 exit_if_error "Could not deploy service UI"
-sleep 2
+sleep 4
 kubectl apply -f ./iris-deployment.yaml
 exit_if_error "Could not deploy iris"
 

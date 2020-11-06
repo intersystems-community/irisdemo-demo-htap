@@ -13,12 +13,18 @@ spec:
       shards: <SHARDS>
       mirrored: <MIRROR>
       image: intersystemsicm/iris:2020.3.0AA.331.0
+      preferredZones:
+        - us-east-2b
+        - us-east-2c
       podTemplate:
         spec:
           nodeSelector:
             node-label: iris
           imagePullSecrets:
           - name: dockerhub-secret
+          resources:
+            requests:
+              cpu: <CPUS>
           selector:
             matchLabels:
               app: htapirisdb
@@ -30,7 +36,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: <STORAGE_SIZE>
+            storage: <STORAGE_SIZE>G
         storageClassName: data-storage-class
       # storageWIJ:
       #   resources:
