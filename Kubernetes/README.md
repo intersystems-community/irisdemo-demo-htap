@@ -89,8 +89,20 @@ Put the iris.key file on the folder **./irisdemo-demo-htap/Kubernetes/license/**
 2. There is only one license key file on the folder. If you let more than one key file there, you may have problems.
 3. You are using the right iris.key for your scenario. We are deploying a containerd IRIS, so you should use an IRIS key for Ubuntu Linux.
 
+### 2.2.3 Copy IKO
 
-### 2.2.3 Configuring AWS Credentials
+**Only if you are running the test on Full IRIS**
+
+Download IKO [here](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls?KEY=AIKO). **DOWNLOAD VERSION 2.0.0.222.0** Extract the folder inside and place it in **Kubernetes/IKO**. Go into **Kubernetes/IKO/iris_operator-2..../chart/values.yaml** and change it to match the following:
+
+``` 
+operator:
+  registry: intersystemsicm
+  repository: iris-operator
+  tag: v2.0.0
+```
+
+### 2.2.4 Configuring AWS Credentials
 
 Make sure your credentials are up to date on your machine. Go to your default AWS credential file and make sure it's the latest one. **~/.aws/credentials**
 
@@ -101,7 +113,7 @@ aws_secret_access_key = dsfsDFSDFSDSD4534534FDG4FDGD
 aws_session_token = A_VERY_LARGE_STRING_ENDED_WITH==
 ```
 
-### 2.2.4 Runnint the SpeedTest
+### 2.2.5 Runnint the SpeedTest
 
 Now that you're setup, go into to **./irisdemo-demo-htap/Kubernetes/**. From there, you will see a script called setup.sh. Run it, and go through the steps in the script. **If you do not have a license key and will not be running the test on full IRIS, answer yes to running the test on IRIS Community.**
 
