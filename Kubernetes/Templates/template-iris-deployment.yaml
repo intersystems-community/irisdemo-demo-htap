@@ -37,19 +37,19 @@ spec:
         resources:
           requests:
             storage: <STORAGE_SIZE>G
-        storageClassName: data-storage-class
+        storageClassName: ssd-storage-class-normal
       # storageWIJ:
       #   resources:
       #     requests:
-      #       storage: <WIJ_STORAGE_SIZE>
-      #   storageClassName: data-storage-class
+      #       storage: <WIJ_STORAGE_SIZE>G
+      #   storageClassName: ssd-storage-class-slow
       # storageJournal1:
       #   resources:
       #     requests:
-      #       storage: <J1_STORAGE_SIZE>
-      #   storageClassName: data-storage-class
+      #       storage: <J1_STORAGE_SIZE>G
+      #   storageClassName: ssd-storage-class-slow
       # storageJournal2:
       #   resources:
       #     requests:
-      #       storage: <J2_STORAGE_SIZE>
-      #   storageClassName: data-storage-class
+      #       storage: <J2_STORAGE_SIZE>G
+      #   storageClassName: ssd-storage-class-fast

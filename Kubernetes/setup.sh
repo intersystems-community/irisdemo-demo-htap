@@ -4,7 +4,7 @@ source ./utils.sh
 #Setting up LABEL for our cluster
 #
 
-printf "\n\n${GREEN}Please enter with the label for your EKS machines (ex: asamaryCluster1): ${RESET}"
+printf "\n\n${GREEN}Please enter with the label for your Kubernetes cluster (ex: asamaryCluster1): ${RESET}"
 read CLUSTER_LABEL
 exit_if_empty $CLUSTER_LABEL
 
@@ -38,6 +38,8 @@ then
     printf "\n\n${GREEN}Are you using IRIS Community (answer yes or something else if not)?: ${RESET}"
     read irisCommunityAnswer
     exit_if_empty $irisCommunityAnswer
+else
+    LOCAL=true
 fi
 
 if [ "$irisCommunityAnswer" == "yes" ] || [ "$irisLocalAnswer" == "yes" ];
@@ -50,9 +52,20 @@ then
     SHARDING=false
     SHARDS=1
     INSTANCES=1
+    NAMESPACE=USER
 
 else
     COMMUNITY=false
+    NAMESPACE=IRISCLUSTER
+
+    printf "\n\n${GREEN}Enter your Docker Username: ${RESET}"
+    read DOCKER_USER
+    exit_if_empty $DOCKER_USER
+
+    printf "\n\n${GREEN}Enter your Docker Password: ${RESET}"
+    read -s DOCKER_PASSWORD
+    exit_if_empty $DOCKER_PASSWORD
+    
 
     printf "\n\n${GREEN}Do you want IRIS with Mirroring (answer yes or something else if not)?: ${RESET}"
     read irisWithMirroringAnswer
@@ -111,7 +124,6 @@ then
 
 
     printf "\n\n${GREEN}Please enter with the AWS instance type: ${RESET}"
-
     instanceList=$(ls ./Templates/AWS/instances)
     instanceTypeNumber=0
     IFS='
@@ -154,6 +166,9 @@ echo "MIRROR=$MIRROR" >> $DEPLOYMENT_FOLDER/envar.sh
 echo "SHARDING=$SHARDING" >> $DEPLOYMENT_FOLDER/envar.sh
 echo "SHARDS=$SHARDS" >> $DEPLOYMENT_FOLDER/envar.sh
 echo "INSTANCES=$INSTANCES" >> $DEPLOYMENT_FOLDER/envar.sh
+echo "DOCKER_USER=$DOCKER_USER" >> $DEPLOYMENT_FOLDER/envar.sh
+echo "DOCKER_PASSWORD=$DOCKER_PASSWORD" >> $DEPLOYMENT_FOLDER/envar.sh
+
 
 
 cp ./Templates/AWS/template-cluster-config.yaml $DEPLOYMENT_FOLDER/cluster-config.yaml
@@ -192,11 +207,18 @@ sed -E -i '' "s;<HTAP_QUERY_WORKERS>;$HTAP_QUERY_WORKERS;g" $DEPLOYMENT_FOLDER/c
 
 sed -E -i '' "s;<SHARDS>;$SHARDS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<STORAGE_SIZE>;$STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
+sed -E -i '' "s;<WIJ_STORAGE_SIZE>;$WIJ_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
+sed -E -i '' "s;<J1_STORAGE_SIZE>;$J1_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
+sed -E -i '' "s;<J2_STORAGE_SIZE>;$J2_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<MIRROR>;$MIRROR;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<CPUS>;$CPUS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 
 
-sed -E -i '' "s;<IOPS_PER_GB>;$IOPS_PER_GB;g" $DEPLOYMENT_FOLDER/storage-class.yaml
+sed -E -i '' "s;<NAMESPACE>;$NAMESPACE;g" $DEPLOYMENT_FOLDER/deployment-master.yaml
+
+sed -E -i '' "s;<IOPS_PER_GB_NORMAL>;$IOPS_PER_GB_NORMAL;g" $DEPLOYMENT_FOLDER/storage-class.yaml
+sed -E -i '' "s;<IOPS_PER_GB_SLOW>;$IOPS_PER_GB_SLOW;g" $DEPLOYMENT_FOLDER/storage-class.yaml
+sed -E -i '' "s;<IOPS_PER_GB_FAST>;$IOPS_PER_GB_FAST;g" $DEPLOYMENT_FOLDER/storage-class.yaml
 
 if [ "$LOCAL" != false ];
 then
@@ -212,4 +234,4 @@ then
 
 fi
 
-printf "\n\n${YELLOW}You can now change to $DEPLOYMENT_FOLDER and run ./provision.sh to provision the infrastructure on EKS.\n\n${RESET}"
+printf "\n\n${YELLOW}You can now change to $DEPLOYMENT_FOLDER and run ./provision.sh to provision the infrastructure on Kubernetes.\n\n${RESET}"

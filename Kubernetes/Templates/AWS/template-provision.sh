@@ -19,10 +19,15 @@ fi
 if [ "$COMMUNITY" == "false" ];
 then 
 
+    printf "\n\n${GREEN}Installing IKO on the cluster using Helm...${RESET}"
+    kubectl delete secret dockerhub-secret
+    kubectl create secret docker-registry dockerhub-secret  --docker-server=containers.intersystems.com --docker-username$DOCKER_USER --docker-password=DOCKER_PASSWORD
+
+
     #use helm install to install IKO on cluster (for now we depend on the user to have the file from which to install)
     printf "\n\n${GREEN}Installing IKO on the cluster using Helm...${RESET}"
     helm uninstall intersystems
-    helm install intersystems ../../IKO/iris_operator-2.0.0.222.0/chart/iris-operator
+    helm install intersystems ../../IKO/iris_operator-2.0.*/chart/iris-operator
     exit_if_error "Helm IKO installation failed"
 
     printf "\n\n${GREEN}Creating iris-key-secret on the cluster...${RESET}"
@@ -48,8 +53,8 @@ kubectl apply -f ./deployment-workers.yaml
 exit_if_error "Could not deploy workers"
 kubectl apply -f ./service-ui.yaml
 exit_if_error "Could not deploy service UI"
-sleep 4
+sleep 12
 kubectl apply -f ./iris-deployment.yaml
 exit_if_error "Could not deploy iris"
 
-
+kubectl port-forward svc/ui 4200:4200&
