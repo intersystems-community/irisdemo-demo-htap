@@ -5,7 +5,7 @@ metadata:
 provisioner: kubernetes.io/aws-ebs
 parameters:
   type: io1
-  iopsPerGB: "<IOPS_PER_GB_NORMAL"
+  iopsPerGB: "<IOPS_PER_GB_NORMAL>"
   fsType: ext4
 volumeBindingMode: WaitForFirstConsumer
 ---

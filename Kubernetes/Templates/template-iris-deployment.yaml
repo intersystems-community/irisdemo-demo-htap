@@ -12,14 +12,14 @@ spec:
     data:
       shards: <SHARDS>
       mirrored: <MIRROR>
-      image: intersystemsicm/iris:2020.3.0AA.331.0
+      image: angellopezque/iko:iris-2020.4.0.524.0
       preferredZones:
         - us-east-2b
         - us-east-2c
       podTemplate:
         spec:
           nodeSelector:
-            node-label: iris
+            speedtest/node-type: iris
           imagePullSecrets:
           - name: dockerhub-secret
           resources:
@@ -30,26 +30,26 @@ spec:
               app: htapirisdb
       updateStrategy:
         type: RollingUpdate
-      #storageDB:
-      storage:
+      storageDB:
+      # storage:
         accessModes:
           - ReadWriteOnce
         resources:
           requests:
             storage: <STORAGE_SIZE>G
         storageClassName: ssd-storage-class-normal
-      # storageWIJ:
-      #   resources:
-      #     requests:
-      #       storage: <WIJ_STORAGE_SIZE>G
-      #   storageClassName: ssd-storage-class-slow
-      # storageJournal1:
-      #   resources:
-      #     requests:
-      #       storage: <J1_STORAGE_SIZE>G
-      #   storageClassName: ssd-storage-class-slow
-      # storageJournal2:
-      #   resources:
-      #     requests:
-      #       storage: <J2_STORAGE_SIZE>G
-      #   storageClassName: ssd-storage-class-fast
+      storageWIJ:
+        resources:
+          requests:
+            storage: <WIJ_STORAGE_SIZE>G
+        storageClassName: ssd-storage-class-slow
+      storageJournal1:
+        resources:
+          requests:
+            storage: <J1_STORAGE_SIZE>G
+        storageClassName: ssd-storage-class-slow
+      storageJournal2:
+        resources:
+          requests:
+            storage: <J2_STORAGE_SIZE>G
+        storageClassName: ssd-storage-class-fast

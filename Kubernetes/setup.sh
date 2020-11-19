@@ -56,7 +56,7 @@ then
 
 else
     COMMUNITY=false
-    NAMESPACE=IRISCLUSTER
+    NAMESPACE=IRISDM
 
     printf "\n\n${GREEN}Enter your Docker Username: ${RESET}"
     read DOCKER_USER
@@ -223,13 +223,13 @@ sed -E -i '' "s;<IOPS_PER_GB_FAST>;$IOPS_PER_GB_FAST;g" $DEPLOYMENT_FOLDER/stora
 if [ "$LOCAL" != false ];
 then
     sed -E -i '' '/nodeSelector/d' $DEPLOYMENT_FOLDER/deployment-workers.yaml
-    sed -E -i '' '/node-label/d' $DEPLOYMENT_FOLDER/deployment-workers.yaml
+    sed -E -i '' '/node-type/d' $DEPLOYMENT_FOLDER/deployment-workers.yaml
 
     sed -E -i '' '/nodeSelector/d' $DEPLOYMENT_FOLDER/deployment-master.yaml
-    sed -E -i '' '/node-label/d' $DEPLOYMENT_FOLDER/deployment-master.yaml
+    sed -E -i '' '/node-type/d' $DEPLOYMENT_FOLDER/deployment-master.yaml
 
     sed -E -i '' '/nodeSelector/d' $DEPLOYMENT_FOLDER/deployment-ui.yaml
-    sed -E -i '' '/node-label/d' $DEPLOYMENT_FOLDER/deployment-ui.yaml
+    sed -E -i '' '/node-type/d' $DEPLOYMENT_FOLDER/deployment-ui.yaml
     
 
 fi

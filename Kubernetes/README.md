@@ -1,6 +1,6 @@
 # Running the HTAP Speed Test on Kubernetes
 
-We are using Kubernetes to deploy Intersystems IRIS and to provision the infrastructure for these Ingestions tests. In order to run IRIS on Kubernetes, you are going to need Kubectl, the Kubernetes Command-Line tool!
+We are using Kubernetes to deploy Intersystems IRIS and to provision the infrastructure for these Ingestions tests. In order to run IRIS on Kubernetes, you are going to need KubeCTL, the Kubernetes Command-Line tool!
 
 
 **This folder has scripts that are written to make running the HTAP demo on Kubernetes easy** 
@@ -18,8 +18,7 @@ On step 1, you use the provided scripts to:
 To run the HTAP Speed Test with InterSystems IRIS on AWS, you will need:
 * An AWS account
 * Git installed on your machine so you can clone this repository on your local PC
-* Docker Desktop installed on your machine (if you're running the test locally)
-* Kubectl (Minikube)
+* Docker Desktop or KubeCTL installed on your machine (if you're running the test locally)
 * An **InterSystems IRIS 2020 Advanced Server License WITH sharding**. 
 * IRIS Kubernetes Operator if using non-Community IRIS
 * Helm if using IKO
@@ -65,7 +64,25 @@ Now you can change into the new directory that the setup script gives you.
 
 Once there run **./provision** to setup everything into your local Kubernetes Cluster.
 
+Once it's finished, enter the following in your command line to access the UI:
+```bash
+kubectl port-forward svc/ui 4200:4200
+```
+
 Now you can go to **localhost:4200** to access the SpeedTest UI.
+
+**NOTE**
+We are forwarding the service's port to localhost for numerous reasons:
+* Ingress costs money
+* It spins up a LoadBalancer
+* Setting up the project becomes slower
+* Upon doing many tests, we found that it causes issues on cleanup, having some resources not be deleted.
+
+If you want to access the System Management Portal, you can port-forward the appropriate ports in the iris pod using KubeCTL. In order to do this, enter the following in your command line:
+
+```
+kubectl port-forward svc/htapirisdb 52773:52773
+```
 
 Once you're done, run **./unprovision** to remove everything from Kubernetes.
 
@@ -74,7 +91,7 @@ Once you're done, run **./unprovision** to remove everything from Kubernetes.
 ### 2.2.1 Installing Requirements
 
 You will need the following to run the test on Kubernetes in the cloud:
-* Kubectl
+* KubeCTL
 * Helm (only if you have a license key and want to run the SpeedTest on full IRIS)
 
 If you don't have **Docker Desktop** or **MiniKube** installed, you can just KubeCTL on your machine.
@@ -93,14 +110,8 @@ Put the iris.key file on the folder **./irisdemo-demo-htap/Kubernetes/license/**
 
 **Only if you are running the test on Full IRIS**
 
-Download IKO [here](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls?KEY=AIKO). **DOWNLOAD VERSION 2.0.0.222.0** Extract the folder inside and place it in **Kubernetes/IKO**. Go into **Kubernetes/IKO/iris_operator-2..../chart/values.yaml** and change it to match the following:
+Download IKO [here](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls?KEY=AIKO). **DOWNLOAD VERSION 2.1.0.2.0** Extract the folder inside and place it in **Kubernetes/IKO**.
 
-``` 
-operator:
-  registry: intersystemsicm
-  repository: iris-operator
-  tag: v2.0.0
-```
 
 ### 2.2.4 Configuring AWS Credentials
 
@@ -165,6 +176,26 @@ Now you can change into the new directory that the setup script gives you.
 
 Once there run **./provision** to setup everything into your Kubernetes Cluster. **THE CLUSTER PROVISIONING STEP CAN TAKE A VERY LONG TIME (30-40 minutes)**
 
+Once it's finished, enter the following in your command line to access the UI:
+```bash
+kubectl port-forward svc/ui 4200:4200
+```
+
 Now you can go to **localhost:4200** to access the SpeedTest UI.
+
+**NOTE**
+We are forwarding the service's port to localhost for numerous reasons:
+* Ingress costs money
+* It spins up a LoadBalancer
+* Setting up the project becomes slower
+* Upon doing many tests, we found that it causes issues on cleanup, having some resources not be deleted.
+
+If you want to access the System Management Portal, you can port-forward the appropriate ports in the iris-svc using KubeCTL. In order to do this, enter the following in your command line:
+
+```
+kubectl port-forward svc/htapirisdb 52773:52773
+```
+
+Now, you can go [here](http://localhost:52773/csp/sys/%25CSP.Portal.Home.zen?$NAMESPACE=%25SYS) and use the credentials **SuperUser** and **sys** to access it.
 
 Once you're done, run **./unprovision** to remove everything from Kubernetes.

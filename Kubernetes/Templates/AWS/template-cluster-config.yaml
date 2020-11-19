@@ -6,25 +6,25 @@ metadata:
 availabilityZones: ["us-east-2a", "us-east-2b", "us-east-2c"]
 nodeGroups:
 - name: iris-nodes
-  labels: { node-label: iris }
+  labels: { speedtest/node-type: iris }
   instanceType: <IRIS_INSTANCE_TYPE>
   minSize: <INSTANCES>
   maxSize: <INSTANCES>
   desiredCapacity: <INSTANCES>
 - name: masterui-group
-  labels: { node-label: master-ui }
+  labels: { speedtest/node-type: master-ui }
   instanceType: c5.xlarge
   minSize: 1
   maxSize: 1
   desiredCapacity: 1
 - name: ingest-group
-  labels: { node-label: ingest }
+  labels: { speedtest/node-type: ingest }
   instanceType: c5.xlarge
   minSize: <HTAP_INGESTION_WORKERS>
   maxSize: <HTAP_INGESTION_WORKERS>
   desiredCapacity: <HTAP_INGESTION_WORKERS>
 - name: query-group
-  labels: { node-label: query }
+  labels: { speedtest/node-type: query }
   instanceType: c5.xlarge
   minSize: <HTAP_QUERY_WORKERS>
   maxSize: <HTAP_QUERY_WORKERS>

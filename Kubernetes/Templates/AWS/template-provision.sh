@@ -21,13 +21,13 @@ then
 
     printf "\n\n${GREEN}Installing IKO on the cluster using Helm...${RESET}"
     kubectl delete secret dockerhub-secret
-    kubectl create secret docker-registry dockerhub-secret  --docker-server=containers.intersystems.com --docker-username$DOCKER_USER --docker-password=DOCKER_PASSWORD
+    kubectl create secret docker-registry dockerhub-secret --docker-username=$DOCKER_USER --docker-password=$DOCKER_PASSWORD
 
 
     #use helm install to install IKO on cluster (for now we depend on the user to have the file from which to install)
     printf "\n\n${GREEN}Installing IKO on the cluster using Helm...${RESET}"
     helm uninstall intersystems
-    helm install intersystems ../../IKO/iris_operator-2.0.*/chart/iris-operator
+    helm install intersystems ../../IKO/iris_operator-2.1.*/chart/iris-operator --set operator.registry=angellopezque,operator.repository=iko,operator.tag=iko-2.1.0.2.0
     exit_if_error "Helm IKO installation failed"
 
     printf "\n\n${GREEN}Creating iris-key-secret on the cluster...${RESET}"
@@ -57,4 +57,4 @@ sleep 12
 kubectl apply -f ./iris-deployment.yaml
 exit_if_error "Could not deploy iris"
 
-kubectl port-forward svc/ui 4200:4200&
+# kubectl port-forward svc/ui 4200:4200&

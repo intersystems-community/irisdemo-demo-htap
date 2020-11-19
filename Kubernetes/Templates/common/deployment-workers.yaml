@@ -15,7 +15,7 @@ spec:
         app: ingestion-worker-pod
     spec:
       nodeSelector:
-        node-label: ingest
+        speedtest/node-type: ingest
       containers:
       - name: ingestion-worker-container
         image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.5.2
@@ -45,7 +45,7 @@ spec:
         app: query-worker-pod
     spec:
       nodeSelector:
-        node-label: query
+        speedtest/node-type: query
       containers:
       - name: query-worker-container
         image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.5.2
