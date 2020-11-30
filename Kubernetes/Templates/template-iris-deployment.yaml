@@ -14,6 +14,7 @@ spec:
       mirrored: <MIRROR>
       image: angellopezque/iko:iris-2020.4.0.524.0
       preferredZones:
+        - us-east-2a
         - us-east-2b
         - us-east-2c
       podTemplate:
