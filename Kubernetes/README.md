@@ -91,6 +91,7 @@ Once you're done, run **./unprovision** to remove everything from Kubernetes.
 ### 2.2.1 Installing Requirements
 
 You will need the following to run the test on Kubernetes in the cloud:
+* EKSCTL
 * KubeCTL
 * Helm (only if you have a license key and want to run the SpeedTest on full IRIS)
 
