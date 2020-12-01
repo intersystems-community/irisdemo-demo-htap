@@ -76,6 +76,7 @@ else
         MIRROR=true
         mirrors=2
     else
+        NAMESPACE=USER
         MIRROR=false
         mirrors=1
     fi
