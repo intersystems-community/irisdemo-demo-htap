@@ -56,7 +56,11 @@ You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here
 
 Follow [this link](/ICM/README.md) to see instructions on how to run this Speed Test on AWS comparing InterSystems IRIS with other databases such as SAP HANA and AWS Aurora.
 
-## 2 - How to run it on your PC
+## 2 - Running the Speed Test on Kubernetes
+
+Follow [this link](/Kubernetes/README.md) to see instructions on how to run this Speed Test on Kubernetes. 
+
+## 3 - How to run it on your PC
 
 The pre-requisites for running the speed test on your PC are:
 * Docker and Docker Compose
@@ -64,7 +68,7 @@ The pre-requisites for running the speed test on your PC are:
 
 You can currently run this demo on your PC with InterSystems IRIS, MySQL, SqlServer and SAP HANA.
 
-### 2.1 - Run it with InterSystems IRIS Community
+### 3.1 - Run it with InterSystems IRIS Community
 
 To run the demo on your PC, make sure you have Docker installed on your machine. You can quickly get it up and running with the following commands on your Mac or Linux PC:
 
@@ -115,7 +119,7 @@ docker-compose rm
 
 This is important, specially if you are going back and forth between running the speed test on one database (say InterSystems IRIS) and some other (say MySQL).
 
-### 2.2 - MySQL or MariaDB on your PC
+### 3.2 - MySQL or MariaDB on your PC
 
 To run this demo against MySQL:
 
@@ -139,7 +143,7 @@ In our tests, we found InterSystems IRIS to ingest data 25X faster than MySQL an
 
 There is a **docker-compose-mariadb.yml** file for **MariaDB** as well.
 
-### 2.3 - SQL Server 2019-GA-ubuntu-16.04 on your PC
+### 3.3 - SQL Server 2019-GA-ubuntu-16.04 on your PC
 
 To run this demo against SQL Server:
 
@@ -152,7 +156,7 @@ As before, leave this terminal window open and open a browser at http://localhos
 
 In our tests running on a local PC, we found InterSystems IRIS to ingest data 2.5X faster than SQL Server while query rates were 400X faster! We will test it against AWS RDS SQL Server and report.
 
-### 2.4 - SAP Hana on your PC
+### 3.4 - SAP Hana on your PC
 
 To run the speed test with SAP HANA on your PC you will need:
 * A VM with Ubuntu 18 VM, docker and docker-compose - because SAP HANA requires some changes to the Linux Kernel parameters that we otherwise couldn't do using Docker for Mac or Docker for Windows. Also, SAP HANA requires a Linux Kernel version 4 or superior.
@@ -172,11 +176,11 @@ As you can see, it is not just a matter of running docker-compose up as it is wi
 
 In our tests running the Speed Test on a VM, we found InterSystems IRIS to be 1.3X faster than SAP HANA for ingesting data, and 20X faster for querying data, and uses a fraction of the memory. 
 
-## 3 - Resources
+## 4 - Resources
 
 A video about this demo is in the works! In the meantime, [here](https://www.intersystems.com/resources/detail/a-superior-alternative-to-in-memory-databases-and-key-value-stores/) is an interesting article that talks about InterSystems IRIS architecture and what makes it faster.
 
-## 4 - How does this benchmark compare against standard benchmarks such as sysbench, YCSB or TPC-H?
+## 5 - How does this benchmark compare against standard benchmarks such as sysbench, YCSB or TPC-H?
 
 The open source [sysbench](https://github.com/akopytov/sysbench) tool can certainly be extended but as of now it can only be used to test MySQL, PostgreSQL and other databases that are based on MySQL (ex.: AWS Aurora) or implement MySQL wire protocol. We could certainly modify it to test other databases but we wanted to use JDBC (not the C based driver that sysbench is using) and we needed the tool to be less dependent of the backend database for metrics collection. 
 
@@ -219,7 +223,7 @@ InterSystems IRIS is a hybrid database. As with traditional databases, it will a
   * Perform well at ingestion during the first minutes of the test as memory fills up, compression becomes harder and writing to disk becomes unavoidable
   * Perform poorly at querying since the system will be too busy with ingestion, compressing data, moving data out of memory, etc. 
 
-## 5 - Can I see the table?
+## 6 - Can I see the table?
 
 Here is the the statement we send to all databases we support:
 
@@ -255,7 +259,7 @@ End-to-end performance has to do with the fact that some JDBC drivers have optmi
 
 To proove that we are actually reading the columns we are SELECTing, we sum up the bytes of all the filds reeturned as **proof of work**.
 
-## 6 - How do you achieve maximum throughput on ingestion and querying?
+## 7 - How do you achieve maximum throughput on ingestion and querying?
 
 To achieve maximum throughput, each ingestion worker will start multiple threads that each will:
 - Prepare a set of 1000 random values for each column of the table above. This is done because each column can have a different data type and a different size. So we want to genererate records that can vary accordingly
@@ -266,13 +270,13 @@ The default number of ingestion worker threads is 15. But it can be changed duri
 
 The query workers, on the other hand, also start multiple threads to query as many records as possible. But as we explained above, we are also providing **proof of work**. We are reading the columns returned and summing up the number of bytes read to make sure the data is actually traveling from the database, through the wire and into the query worker. That is to avoid optimizations implemented by some JDBC drivers that will only bring the data over the wire if it is actually used. We are actually consuming the data returned and providing a sum of MB read/s and total number of MB read as proof of it.
 
-## 7 - How much space does InterSystems IRIS take on disk?
+## 8 - How much space does InterSystems IRIS take on disk?
 
 I filled up a 70Gb DATA file system after ingesting 171,421,000 records. That would mean that each records would take an avergage of 439 bytes (rounding up).
 
 I also filled 100% of my first journal directory and about 59% of the second. Both filesystems had 100Gb which means that 171,421,000 would take about 159Gb of journal space or that each records would take an average of 996 bytes. 
 
-## 6 - Architecture of the HTAP Demo
+## 9 - Architecture of the HTAP Demo
 
 The architecture of the HTAP demo is shown below:
 
@@ -294,7 +298,7 @@ When running the demo on our PCs, we use Docker and Docker Compose. Docker Compo
 * **docker-compose-sqlserver.yml** - This is the speed test against SqlServer for Dockers. 
 * **docker-compose-enterprise-iris.yml** - If you want to run the speed test demo on InterSystems IRIS standard, there is an example of a docker-compose.yml file for it.
 
-## 7 - Can I run this without containers against a random InterSystems IRIS Cluster?
+## 10 - Can I run this without containers against a random InterSystems IRIS Cluster?
 
 Yes! The easiest way to get this done is to clone this repo on each server where you are planning on running the master and the UI (they run on the same server) and on each worker type (ingestion and query workers). You may have as many ingestion workers and query workers as you want! 
 
@@ -313,13 +317,13 @@ What about InterSystems IRIS? You have two choices:
 
 Just make sure you change your start_master.sh script to configure the environment variables with the correct InterSystems IRIS end points, usernames and passwords.
 
-## 8 - Customizations
+## 11 - Customizations
 
-### 8.1 - How do I configure this demo to run with more workers, threads, etc?
+### 11.1 - How do I configure this demo to run with more workers, threads, etc?
 
 Look at the docker-compose.yml file and you will notice environment variables that will allow you to configure everything. The provided docker-compose yml files are just good starting points. You can copy them and change your copies to have more workers (it won't make a lot of difference if you are running on your PC), higher number of threads per worker type, change the ingestion batch size, wait time in milliseconds between queries on the consumter, etc.
 
-### 8.2 - Can I change the table name or structure?
+### 11.2 - Can I change the table name or structure?
 
 Yes, but you will have to:
 * Fork this repo on your PC
@@ -336,7 +340,7 @@ Then, change the other *.sql scripts to match your changes. The INSERT script, t
 
 Finally, just run the build.sh to rebuild the demo and you should be ready to go!
 
-## 9 - Documentation about the columns on the Results CSV file
+## 12 - Documentation about the columns on the Results CSV file
 
 After running a test, the UI will allow you to download the test results as a CSV file. Here is what the columns on the Results CSV file mean:
 * Ingestion:
@@ -359,7 +363,7 @@ After running a test, the UI will allow you to download the test results as a CS
   - **queryAndConsumptionTimeInMs** - Instantaneous time taken to fetch a single record from the database and process it (sum the number of bytes fetched) measured in milliseconds.
   - **avgQueryAndConsumptionTimeInMs** - Average time taken to fetch a single record form the database and process it considering the total number of records fetched and how long the test has been running in milliseconds.
 
-## 10 - Other demo applications
+## 13 - Other demo applications
 
 There are other InterSystems IRIS demo applications that touch different subjects such as NLP, ML, Integration with AWS services, Twitter services, performance benchmarks etc. Here are some of them:
 * [HTAP Demo](https://github.com/intersystems-community/irisdemo-demo-htap) - Hybrid Transaction-Analytical Processing benchmark. See how fast InterSystems IRIS can insert and query at the same time. You will notice it is up to 20x faster than AWS Aurora!
@@ -368,7 +372,7 @@ There are other InterSystems IRIS demo applications that touch different subject
 * [HL7 Appointments and SMS (text messages) application](https://github.com/intersystems-community/irisdemo-demo-appointmentsms) -  Shows how InterSystems IRIS for Health can be used to parse HL7 appointment messages to send SMS (text messages) appointment reminders to patients. It also shows real time dashboards based on appointments data stored in a normalized data lake.
 * [The Readmission Demo](https://github.com/intersystems-community/irisdemo-demo-readmission) - Patient Readmissions are said to be the "Hello World of Machine Learning" in Healthcare. On this demo, we use this problem to show how InterSystems IRIS can be used to **safely build and operationalize** ML models for real time predictions and how this can be integrated into a random application. This **InterSystems IRIS for Health** demo seeks to show how a full solution for this problem can be built.
 
-## 11 - Supported Databases
+## 14 - Supported Databases
 
 Here is the list of the supported databases so far:
 
@@ -389,10 +393,10 @@ Here is the list of the supported databases so far:
   - SAP Sybase ASE 16.0 SP03 PL08, public cloud edition, premium version, without replication
   - AWS RDS Oracle (production deployment) with replication
 
-## 12 - Report any Issues
+## 15 - Report any Issues
   
 Please, report any issues on the [Issues section](https://github.com/intersystems-community/irisdemo-demo-htap/issues).
 
-## 13 - Check the Change Log
+## 16 - Check the Change Log
 
 All the changes to this project are logged [here](CHANGELOG.md).
