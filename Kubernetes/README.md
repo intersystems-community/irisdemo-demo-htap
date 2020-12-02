@@ -92,9 +92,9 @@ Once you're done, run **./unprovision** to remove everything from Kubernetes.
 ### 2.2.1 Installing Requirements
 
 You will need the following to run the test on Kubernetes in the cloud:
-* EKSCTL
-* KubeCTL
-* Helm (only if you have a license key and want to run the SpeedTest on full IRIS)
+* [EKSCTL](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
+* [KubeCTL](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+* [Helm](https://helm.sh/docs/intro/install/) (only if you have a license key and want to run the SpeedTest on full IRIS)
 
 If you don't have **Docker Desktop** or **MiniKube** installed, you can just install KubeCTL on your machine.
 
