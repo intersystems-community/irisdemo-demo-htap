@@ -27,7 +27,7 @@ then
     #use helm install to install IKO on cluster (for now we depend on the user to have the file from which to install)
     printf "\n\n${GREEN}Installing IKO on the cluster using Helm...${RESET}"
     helm uninstall intersystems
-    helm install intersystems ../../IKO/iris_operator-2.1.*/chart/iris-operator --set operator.registry=angellopezque,operator.repository=iko,operator.tag=iko-2.1.0.2.0
+    helm install intersystems ../../IKO/iris_operator-2.1.0.7*/chart/iris-operator --set operator.registry=angellopezque,operator.repository=iko,operator.tag=iko-2.1.0.7.0
     exit_if_error "Helm IKO installation failed"
 
     printf "\n\n${GREEN}Creating iris-key-secret on the cluster...${RESET}"

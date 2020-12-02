@@ -22,6 +22,7 @@ To run the HTAP Speed Test with InterSystems IRIS on AWS, you will need:
 * An **InterSystems IRIS 2020 Advanced Server License WITH sharding**. 
 * IRIS Kubernetes Operator if using non-Community IRIS
 * Helm if using IKO
+* EKSCTL 
 
 If you are a supported InterSystems customer, you can download an InterSystems IRIS license from the [Evaluation Service](https://evaluation.intersystems.com).
 
@@ -95,7 +96,7 @@ You will need the following to run the test on Kubernetes in the cloud:
 * KubeCTL
 * Helm (only if you have a license key and want to run the SpeedTest on full IRIS)
 
-If you don't have **Docker Desktop** or **MiniKube** installed, you can just KubeCTL on your machine.
+If you don't have **Docker Desktop** or **MiniKube** installed, you can just install KubeCTL on your machine.
 
 
 ### 2.2.2 Copy the InterSystems IRIS license key
@@ -111,7 +112,7 @@ Put the iris.key file on the folder **./irisdemo-demo-htap/Kubernetes/license/**
 
 **Only if you are running the test on Full IRIS**
 
-Download IKO [here](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls?KEY=AIKO). **DOWNLOAD VERSION 2.1.0.2.0** Extract the folder inside and place it in **Kubernetes/IKO**.
+Download IKO [here](https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls?KEY=AIKO). **DOWNLOAD VERSION 2.1.0.7.0** Extract the folder inside and place it in **Kubernetes/IKO**.
 
 
 ### 2.2.4 Configuring AWS Credentials
@@ -125,7 +126,7 @@ aws_secret_access_key = dsfsDFSDFSDSD4534534FDG4FDGD
 aws_session_token = A_VERY_LARGE_STRING_ENDED_WITH==
 ```
 
-### 2.2.5 Runnint the SpeedTest
+### 2.2.5 Running the SpeedTest
 
 Now that you're setup, go into to **./irisdemo-demo-htap/Kubernetes/**. From there, you will see a script called setup.sh. Run it, and go through the steps in the script. **If you do not have a license key and will not be running the test on full IRIS, answer yes to running the test on IRIS Community.**
 
@@ -200,3 +201,5 @@ kubectl port-forward svc/htapirisdb 52773:52773
 Now, you can go [here](http://localhost:52773/csp/sys/%25CSP.Portal.Home.zen?$NAMESPACE=%25SYS) and use the credentials **SuperUser** and **sys** to access it.
 
 Once you're done, run **./unprovision** to remove everything from Kubernetes.
+
+If **./unprovision** fails, run it again.

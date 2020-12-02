@@ -56,7 +56,7 @@ then
 
 else
     COMMUNITY=false
-    NAMESPACE=IRISDM
+    NAMESPACE=IRISCLUSTER
 
     printf "\n\n${GREEN}Enter your Docker Username: ${RESET}"
     read DOCKER_USER
@@ -76,7 +76,7 @@ else
         MIRROR=true
         mirrors=2
     else
-        NAMESPACE=USER
+        NAMESPACE=IRISCLUSTER
         MIRROR=false
         mirrors=1
     fi
@@ -205,8 +205,12 @@ sed -E -i '' "s;<IRIS_INSTANCE_TYPE>;$IRIS_INSTANCE_TYPE;g" $DEPLOYMENT_FOLDER/c
 sed -E -i '' "s;<INSTANCES>;$INSTANCES;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
 sed -E -i '' "s;<HTAP_INGESTION_WORKERS>;$HTAP_INGESTION_WORKERS;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
 sed -E -i '' "s;<HTAP_QUERY_WORKERS>;$HTAP_QUERY_WORKERS;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
-
-sed -E -i '' "s;<SHARDS>;$SHARDS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
+if [ "$SHARDING" == true ];
+then
+    sed -E -i '' "s;<SHARDS>;$SHARDS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
+else
+    sed -E -i '' '/<SHARDS>/d' $DEPLOYMENT_FOLDER/iris-deployment.yaml
+fi
 sed -E -i '' "s;<STORAGE_SIZE>;$STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<WIJ_STORAGE_SIZE>;$WIJ_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<J1_STORAGE_SIZE>;$J1_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
@@ -220,6 +224,7 @@ sed -E -i '' "s;<NAMESPACE>;$NAMESPACE;g" $DEPLOYMENT_FOLDER/deployment-master.y
 sed -E -i '' "s;<IOPS_PER_GB_NORMAL>;$IOPS_PER_GB_NORMAL;g" $DEPLOYMENT_FOLDER/storage-class.yaml
 sed -E -i '' "s;<IOPS_PER_GB_SLOW>;$IOPS_PER_GB_SLOW;g" $DEPLOYMENT_FOLDER/storage-class.yaml
 sed -E -i '' "s;<IOPS_PER_GB_FAST>;$IOPS_PER_GB_FAST;g" $DEPLOYMENT_FOLDER/storage-class.yaml
+
 
 if [ "$LOCAL" != false ];
 then

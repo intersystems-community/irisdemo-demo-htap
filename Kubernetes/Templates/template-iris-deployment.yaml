@@ -8,49 +8,48 @@ spec:
     name: iris-key-secret
   configSource:
     name: iris-cpf
+  imagePullSecrets:
+    - name: dockerhub-secret
   topology:
     data:
       shards: <SHARDS>
       mirrored: <MIRROR>
       image: angellopezque/iko:iris-2020.4.0.524.0
+      updateStrategy:
+        type: RollingUpdate
       preferredZones:
         - us-east-2a
         - us-east-2b
         - us-east-2c
+      storageDB:
+        resources:
+          requests:
+            storage: <STORAGE_SIZE>Gi
+        storageClassName: ssd-storage-class-normal
+      storageWIJ:
+        resources:
+          requests:
+            storage: <WIJ_STORAGE_SIZE>Gi
+        storageClassName: ssd-storage-class-fast
+      storageJournal1:
+        resources:
+          requests:
+            storage: <J1_STORAGE_SIZE>Gi
+        storageClassName: ssd-storage-class-slow
+      storageJournal2:
+        resources:
+          requests:
+            storage: <J2_STORAGE_SIZE>Gi
+        storageClassName: ssd-storage-class-slow
       podTemplate:
         spec:
           nodeSelector:
             speedtest/node-type: iris
-          imagePullSecrets:
-          - name: dockerhub-secret
           resources:
             requests:
               cpu: <CPUS>
           selector:
             matchLabels:
               app: htapirisdb
-      updateStrategy:
-        type: RollingUpdate
-      storageDB:
-      # storage:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: <STORAGE_SIZE>G
-        storageClassName: ssd-storage-class-normal
-      storageWIJ:
-        resources:
-          requests:
-            storage: <WIJ_STORAGE_SIZE>G
-        storageClassName: ssd-storage-class-slow
-      storageJournal1:
-        resources:
-          requests:
-            storage: <J1_STORAGE_SIZE>G
-        storageClassName: ssd-storage-class-slow
-      storageJournal2:
-        resources:
-          requests:
-            storage: <J2_STORAGE_SIZE>G
-        storageClassName: ssd-storage-class-fast
+      
+      
