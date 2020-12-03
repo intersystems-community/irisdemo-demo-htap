@@ -1,3 +1,8 @@
+## 2.5.3 (December 03, 2020)
+ - Adding support for Kubernetes
+ - Bumping to IRIS base image 1.7.1 because of messages.log problem.
+ - Making workers exist after an exception so that Kubernetes can restart the container for us.
+
 ## 2.5.2 (October 14, 2020)
   - Making workers register with their IP addresses so that HTAP Demo can work on Kubernetes.
 
