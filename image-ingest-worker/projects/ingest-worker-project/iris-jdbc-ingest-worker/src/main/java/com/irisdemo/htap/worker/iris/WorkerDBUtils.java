@@ -241,7 +241,10 @@ public class WorkerDBUtils
 			"	Set tNS = $Namespace \n" +
 			"	Try { \n" +
 			"		Set $Namespace=\"%SYS\" \n" +
-			"       Set tSC = ##class(Config.Databases).Get(tNS, .properties) \n"+
+			"       Set tSC=##Class(Config.Namespaces).Get(tNS,.NSProperties) \n" +
+			"		Quit:$$$ISERR(tSC)\n" +
+			"       Set tDBName=NSProperties(\"Globals\") \n" +
+			"       Set tSC = ##class(Config.Databases).Get(tDBName, .properties) \n"+
 			"		Quit:$$$ISERR(tSC)\n" +
 			"		\n" +
 			"		Set dir=properties(\"Directory\")\n" +

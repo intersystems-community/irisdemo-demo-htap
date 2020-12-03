@@ -185,7 +185,7 @@ public class PostgresWorker implements IWorker
 		catch (SQLException sqlException) 
 		{
 			logger.error("Exception while running consumer query: " + sqlException.getMessage());
-			throw sqlException;
+			System.exit(-1);
 		} 
 		catch (InterruptedException e) 
 		{

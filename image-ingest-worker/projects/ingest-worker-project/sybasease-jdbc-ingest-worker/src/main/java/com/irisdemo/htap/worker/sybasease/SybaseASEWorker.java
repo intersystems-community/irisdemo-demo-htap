@@ -102,7 +102,8 @@ public class SybaseASEWorker implements IWorker
 		} 
     	catch (SQLException sqlException) 
     	{
-			throw sqlException;
+			logger.error("Ingestion worker #"+threadNum+" crashed with the following error:" + sqlException.getMessage());
+			System.exit(-1);
 		} 
 		catch (InterruptedException e) 
 		{
