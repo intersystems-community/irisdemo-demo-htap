@@ -5,8 +5,6 @@ source ../../utils.sh
 #Iris Deployment uninstalled as per https://docs.intersystems.com/irisforhealthlatest/csp/docbook/DocBook.UI.Page.cls?KEY=AIKO
 #
 
-kill $!
-
 #REMOVING IRIS FIRST
 printf "\n\n${GREEN}Deleting IRIS from cluster...${RESET}"
 kubectl delete -f ./iris-deployment.yaml

@@ -1,17 +1,18 @@
 # Running the HTAP Speed Test on Kubernetes
 
-We are using Kubernetes to deploy Intersystems IRIS and to provision the infrastructure for these Ingestions tests. In order to run IRIS on Kubernetes, you are going to need KubeCTL, the Kubernetes Command-Line tool!
+This guide provide instructions on how to run the HTAP Speed Test with InterSystems IRIS on a Kubernetes cluster on AWS (using EKS).
 
+For now, although possible, we have not documented the instructions of how to run the Speed Test on Kubernetes with other databases. 
 
-**This folder has scripts that are written to make running the HTAP demo on Kubernetes easy** 
+As when running the Speed Test with ICM, we have created shell scripts that will help the user to create a deployment folder with all 
+that is needed to deploy the full Speed Test on EKS.
 
 Here is how it will work:
 
-On step 1, you use the provided scripts to:
-* Setup the speedtest according to the selections you make.
-* Provision the Kubernetes cluster, with the appropriate machines.
-* Deploy InterSystems IRIS on the Kubernetes cluster
-* Deploy The Speed Test for InterSystems IRIS on this cluster.
+* Setup - Run the setup.sh script and answer a questionnaire about the size of the machines you want, if you want mirroring or not and the number of workers. The setup script will create a folder with everything you need to deploy your cluster.
+* Provision - Go to the folder that was created by the setup script and run the provision.sh script to get your Kubernetes cluster created for you
+* Deploy - On the same folder, Deploy InterSystems IRIS and the Speed Test on the Kubernetes cluster
+* Test - Run the speed test!
 
 # Pre-Requisites
 
@@ -63,7 +64,7 @@ You can now change to Deployments/<MACHINE LABEL> and run ./provision.sh to prov
 
 Now you can change into the new directory that the setup script gives you. 
 
-Once there run **./provision** to setup everything into your local Kubernetes Cluster.
+Once there run **./provision.sh** to setup everything into your local Kubernetes Cluster.
 
 Once it's finished, enter the following in your command line to access the UI:
 ```bash
@@ -85,7 +86,9 @@ If you want to access the System Management Portal, you can port-forward the app
 kubectl port-forward svc/htapirisdb 52773:52773
 ```
 
-Once you're done, run **./unprovision** to remove everything from Kubernetes.
+The you should be able to open the management portal at the URL http://localhost:52773/csp/sys/UtilHome.csp.
+
+Once you're done, run **./unprovision.sh** to remove everything from your local Kubernetes.
 
 ## 2.2 Running the Test on EKS
 

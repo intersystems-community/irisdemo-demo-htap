@@ -9,4 +9,4 @@ spec:
   ports:
     - protocol: TCP
       port: 4200
-      nodePort: 30000
+      nodePort: 30000 ## needs to be above 30000

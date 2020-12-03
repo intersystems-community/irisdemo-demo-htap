@@ -111,10 +111,7 @@ exit_if_empty $HTAP_QUERY_WORKERS
 
 echo "export HTAP_QUERY_WORKERS=$HTAP_QUERY_WORKERS" >> $DEPLOYMENT_FOLDER/envar.sh
 
-
-
-
-if [ "$irisLocalAnswer" != "yes" ];
+if [ "$COMMUNITY" == false ];
 then 
     #
     #
@@ -156,10 +153,10 @@ then
     source $DEPLOYMENT_FOLDER/envar.sh
 
     cp ./Templates/AWS/instances/$INSTANCE_TYPE/data.cpf $DEPLOYMENT_FOLDER/data.cpf
+
 fi
 
-
-
+## Finish completing envar.sh
 echo "LOCAL=$LOCAL" >> $DEPLOYMENT_FOLDER/envar.sh
 echo "CLUSTER_LABEL=$CLUSTER_LABEL" >> $DEPLOYMENT_FOLDER/envar.sh
 echo "COMMUNITY=$COMMUNITY" >> $DEPLOYMENT_FOLDER/envar.sh
@@ -170,47 +167,48 @@ echo "INSTANCES=$INSTANCES" >> $DEPLOYMENT_FOLDER/envar.sh
 echo "DOCKER_USER=$DOCKER_USER" >> $DEPLOYMENT_FOLDER/envar.sh
 echo "DOCKER_PASSWORD=$DOCKER_PASSWORD" >> $DEPLOYMENT_FOLDER/envar.sh
 
+## Copying the rest of the templates and replacing parameterized values
 
-
-cp ./Templates/AWS/template-cluster-config.yaml $DEPLOYMENT_FOLDER/cluster-config.yaml
-cp ./Templates/AWS/template-storage-class.yaml $DEPLOYMENT_FOLDER/storage-class.yaml
-cp ./Templates/AWS/template-service-ui.yaml $DEPLOYMENT_FOLDER/service-ui.yaml
-
-cp ./Templates/common/deployment-master.yaml $DEPLOYMENT_FOLDER/deployment-master.yaml
-cp ./Templates/common/deployment-ui.yaml $DEPLOYMENT_FOLDER/deployment-ui.yaml
-cp ./Templates/common/deployment-workers.yaml $DEPLOYMENT_FOLDER/deployment-workers.yaml
-
-cp ./Templates/AWS/template-provision.sh $DEPLOYMENT_FOLDER/provision.sh
-chmod +x $DEPLOYMENT_FOLDER/provision.sh
-cp ./Templates/AWS/template-unprovision.sh $DEPLOYMENT_FOLDER/unprovision.sh
-chmod +x $DEPLOYMENT_FOLDER/unprovision.sh
-
-
-if [ "$COMMUNITY" == "true" ];
+if [ "$irisLocalAnswer" == "yes" ];
 then
-    cp ./Templates/template-community-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
+    # Local templates
+    cp ./Templates/local-community/template-iris-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
 else
-    cp ./Templates/template-iris-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
+    # AWS templates
+
+    cp ./Templates/AWS/template-cluster-config.yaml $DEPLOYMENT_FOLDER/cluster-config.yaml
+    sed -E -i '' "s;<CLUSTER_LABEL>;$CLUSTER_LABEL;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
+    sed -E -i '' "s;<IRIS_INSTANCE_TYPE>;$IRIS_INSTANCE_TYPE;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
+    sed -E -i '' "s;<INSTANCES>;$INSTANCES;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
+    sed -E -i '' "s;<HTAP_INGESTION_WORKERS>;$HTAP_INGESTION_WORKERS;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
+    sed -E -i '' "s;<HTAP_QUERY_WORKERS>;$HTAP_QUERY_WORKERS;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
+
+    cp ./Templates/AWS/template-storage-class.yaml $DEPLOYMENT_FOLDER/storage-class.yaml
+    sed -E -i '' "s;<IOPS_PER_GB_NORMAL>;$IOPS_PER_GB_NORMAL;g" $DEPLOYMENT_FOLDER/storage-class.yaml
+    sed -E -i '' "s;<IOPS_PER_GB_SLOW>;$IOPS_PER_GB_SLOW;g" $DEPLOYMENT_FOLDER/storage-class.yaml
+    sed -E -i '' "s;<IOPS_PER_GB_FAST>;$IOPS_PER_GB_FAST;g" $DEPLOYMENT_FOLDER/storage-class.yaml
+
+    cp ./Templates/AWS/template-iris-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
+
 fi
 
+# Common templates
+cp ./Templates/common/template-service-ui.yaml $DEPLOYMENT_FOLDER/service-ui.yaml
+cp ./Templates/common/template-deployment-master.yaml $DEPLOYMENT_FOLDER/deployment-master.yaml
+cp ./Templates/common/template-deployment-ui.yaml $DEPLOYMENT_FOLDER/deployment-ui.yaml
+cp ./Templates/common/template-deployment-workers.yaml $DEPLOYMENT_FOLDER/deployment-workers.yaml
+cp ./Templates/common/template-provision.sh $DEPLOYMENT_FOLDER/provision.sh
+chmod +x $DEPLOYMENT_FOLDER/provision.sh
+cp ./Templates/common/template-unprovision.sh $DEPLOYMENT_FOLDER/unprovision.sh
+chmod +x $DEPLOYMENT_FOLDER/unprovision.sh
 
-
-
-#
-# Filling values in the yaml files in the deployment folder
-#
-
-sed -E -i '' "s;<CLUSTER_LABEL>;$CLUSTER_LABEL;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
-sed -E -i '' "s;<IRIS_INSTANCE_TYPE>;$IRIS_INSTANCE_TYPE;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
-sed -E -i '' "s;<INSTANCES>;$INSTANCES;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
-sed -E -i '' "s;<HTAP_INGESTION_WORKERS>;$HTAP_INGESTION_WORKERS;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
-sed -E -i '' "s;<HTAP_QUERY_WORKERS>;$HTAP_QUERY_WORKERS;g" $DEPLOYMENT_FOLDER/cluster-config.yaml
 if [ "$SHARDING" == true ];
 then
     sed -E -i '' "s;<SHARDS>;$SHARDS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 else
     sed -E -i '' '/<SHARDS>/d' $DEPLOYMENT_FOLDER/iris-deployment.yaml
 fi
+
 sed -E -i '' "s;<STORAGE_SIZE>;$STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<WIJ_STORAGE_SIZE>;$WIJ_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<J1_STORAGE_SIZE>;$J1_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
@@ -218,13 +216,7 @@ sed -E -i '' "s;<J2_STORAGE_SIZE>;$J2_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-de
 sed -E -i '' "s;<MIRROR>;$MIRROR;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<CPUS>;$CPUS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 
-
 sed -E -i '' "s;<NAMESPACE>;$NAMESPACE;g" $DEPLOYMENT_FOLDER/deployment-master.yaml
-
-sed -E -i '' "s;<IOPS_PER_GB_NORMAL>;$IOPS_PER_GB_NORMAL;g" $DEPLOYMENT_FOLDER/storage-class.yaml
-sed -E -i '' "s;<IOPS_PER_GB_SLOW>;$IOPS_PER_GB_SLOW;g" $DEPLOYMENT_FOLDER/storage-class.yaml
-sed -E -i '' "s;<IOPS_PER_GB_FAST>;$IOPS_PER_GB_FAST;g" $DEPLOYMENT_FOLDER/storage-class.yaml
-
 
 if [ "$LOCAL" != false ];
 then
@@ -237,7 +229,6 @@ then
     sed -E -i '' '/nodeSelector/d' $DEPLOYMENT_FOLDER/deployment-ui.yaml
     sed -E -i '' '/node-type/d' $DEPLOYMENT_FOLDER/deployment-ui.yaml
     
-
 fi
 
 printf "\n\n${YELLOW}You can now change to $DEPLOYMENT_FOLDER and run ./provision.sh to provision the infrastructure on Kubernetes.\n\n${RESET}"
