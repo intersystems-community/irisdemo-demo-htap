@@ -14,7 +14,7 @@ spec:
     data:
       shards: <SHARDS>
       mirrored: <MIRROR>
-      image: angellopezque/iko:iris-2020.4.0.524.0
+      image: angellopezque/iko:iris-2021.1.0XDBC.148.1
       updateStrategy:
         type: RollingUpdate
       preferredZones:

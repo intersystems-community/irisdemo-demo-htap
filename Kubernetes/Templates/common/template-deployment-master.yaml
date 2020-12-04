@@ -48,7 +48,7 @@ spec:
         - name: DISABLE_JOURNAL_FOR_TRUNCATE_TABLE
           value: "true"
         - name: INGESTION_THREADS_PER_WORKER
-          value: "2"
+          value: "15"
         - name: INGESTION_BATCH_SIZE
           value: "1000"
         - name: INGESTION_JDBC_URL
@@ -64,8 +64,8 @@ spec:
         - name: CONSUMER_JDBC_PASSWORD
           value: "sys"
         - name: CONSUMER_THREADS_PER_WORKER
-          value: "1"
+          value: "10"
         - name: CONSUMER_TIME_BETWEEN_QUERIES_IN_MILLIS
           value: "0"
         - name: DATABASE_SIZE_IN_GB
-          value: "1"
+          value: "<STORAGE_SIZE>"
