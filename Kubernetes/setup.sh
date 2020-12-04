@@ -111,7 +111,7 @@ exit_if_empty $HTAP_QUERY_WORKERS
 
 echo "export HTAP_QUERY_WORKERS=$HTAP_QUERY_WORKERS" >> $DEPLOYMENT_FOLDER/envar.sh
 
-if [ "$COMMUNITY" == false ];
+if [ "$irisLocalAnswer" != "yes" ];
 then 
     #
     #
@@ -174,6 +174,14 @@ then
     # Local templates
     cp ./Templates/local-community/template-iris-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
 else
+
+    ## Now it could be On Cloud COMMUNITY or NO COMMUNITY
+    if [ "$COMMUNITY" == true ];
+    then
+        cp ./Templates/local-community/template-iris-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
+    else
+        cp ./Templates/AWS/template-iris-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
+    fi
     # AWS templates
 
     cp ./Templates/AWS/template-cluster-config.yaml $DEPLOYMENT_FOLDER/cluster-config.yaml
@@ -188,7 +196,7 @@ else
     sed -E -i '' "s;<IOPS_PER_GB_SLOW>;$IOPS_PER_GB_SLOW;g" $DEPLOYMENT_FOLDER/storage-class.yaml
     sed -E -i '' "s;<IOPS_PER_GB_FAST>;$IOPS_PER_GB_FAST;g" $DEPLOYMENT_FOLDER/storage-class.yaml
 
-    cp ./Templates/AWS/template-iris-deployment.yaml $DEPLOYMENT_FOLDER/iris-deployment.yaml
+    
 
 fi
 
@@ -216,6 +224,7 @@ sed -E -i '' "s;<J2_STORAGE_SIZE>;$J2_STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/iris-de
 sed -E -i '' "s;<MIRROR>;$MIRROR;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 sed -E -i '' "s;<CPUS>;$CPUS;g" $DEPLOYMENT_FOLDER/iris-deployment.yaml
 
+sed -E -i '' "s;<STORAGE_SIZE>;$STORAGE_SIZE;g" $DEPLOYMENT_FOLDER/deployment-master.yaml
 sed -E -i '' "s;<NAMESPACE>;$NAMESPACE;g" $DEPLOYMENT_FOLDER/deployment-master.yaml
 
 if [ "$LOCAL" != false ];

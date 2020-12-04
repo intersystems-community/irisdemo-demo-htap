@@ -18,7 +18,7 @@ spec:
         speedtest/node-type: master-ui
       containers:
       - name: ui-container
-        image: intersystemsdc/irisdemo-demo-htap:ui-version-2.5.2
+        image: intersystemsdc/irisdemo-demo-htap:ui-version-2.5.3
         resources:
           requests:
               cpu: 0.5
