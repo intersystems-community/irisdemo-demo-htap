@@ -46,6 +46,7 @@ update_version_on_files () {
         else
             if [[ "$pathname" == *.yaml || "$pathname" == *.yml ]]; then
                 sed -E -i '' "s;version-[0-9][0-9.]*;version-$INPUT_STRING;g" $pathname
+                git add $pathname
             fi
         fi
     done

@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: iris-container
-        image: intersystemsdc/irisdemo-base-irisdb-community:version-1.7.1
+        image: intersystemsdc/irisdemo-base-irisdb-community:version-2.5.3
         resources:
           requests:
               cpu: 0.5
