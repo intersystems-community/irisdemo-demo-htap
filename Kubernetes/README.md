@@ -133,7 +133,7 @@ Do you want IRIS with Sharding (answer yes or something else if not)?: no
 
 
 How many Ingestion Workers?: 1
-
+ku
 
 How many Query Workers?: 1
 
