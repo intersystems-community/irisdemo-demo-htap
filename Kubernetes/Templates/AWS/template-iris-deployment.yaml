@@ -48,8 +48,5 @@ spec:
           resources:
             requests:
               cpu: <CPUS>
-          selector:
-            matchLabels:
-              app: htapirisdb
       
       
