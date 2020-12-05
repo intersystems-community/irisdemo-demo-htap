@@ -1,4 +1,4 @@
-## 2.5.3 (December 03, 2020)
+## 2.6.0 (December 04, 2020)
  - Adding support for Kubernetes
  - Bumping to IRIS base image 1.7.1 because of messages.log problem.
  - Making workers exist after an exception so that Kubernetes can restart the container for us.
