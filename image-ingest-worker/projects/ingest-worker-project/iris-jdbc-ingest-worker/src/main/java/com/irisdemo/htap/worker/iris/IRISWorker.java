@@ -100,7 +100,7 @@ public class IRISWorker implements IWorker
     	catch (SQLException sqlException) 
     	{
 			logger.error("Ingestion worker #"+threadNum+" crashed with the following error:" + sqlException.getMessage());
-			throw sqlException;
+			System.exit(-1);
 		} 
 		catch (InterruptedException e) 
 		{
@@ -167,7 +167,8 @@ public class IRISWorker implements IWorker
 		}
 		catch (Exception e)
 		{
-			throw e;
+			logger.error("Ingestion worker crashed while preparing the database for the Speed Test with the following error:" + e.getMessage());
+			System.exit(-1);
 		}
 		finally
 		{

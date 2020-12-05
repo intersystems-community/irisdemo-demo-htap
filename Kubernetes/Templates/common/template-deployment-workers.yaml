@@ -14,13 +14,11 @@ spec:
       labels:
         app: ingestion-worker-pod
     spec:
+      nodeSelector:
+        speedtest/node-type: ingest
       containers:
       - name: ingestion-worker-container
-        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.5.1
-        resources:
-          requests:
-              cpu: 0.5
-              memory: 512M
+        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.5.3
         ports:
         - containerPort: 8080
         env:
@@ -46,14 +44,11 @@ spec:
       labels:
         app: query-worker-pod
     spec:
+      nodeSelector:
+        speedtest/node-type: query
       containers:
       - name: query-worker-container
-        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.5.1
-        resources:
-          requests:
-              cpu: 0.5
-              memory: 512M
-
+        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.5.3
         ports:
         - containerPort: 8080
         env:

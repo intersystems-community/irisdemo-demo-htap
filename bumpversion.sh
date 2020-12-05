@@ -38,6 +38,30 @@ NOTICE_FLAG="${CYAN}❯"
 ADJUSTMENTS_MSG="${QUESTION_FLAG} ${CYAN}Now you can make adjustments to ${WHITE}CHANGELOG.md${CYAN}. Then press enter to continue."
 PUSHING_MSG="${NOTICE_FLAG} Pushing new version to the ${WHITE}origin${CYAN}..."
 
+update_version_on_files () {
+
+    # Check all files in the given folder
+    for pathname in "$1"/*; do
+
+        # If the file is a directory check the files inside the directory 
+        if [ -d "$pathname" ]; then
+            update_version_on_files "$pathname"
+        else
+            # Find files that end on *.yaml or *.yml
+            if [[ "$pathname" == *.yaml || "$pathname" == *.yml ]]; then
+
+                # Do not change the version of iris base images
+                if [[ "$pathname" != *irisdemo-base* ]];
+                then
+                    # Change the version of our images
+                    sed -E -i '' "s;version-[0-9][0-9.]*;version-$INPUT_STRING;g" $pathname
+                    git add $pathname
+                fi
+            fi
+        fi
+    done
+}
+
 if [ -f VERSION ]; then
     BASE_STRING=`cat VERSION`
     BASE_LIST=(`echo $BASE_STRING | tr '.' ' '`)
@@ -69,6 +93,8 @@ if [ -f VERSION ]; then
     #sed -E -i '' "s;(intersystemsdc/irisdemo-demo-htap:.+)-version-[0-9][0-9.]*;\1-version-$INPUT_STRING;g" ./README.md
     sed -E -i '' "s;version-[0-9][0-9.]*;version-$INPUT_STRING;g" ./ICM/ICMDurable/base_env.sh
 
+    update_version_on_files ./Kubernetes
+    
     echo "## $INPUT_STRING ($NOW)" > tmpfile
     git log --pretty=format:"  - %s" "v$BASE_STRING"...HEAD >> tmpfile
     echo "" >> tmpfile
