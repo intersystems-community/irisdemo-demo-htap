@@ -201,6 +201,8 @@ else
 fi
 
 # Common templates
+
+cp ./Templates/common/template-bounce-speedtest.sh $DEPLOYMENT_FOLDER/bounce-speedtest.sh
 cp ./Templates/common/template-service-ui.yaml $DEPLOYMENT_FOLDER/service-ui.yaml
 cp ./Templates/common/template-deployment-master.yaml $DEPLOYMENT_FOLDER/deployment-master.yaml
 cp ./Templates/common/template-deployment-ui.yaml $DEPLOYMENT_FOLDER/deployment-ui.yaml
