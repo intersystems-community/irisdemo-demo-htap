@@ -73,7 +73,7 @@ icm-2020.2.0.211.0-docker.tar.gz
 
 **Please, notice that the InterSystems IRIS tar.gz is NOT a docker image. It is a normal InterSystems IRIS install kit for Ubuntu.**
 
-**WARNING: The combination of GA versions of ICM and IRIS above has been tested and they work. Some combinations of ICM and IRIS may produce problems, so be careful if you are trying this with different versions.**
+**WARNING: The combination of GA versions of ICM and IRIS above has been tested and they work. Typically, you want the versions of IRIS and ICM to match. So be careful if you are trying this with different versions.**
 
 Copy the InterSystems IRIS install kit to the folder **ICM/ICMDurable/IRISKit/**.
 
