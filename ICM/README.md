@@ -66,26 +66,29 @@ Put the iris.key file on the folder **./irisdemo-demo-htap/ICM/ICMDurable/licens
 You downloaded InterSystems IRIS and ICM from the [Evaluation Service](https://evaluation.intersystems.com) and [Worldwide Response Center (WRC)](https://wrc.intersystems.com) as per instructions above and now you must have two tar.gz files like these:
 
 ```bash
-IRIS-2020.2.0.196.0-lnxubuntux64.tar.gz
-icm-2020.2.0.196.0-docker.tar.gz
+
+IRIS-2020.1.0.215.0-lnxubuntux64.tar.gz
+icm-2020.2.0.211.0-docker.tar.gz
 ```
 
 **Please, notice that the InterSystems IRIS tar.gz is NOT a docker image. It is a normal InterSystems IRIS install kit for Ubuntu.**
+
+**WARNING: The combination of GA versions of ICM and IRIS above has been tested and they work. Some combinations of ICM and IRIS may produce problems, so be careful if you are trying this with different versions.**
 
 Copy the InterSystems IRIS install kit to the folder **ICM/ICMDurable/IRISKit/**.
 
 ICM must be loaded into your local docker installation with the following commands:
 ```bash
-docker load --input ./icm-2020.2.0.196.0-docker.tar.gz
+docker load --input ./icm-2020.2.0.211.0-docker.tar.gz
 
 ...
 
-Loaded image: intersystems/icm:2020.2.0.196.0
+Loaded image: intersystems/icm:2020.2.0.211.0
 ```
 
-This last message is very important. It gives you the full name of the ICM image you just loaded: **intersystems/icm:2020.2.0.196.0**. This name has two parts: 
+This last message is very important. It gives you the full name of the ICM image you just loaded: **intersystems/icm:2020.2.0.211.0**. This name has two parts: 
 - ICM Repository: intersystems/icm
-- ICM Tag: 2020.2.0.196.0
+- ICM Tag: 2020.2.0.211.0
 
 Make sure that the file **ICM/ICMDurable/CONF_ICM_TAG** contains the same tag above (i.e: 2020.2.0.204.0) so that when you try to run the **icm.sh** script (or the **icm.ps1** script on Powershell), it will use the right ICM version.
 
