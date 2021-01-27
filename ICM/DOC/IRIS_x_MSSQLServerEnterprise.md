@@ -278,80 +278,10 @@ After 20 minutes, here are my initial results running on a m5.xlarge (16Gb of RA
 | Database                 | Machine       | Run time | Avg Inserts/s       | Tot Records Inserted | Avg Queries/s       | Tot Records Retrieved AEOT | Query Response Time AEOT     | 
 |--------------------------|---------------|----------|---------------------|----------------------|---------------------|----------------------------|------------------------------|
 | InterSystems IRIS 2020.2 | m5.xlarge     | 1200s    | 134,173K rec/sec    | 160,911,000          | 21,928 rec/sec      | 26,297,327                 | 0.0459ms                     |
-| AWS RDS SQL Server 2017  | db.m5.xlarge  | 1200s    | 23,710K rec/sec     | 28,432,000           | 0.61 rec/sec        | 713                        | 500ms                        |
+| AWS RDS SQL Server 2017  | db.m5.xlarge  | 1200s    | Can't publish     | Can't publish           | Can't publish        | Can't publish                        | Can't publish |
 
-InterSystems IRIS:					
-- Ingested 466% more records	
-- Was ingesting them 465.9% faster
-- Retrieved 3688164.7% more records	
-- Was retrieving them 3567650.8% faster
 
-That is impossible. SQL Server can't be that bad... And look at that query response time of 500ms. That points me to a configured timeout of sorts that is going on when querying...
-
-So I went to investigate my logs on the Query Worker by running the following commands on my ICM session:
-
-```bash
-icm ssh --interactive --machine asamaryAWSSQLServer-CN-IRISSpeedTest-0006
-docker logs htapQueryWorker
-```
-
-And I saw the following messages:
-
-```bash
-2020-04-27 15:27:12.016 ERROR 7 --- [        task-17] c.i.htap.worker.mysql.MSSQLWorker        : Exception while running consumer query: Transaction (Process ID 101) was deadlocked on lock | communication buffer resources with another process and has been chosen as the deadlock victim. Rerun the transaction.
-```
-
-So, there are dead locks going on... And there are time outs to locks... That explains it. I managed to reproduce that problem on my local machine as well with SQL Server 2019 for Linux (running docker-compose up -f docker-compose-sqlserver.yml).
-
-Here is what I tried to solve this:
-- I changed both ingestion worker and query worker to use transaction isolation level READ UNCOMMITTED to reduce locking pression with no results.
-- I changed the PRIMARY KEY index on the table to an UNCLUSTERED index with no results.
-- I added a 1 second wait between every batch on the ingestion worker to reduce the ingestion pressure. The query worker managed to work faster, but not nearly fast enough and the deadlocks were still there. 
-
-It looks like the problem has to do with locking escalation on SQL Server... This article [here](https://www.sqlshack.com/locking-sql-server/) and the additional SQL Server documentation [here](https://docs.microsoft.com/en-us/sql/relational-databases/performance-monitor/sql-server-locks-object?view=sql-server-ver15) explain all the types of locking that SQL Server supports. 
-
-I used Visual Studio Code (with a SQL Server plugin) to run the following query while running the test:
-
-```SQL
-SELECT resource_type, request_mode, count(resource_description)
-FROM sys.dm_tran_locks
-WHERE resource_type <> 'DATABASE'
-group by resource_type, request_mode
-```
-
-If you keep repeating this query while running the test, from time to time you will see a row with resource_type=OBJECT, request_mode='IX'(intent to exclusive) appearing. Well... this type of lock escalation prevents any shared locks to be applied to any rows on the table while it is there! It goes away and comes back frequently. My interpretation is that SQL Server is doing a lot of lock escalation to the table level (OBJECT) and is preventing any reads to the table. That is happening with transaction isolation level READ_UNCOMMITTED which is pretty unexpected.
-
-I used the following query to validate that both the ingestion workers and the query workers were working with the READ_UNCOMMITTED isolation level:
-
-```SQL
-SELECT session_id, start_time, status,
-total_elapsed_time,
-CASE transaction_isolation_level
-WHEN 1 THEN 'ReadUncomitted'
-WHEN 2 THEN 'ReadCommitted'
-WHEN 3 THEN 'Repeatable'
-WHEN 4 THEN 'Serializable'
-WHEN 5 THEN 'Snapshot'
-ELSE 'Unspecified' END AS transaction_isolation_level,
-sh.text, ph.query_plan
-FROM sys.dm_exec_requests
-CROSS APPLY sys.dm_exec_sql_text(sql_handle) sh
-CROSS APPLY sys.dm_exec_query_plan(plan_handle) ph
-```
-
-I found both my INSERT and SELECT queries on the resultset with the proper isolation level of READ_UNCOMMITTED.
-
-It seems I can change the SELECT query to include a WITH (NOLOCK) hint that will prevent SQL Server from trying to acquire a shared lock on the row when trying to read it, and collide with the OBJECT intent exclusive lock (IX). 
-
-Running with NOLOCK is very acceptable for this scenario. It is time for us to make another huge overhaul of this Speed Test to make it easier for anyone to work with these database differences. Anyway, after hacking the SQL Server Query Worker to add the NOLOCK to the query the results are.... still very disapointing.
-
-The database is pre-expanded, Ingestion is being run with READ_UNCOMMITTED, Queries are being run with READ_UNCOMITTED and WITH (NOLOCK), all verified with SQL Server system querires. I even tried using a NONCLUSTERED index on the primary key. Nothing made SQL Server behave better. It does ingestion relatively well, but query performance is very disapointing under ingestion pressure.
-
-After all these optimizations, the results were not too different... 
-
-It seems that SQL Server requires a lot of RAM to perform so I tried it again on a m5.8xlarge with 128GB of RAM. The results were very similar in the sense that SQL Server query performance started at under 1K records/s and degraded to close to 0 records/s pretty quickly. Ingestion performance increased from 23,710K rec/sec (with 16Gb of RAM) to ~90K records/s (with 128Gb of RAM). 
-
-If anyone else out there can make SQL Server perform under pressure, I would appreciate the help.
+The results were astounding but we can't publish them because SQL Server's EULSA prevents us from doing it. But you can run the test yourself and find out! :)
 
 ## 9 - Unprovision everything
 
@@ -374,8 +304,4 @@ After ICM is done, make sure you:
 
 ## 10 - Screenshots
 
-Here is the end result of SQL Server's test:
-![SQL Server Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_AWS_RDS_SQL_Server_Enterprise_2017_results.png?raw=true)
-
-Here is the end result of InterSystems IRIS test:
-![InterSystems IRIS Results](https://raw.githubusercontent.com/intersystems-community/irisdemo-demo-htap/master/ICM/DOC/SpeedTest_InterSystems_IRIS_2020.2_m5.xlarge_results_2.png?raw=true)
+The results were astounding but we can't publish them because SQL Server's EULSA prevents us from doing it. But you can run the test yourself and find out! :)
