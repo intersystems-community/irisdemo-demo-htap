@@ -18,8 +18,8 @@ You can run the tests on AWS! Here are some results:
   - Retrieved 360.9% more records
   - Was retrieving them 360.7% faster
 * [InterSystems IRIS x AWS RDS SQL Server 2017](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_MSSQLServerEnterprise.md). InterSystems IRIS:					
- - The results were astounding but we can't publish them because SQL Server's EULSA prevents us from doing it.
- - But you can run the test yourself and find out! :)
+  - The results were astounding but we can't publish them because SQL Server's EULSA prevents us from doing it.
+  - But you can run the test yourself and find out! :)
 * [InterSystems IRIS x Sybase ASE 16.0 SP03 PL08, public cloud edition, premium version](https://github.com/intersystems-community/irisdemo-demo-htap/blob/master/ICM/DOC/IRIS_x_SAPSybaseASE.md). InterSystems IRIS:					
   - Ingested 4862.8% more records
   - Was ingesting them 6733.4% faster AEOT
@@ -46,8 +46,8 @@ You can run the tests on your own PC using Dockers (3 CPUs and 7GB of RAM)! Here
   * InterSystems IRIS ingests 3043% more records than MySQL 8.0
   * InterSystems IRIS is 643% faster than MySQL 8.0 at querying
 * InterSystems IRIS x SQL Server 2019 for Ubuntu
-  * InterSystems IRIS ingests 223% more records than faster than SQL Server 2019
-  * InterSystems IRIS is 134,632% faster (really, not a typo) than SQL Server 2019 at querying. 
+  - The results were astounding but we can't publish them because SQL Server's EULSA prevents us from doing it.
+  - But you can run the test yourself and find out! :)
   * To be fair, we will be testing SQL Server on AWS and Azure in the future. Stay tuned!
 
 ## 1 - Running the Speed Test on AWS
