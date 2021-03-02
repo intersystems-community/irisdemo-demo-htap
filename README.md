@@ -202,7 +202,7 @@ Databases will also keep this data in memory as a **memory cache**, as long as p
 
 Traditional databases will then do their best to write the current state in a structured **database file**. This is a slow process since the database has to update specific blocks on the database file to reflect the changes happening to the current state (random writes). Traditional databases will do this asynchronously as soon as possible. This has the advantage that, in case you need to restart your database, the current state of the database can be read directly from the database file (and completed with just a few records from the log file) instead of being reconstructed transaction by transaction entirely from the database log file.
 
-In-Memory databases, on the other hand, will only write to the database file if they can't hold the full database state in memory anylonger. They will apply data compression in memory as well to make the best usage of available memory. Some in-memory databases will not even have a database file to write to, relying completely on the log file when it is time to restart the database. These In-memory databases will crash if they run out of memory. But most enterprise In-Memory databases such as SAP HANA will write to the database file just like InterSystems IRIS does, but only when they are running out of memory and data compression doesn't help anymore.
+In-Memory databases, on the other hand, will only write to the database file if they can't hold the full database state in memory any longer. They will apply data compression in memory as well to make the best usage of available memory. Some in-memory databases will not even have a database file to write to, relying completely on the log file when it is time to restart the database. These In-memory databases will crash if they run out of memory. But most enterprise In-Memory databases such as SAP HANA will write to the database file just like InterSystems IRIS does, but only when they are running out of memory and data compression doesn't help anymore.
 
 So, as you can realize, if we are constantly inserting records (Data ingestion) to the database, there is a **out of memory pressure** building up, in order to open up more space in memory for the new records which will force these databases to write to disk. On the other hand, we are running parallel queries as well for a specifc set of records which will force the database to try their best to keep those constantly requested records in memory. That is what we call **in-memory pressure**.
 
@@ -255,11 +255,11 @@ The Query Worker will SELECT from this table by account_id and try to select as 
 
 End-to-end performance has to do with the fact that some JDBC drivers have optmizations. If you just execute the query, the JDBC driver may not fetch the record from the server until you actually request for a value of a column. 
 
-To proove that we are actually reading the columns we are SELECTing, we sum up the bytes of all the filds reeturned as **proof of work**.
+To prove that we are actually reading the columns we are SELECTing, we sum up the bytes of all the filds reeturned as **proof of work**.
 
 ## 7 - How do you achieve maximum throughput on ingestion and querying?
 
-To achieve maximum throughput, each ingestion worker will start multiple threads that each will:
+To achieve maximum throughput, each ingestion worker will start multiple threads that will each:
 - Prepare a set of 1000 random values for each column of the table above. This is done because each column can have a different data type and a different size. So we want to genererate records that can vary accordingly
 - For each new record to be inserted, the ingestion worker will randomly select one value out of the 1000 values for each column and once a record is ready, it will be added to the batch
 - Use batch inserting with a default batch size of 1000 records per batch
@@ -270,9 +270,9 @@ The query workers, on the other hand, also start multiple threads to query as ma
 
 ## 8 - How much space does InterSystems IRIS take on disk?
 
-I filled up a 70Gb DATA file system after ingesting 171,421,000 records. That would mean that each records would take an avergage of 439 bytes (rounding up).
+I filled up a 70Gb DATA file system after ingesting 171,421,000 records. That would mean that each record would take an average of 439 bytes (rounding up).
 
-I also filled 100% of my first journal directory and about 59% of the second. Both filesystems had 100Gb which means that 171,421,000 would take about 159Gb of journal space or that each records would take an average of 996 bytes. 
+I also filled 100% of my first journal directory and about 59% of the second. Both filesystems had 100Gb which means that 171,421,000 would take about 159Gb of journal space or that each record would take an average of 996 bytes. 
 
 ## 9 - Architecture of the HTAP Demo
 
@@ -375,7 +375,7 @@ There are other InterSystems IRIS demo applications that touch different subject
 
 Here is the list of the supported databases so far:
 
-* **Runing on your PC with docker-compose (NO mirroring/replication)**
+* **Running on your PC with docker-compose (NO mirroring/replication)**
   - InterSystems IRIS 2020.2
   - MySQL 8.0
   - MariaDB 10.5.4-focal

@@ -171,8 +171,8 @@ Click [here](https://aws.amazon.com/marketplace/pp/B086L36N2H?qid=1587590071891&
 * Click on the button **Continue to Launch**
   * Pick EC2 Instance Type **i3.xlarge**. It has 4 cores, 30Gb of RAM and a very high network performance (up to 10Gigabit). InterSystems IRIS is deployed on the same machine.
   * Under VPC Settings, pick the VPC_ID that we gave just after you deployed InterSystems IRIS.
-  * Under Security Group Settings, pick the security group that has the form **YourLabel-CN-IRISSpeedTestext**
-  * Under Key Pair Settings, pick the key named **YourLabel-CN-IRISSpeedTest**
+  * Under Security Group Settings, pick the security group that has the form **YourLabel-VM-IRISSpeedTestext**
+  * Under Key Pair Settings, pick the key named **YourLabel-VM-IRISSpeedTest**
 * Click on the button **Launch**
 
 You should see a **Congratulations** message now. SAP HANA is being provisioned and deployed on our VPC!
