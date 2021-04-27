@@ -12,7 +12,7 @@ Once we are done with the steps above, we will know our AWS VPC. We will use thi
 
 ## 1 - Start ICM
 
-You have clonned this repo to a folder on your PC. Now, open a terminal and change to the ICM folder. Run the downloadicm.sh script to get the InterSystems ICM image on your machine.
+You have cloned this repo to a folder on your PC. Now, open a terminal and change to the ICM folder. Run the downloadicm.sh script to get the InterSystems ICM image on your machine.
 
 ```bash
 ./downloadicm.sh

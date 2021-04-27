@@ -191,7 +191,7 @@ Click [here](https://console.aws.amazon.com/rds/home?region=us-east-1#) to open 
   * Under Additional Connectivity Configuration:
     * At "Subnet group", leave it with **Create new DB subnet Group**
     * At "Publicly accessible", leave it with **No**
-    * At "VPC security group", leave it with **Choose existing** and pick the one named **YourLabel-CN-IRISSpeedTestext**
+    * At "VPC security group", leave it with **Choose existing** and pick the one named **YourLabel-VM-IRISSpeedTestext**
 * Do not enable Microsoft SQL Server Windows Authentication
 * Under "Additional Configuration":
   * Set Backup Retention Period to 1 day

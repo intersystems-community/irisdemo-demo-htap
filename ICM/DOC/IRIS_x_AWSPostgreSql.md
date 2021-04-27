@@ -197,7 +197,7 @@ Click [here](https://console.aws.amazon.com/rds/home?region=us-east-1#) to open 
   * Select the "Additional connectivity configuration" dropdown
   * At "Subnet group", it should be populated with the default subnet group for you VPC
   * At "Publicly accessible", leave it with **No**
-  * At "VPC security group", leave it with **Choose existing** and pick the one named **YourLabel-CN-IRISSpeedTestext**. If you don't see any VPC security groups then you need to double check and make sure you have in fact selected the correct VPC. If that is correct then you are experiencing an AWS bug. The bug hides your VPC security groups since this is the first time you are creating a DB in the VPC. In order to get around this bug you need to create a dummy DB and add it into your VPC. You can delete this DB right after creating it, but after its creation you will be able to add the VPC security group to any new databases you create.
+  * At "VPC security group", leave it with **Choose existing** and pick the one named **YourLabel-VM-IRISSpeedTestext**. If you don't see any VPC security groups then you need to double check and make sure you have in fact selected the correct VPC. If that is correct then you are experiencing an AWS bug. The bug hides your VPC security groups since this is the first time you are creating a DB in the VPC. In order to get around this bug you need to create a dummy DB and add it into your VPC. You can delete this DB right after creating it, but after its creation you will be able to add the VPC security group to any new databases you create.
 * At "Database authentication" leave it with **Password authentication**
 * Under "Additional Configuration":
   * Set "Initial database name" with **SPEEDTEST**

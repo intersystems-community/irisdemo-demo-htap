@@ -188,7 +188,7 @@ Click [here](https://console.aws.amazon.com/rds/home?region=us-east-1#) to open 
   * At "Virtual Private Cloud (VPC)", pick the VPC_ID created for us on the previous steps
   * At "Subnet group", leave it with its current option
   * At "Publicly accessible", leave it with **No**
-  * At "VPC security group", leave it with **Choose existing** and pick the one named **YourLabel-CN-IRISSpeedTestext** If you don't see any security groups, make sure you selected the correct VPC. If you have, then you are experiencing an AWS bug, which hides your VPC security groups the first time you create a DB in the VPC. To get around this bug, you must first create a "dummy" DB and add it to your VPC. Feel free to delete the "dummy" DB, since after its creation you will be able to add the correct VPC security group to any DB you csreate under this VPC.
+  * At "VPC security group", leave it with **Choose existing** and pick the one named **YourLabel-VM-IRISSpeedTestext** If you don't see any security groups, make sure you selected the correct VPC. If you have, then you are experiencing an AWS bug, which hides your VPC security groups the first time you create a DB in the VPC. To get around this bug, you must first create a "dummy" DB and add it to your VPC. Feel free to delete the "dummy" DB, since after its creation you will be able to add the correct VPC security group to any DB you csreate under this VPC.
   * At "Database port" leave it with its current value of **3306**
 
 

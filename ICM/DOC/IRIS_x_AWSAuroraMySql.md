@@ -175,7 +175,6 @@ Click [here](https://console.aws.amazon.com/rds/home?region=us-east-1#) to open 
   * At "Engine type" pick option **Amazon Aurora**
   * At "Edition" pick option **Amazon Aurora with MySQL compatibility**
   * At "Version" pick option **Aurora (MySQL)-5.6.10a**
-  * At "Database Location" pick option **Regional**
 * At "Database Features" pick option **One writer and multiple readers - Parallel Query**
 * Under "Settings":
   * At "DB cluster identifier" enter with **speedtest**
@@ -186,7 +185,7 @@ Click [here](https://console.aws.amazon.com/rds/home?region=us-east-1#) to open 
   * At "Virtual Private Cloud (VPC)", pick the VPC_ID created for us on the previous steps
   * At "Subnet group", leave it with **Create new DB subnet Group**
   * At "Publicly accessible", leave it with **No**
-  * At "VPC security group", leave it with **Choose existing** and pick the one named **YourLabel-CN-IRISSpeedTestext**
+  * At "VPC security group", leave it with **Choose existing** and pick the one named **YourLabel-VM-IRISSpeedTestext**
 * At "Database authentication" leave it with **Password authentication**
 * Under "Additional Configuration":
   * Set "Initial database name" with **SPEEDTEST**
