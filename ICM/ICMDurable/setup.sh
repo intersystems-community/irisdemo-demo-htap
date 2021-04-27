@@ -246,6 +246,7 @@ then
 fi
 if [ "$ECP" == "true" ];
 then
+    echo "export ECP=$ECP" >> $DEPLOYMENT_FOLDER/env.sh
     echo ",
         {
             \"Role\": \"AM\",

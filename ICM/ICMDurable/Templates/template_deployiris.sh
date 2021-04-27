@@ -17,6 +17,12 @@ then
     icm scp --role DM -localPath $IRIS_KIT_LOCAL_PATH -remotePath $IRIS_KIT_REMOTE_PATH
     icm install --role DM
     exit_if_error "Installing Containerless IRIS failed."
+    if [ "$ECP" == "true" ];
+    then
+        icm scp --role AM -localPath $IRIS_KIT_LOCAL_PATH -remotePath $IRIS_KIT_REMOTE_PATH
+        icm install --role AM
+        exit_if_error "Installing Containerless IRIS failed."
+    fi
 else
     # icm ssh --role DM -command "echo vm.nr_hugepages=$NR_HUGE_PAGES | sudo tee -a /etc/sysctl.conf" 
     # exit_if_error "Huge pages configuration failed"
