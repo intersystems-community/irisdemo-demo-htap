@@ -253,7 +253,6 @@ then
             \"LicenseKey\": \"iris.key\",
             \"Count\": \"${ecpCount}\",
             \"LoadBalancer\": \"true\",
-            \"InstanceType\": \"c5.xlarge\",
             \"KitURL\": \"file://tmp/IRIS-2020.1.0.215.0-lnxubuntux64.tar.gz\"
         }" >> $DEPLOYMENT_FOLDER/definitions.json
 fi
