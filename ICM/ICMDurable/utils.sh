@@ -332,7 +332,11 @@ bounce_container_at_machine() {
     
     icm ssh  \
         --machine $2 \
-        --command "docker restart $1"
+        --command "docker stop $1"
+
+    icm ssh  \
+        --machine $2 \
+        --command "docker start $1"
     exit_if_error "Failed to restart container $2 at machine $1."
 }
 

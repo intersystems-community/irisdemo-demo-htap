@@ -24,7 +24,7 @@ do
     do
         WORKER_MACHINE_NAME=${ICM_LABEL}-VM-IRISSpeedTest-$(printf %04d $iINGESTION_WORKER)
 
-        bounce_container_at_machine htapIngestionWorker $WORKER_MACHINE_NAME
+        bounce_container_at_machine ingw $WORKER_MACHINE_NAME
 
         let iINGESTION_WORKER="$iINGESTION_WORKER + 1"
     done
@@ -36,7 +36,7 @@ do
     do
         WORKER_MACHINE_NAME=${ICM_LABEL}-VM-IRISSpeedTest-$(printf %04d $iQUERY_WORKER)
 
-        bounce_container_at_machine htapQueryWorker $WORKER_MACHINE_NAME
+        bounce_container_at_machine qryW $WORKER_MACHINE_NAME
 
         let iQUERY_WORKER="$iQUERY_WORKER + 1"
     done
