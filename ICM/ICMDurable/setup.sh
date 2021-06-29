@@ -57,6 +57,20 @@ else
     MIRROR="false"
 fi
 
+printf "\n\n${GREEN}Do you want ECP (answer yes or something else if not)?: ${RESET}"
+read irisWithECPAnswer
+exit_if_empty $irisWithECPAnswer
+
+if [ "$irisWithECPAnswer" == "yes" ];
+then
+    ECP="true"
+    printf "\n\n${GREEN}How many compute nodes do you need?: ${RESET}"
+    read ecpCount
+    exit_if_empty $ecpCount
+else
+    ECP="false"
+fi
+
 #
 # Configuring additional machines with enough non-IRIS containers for the number
 # of HTAP UI/Master and Workers we need
@@ -217,7 +231,8 @@ echo "export NR_HUGE_PAGES=$NR_HUGE_PAGES" >> $DEPLOYMENT_FOLDER/env.sh
         {
         \"Role\": \"DM\",
         \"Count\": \"${DM_COUNT}\",
-        \"LicenseKey\": \"iris.key\"
+        \"LicenseKey\": \"iris.key\",
+        \"KitURL\": \"file://tmp/IRIS-2020.1.0.215.0-lnxubuntux64.tar.gz\"
         } ">> $DEPLOYMENT_FOLDER/definitions.json
 
 if [ $MAX_CN -gt 0 ];
@@ -230,6 +245,18 @@ then
             \"DataVolumeSize\": \"30\",
             \"DataVolumeIOPS\": \"100\",
             \"InstanceType\": \"c5.xlarge\"
+        }" >> $DEPLOYMENT_FOLDER/definitions.json
+fi
+if [ "$ECP" == "true" ];
+then
+    echo "export ECP=$ECP" >> $DEPLOYMENT_FOLDER/env.sh
+    echo ",
+        {
+            \"Role\": \"AM\",
+            \"LicenseKey\": \"iris.key\",
+            \"Count\": \"${ecpCount}\",
+            \"LoadBalancer\": \"true\",
+            \"KitURL\": \"file://tmp/IRIS-2020.1.0.215.0-lnxubuntux64.tar.gz\"
         }" >> $DEPLOYMENT_FOLDER/definitions.json
 fi
 echo "]" >> $DEPLOYMENT_FOLDER/definitions.json
