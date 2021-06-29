@@ -323,6 +323,29 @@ deploy()
     printf "\n\n\thttp://${UI_MACHINE_IP}"
 }   
 
+# $1 is the machine name
+# $2 is the container name
+stop_container_at_machine() {
+
+    printf "\n${YELLOW}Stopping container $1 at $2...\n${RESET}"
+    
+    icm ssh  \
+        --machine $2 \
+        --command "docker stop $1"
+}
+
+# $1 is the machine name
+# $2 is the container name
+start_container_at_machine() {
+
+    printf "\n${YELLOW}Starting container $1 at $2...\n${RESET}"
+    
+    icm ssh  \
+        --machine $2 \
+        --command "docker start $1"
+    exit_if_error "Failed to start container $2 at machine $1."
+}
+
 
 # $1 is the machine name
 # $2 is the container name
