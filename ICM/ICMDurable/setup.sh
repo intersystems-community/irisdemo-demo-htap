@@ -162,6 +162,9 @@ then
         echo "export IRIS_KIT=$IRIS_KIT" >> $DEPLOYMENT_FOLDER/env.sh
 
         printf "\n\n${YELLOW}ICM configured to provision $INSTANCE_TYPE machines on AWS.\n\n"
+    else
+        printf "\n\n${RED}You are missing the IRIS Kit in the IRISKit folder. We can't proceed with a containerless installation without it.${RESET}\n\n"
+        exit 1
     fi
 else
     printf "\n\n${YELLOW}Please enter with your docker credentials so we can pull the IRIS image from your private docker hub repository.${RESET}\n"
