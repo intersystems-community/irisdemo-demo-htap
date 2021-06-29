@@ -172,7 +172,7 @@ then
         echo "export IRIS_KIT_REMOTE_PATH=/tmp/$IRIS_KIT" >> $DEPLOYMENT_FOLDER/env.sh
 
         # for usage on definitions.json file
-        IRIS_KIT=file://tmp/$IRIS_KIT
+        IRIS_KIT=/tmp/$IRIS_KIT
         echo "export IRIS_KIT=$IRIS_KIT" >> $DEPLOYMENT_FOLDER/env.sh
 
         printf "\n\n${YELLOW}ICM configured to provision $INSTANCE_TYPE machines on AWS.\n\n"
@@ -232,7 +232,7 @@ echo "export NR_HUGE_PAGES=$NR_HUGE_PAGES" >> $DEPLOYMENT_FOLDER/env.sh
         \"Role\": \"DM\",
         \"Count\": \"${DM_COUNT}\",
         \"LicenseKey\": \"iris.key\",
-        \"KitURL\": \"file://tmp/IRIS-2020.1.0.215.0-lnxubuntux64.tar.gz\"
+        \"KitURL\": \"/tmp/IRIS-2020.1.0.215.0-lnxubuntux64.tar.gz\"
         } ">> $DEPLOYMENT_FOLDER/definitions.json
 
 if [ $MAX_CN -gt 0 ];
@@ -256,7 +256,7 @@ then
             \"LicenseKey\": \"iris.key\",
             \"Count\": \"${ecpCount}\",
             \"LoadBalancer\": \"true\",
-            \"KitURL\": \"file://tmp/IRIS-2020.1.0.215.0-lnxubuntux64.tar.gz\"
+            \"KitURL\": \"/tmp/IRIS-2020.1.0.215.0-lnxubuntux64.tar.gz\"
         }" >> $DEPLOYMENT_FOLDER/definitions.json
 fi
 echo "]" >> $DEPLOYMENT_FOLDER/definitions.json
