@@ -15,8 +15,8 @@ export IRIS_DOCKER_IMAGE=$IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG
 ######################################################################
 # Do not change anything bellow this comment
 ######################################################################
-export IRIS_PORT=51773
-export IRIS_ECP_PORT=51773
+export IRIS_PORT=1972
+export IRIS_ECP_PORT=1972
 
 # this is going to be automatically update every time we bump a version on git
 export HTAP_DEMO_VERSION=version-2.6.0
