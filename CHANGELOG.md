@@ -1,3 +1,16 @@
+## 2.6.1 (July 21, 2021)
+  - Adding functions to stop/start containers in machines
+  - IRIS 2021.1.215 uses port 1972 as its default Super Server port.
+  - Eliminating asyncwij from merge.cpf because it seems it is not supported anymore by IRIS 2021.1
+  - Bumping the version of IRIS to 2021.1.215.0
+  - fixing global buffers for m5.xlarge
+  - added support for ECP
+  - Fixing issue with powershell that would cause it to crash when multiple lines were intered in CONF_ICM_TAG or CONF_ICM_REPO
+  - Documentation fixes and fix to ICM registry location
+  - Fixing typo on license folder name
+  - Making sure the license folder will exist
+  - Several Angular UI security updates
+
 ## 2.6.0 (December 04, 2020)
  - Adding support for Kubernetes
  - Bumping to IRIS base image 1.7.1 because of messages.log problem.

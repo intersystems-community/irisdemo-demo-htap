@@ -9,7 +9,7 @@ spec:
   configSource:
     name: iris-cpf
   imagePullSecrets:
-    - name: dockerhub-secret
+    - name: intersystems-container-registry-secret
   topology:
     data:
       shards: <SHARDS>
@@ -46,7 +46,6 @@ spec:
           nodeSelector:
             speedtest/node-type: iris
           resources:
-            requests:
-              cpu: <CPUS>
-      
+            limits:
+              memory: <MEMORY>
       
