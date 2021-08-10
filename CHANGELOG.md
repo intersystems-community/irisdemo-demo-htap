@@ -1,3 +1,6 @@
+## 2.7.2 (August 10, 2021)
+  - Making worker machine type and java JMX configurable
+
 ## 2.7.1 (August 10, 2021)
   - Increasing amount of memory of query workers to 6144Mb
 

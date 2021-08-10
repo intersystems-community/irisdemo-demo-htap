@@ -19,7 +19,7 @@ export IRIS_PORT=1972
 export IRIS_ECP_PORT=1972
 
 # this is going to be automatically update every time we bump a version on git
-export HTAP_DEMO_VERSION=version-2.7.1
+export HTAP_DEMO_VERSION=version-2.7.2
 
 # Worker machine type and java memory configurations
 export JAVA_XMX=6144Mb 
