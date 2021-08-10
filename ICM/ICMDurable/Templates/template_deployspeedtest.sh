@@ -3,7 +3,7 @@
 source ./env.sh
 source /ICMDurable/utils.sh
 
-export JAVA_XMX=2048Mb 
+export JAVA_XMX=6144Mb 
 
 if [ ! -f ./.provisionHasBeenRun ];
 then
