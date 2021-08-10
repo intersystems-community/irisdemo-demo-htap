@@ -3,8 +3,6 @@
 source ./env.sh
 source /ICMDurable/utils.sh
 
-export JAVA_XMX=6144Mb 
-
 if [ ! -f ./.provisionHasBeenRun ];
 then
     printf "\n\n${RED}You have not provisioned the infrastructure yet. Run 1) setup.sh, 2) provision.sh and 4) deployiris.sh before running this script.\n\n${RESET}"

@@ -42,6 +42,9 @@ echo "export ICM_LABEL=$ICM_LABEL" >> $DEPLOYMENT_FOLDER/env.sh
 echo "export IRIS_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local" >> $DEPLOYMENT_FOLDER/env.sh
 echo "export IRIS_ECP_HOSTNAME=iris-${ICM_LABEL}-DM-IRISSpeedTest-0001.weave.local" >> $DEPLOYMENT_FOLDER/env.sh
 
+echo "export JAVA_XMX=${JAVA_XMX}" >> $DEPLOYMENT_FOLDER/env.sh
+echo "export WORKER_MACHINE_TYPE=${WORKER_MACHINE_TYPE}" >> $DEPLOYMENT_FOLDER/env.sh
+
 printf "\n\n${GREEN}Do you want IRIS with Mirroring (answer yes or something else if not)?: ${RESET}"
 read irisWithMirroringAnswer
 exit_if_empty $irisWithMirroringAnswer
@@ -244,7 +247,7 @@ then
             \"DataVolumeType\": \"io1\",
             \"DataVolumeSize\": \"30\",
             \"DataVolumeIOPS\": \"100\",
-            \"InstanceType\": \"c5.xlarge\"
+            \"InstanceType\": \"${WORKER_MACHINE_TYPE}\"
         }" >> $DEPLOYMENT_FOLDER/definitions.json
 fi
 if [ "$ECP" == "true" ];
