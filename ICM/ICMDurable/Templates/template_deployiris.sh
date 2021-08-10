@@ -30,7 +30,7 @@ else
     # icm ssh --role DM -command "sudo reboot"
     # exit_if_error "Rebooting servers after huge page configuration failed."
 
-    icm run -options "--cap-add IPC_LOCK"
+    icm run -options "--cap-add IPC_LOCK --privileged --security-opt seccomp=unconfined"
     exit_if_error "Deploying container based IRIS failed."
 fi
 

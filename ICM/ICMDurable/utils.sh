@@ -148,7 +148,7 @@ docker_run() {
 
     icm ssh  \
         --machine $1 \
-        --command "docker run -d --name $2 -e HOSTNAME=$INTERNAL_IP $4 $3"
+        --command "docker run --security-opt seccomp=unconfined --privileged -d --name $2 -e HOSTNAME=$INTERNAL_IP $4 $3"
     exit_if_error "Error when creating container $2 at machine $1 with image $3"
 }
 
