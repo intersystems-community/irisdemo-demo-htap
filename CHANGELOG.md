@@ -1,3 +1,6 @@
+## 2.7.1 (August 10, 2021)
+  - Increasing amount of memory of query workers to 6144Mb
+
 ## 2.7.0 (August 10, 2021)
   - Making the query workers fetch all keys (not only the first 4)
   - Making speed test containers run with --security-opt seccomp=unconfined --privileged

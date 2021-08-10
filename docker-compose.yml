@@ -18,7 +18,7 @@ services:
     - seccomp:unconfined
     privileged: true   
     hostname: htapui
-    image: intersystemsdc/irisdemo-demo-htap:ui-version-2.7.0
+    image: intersystemsdc/irisdemo-demo-htap:ui-version-2.7.1
     ports:
     - "10000:4200" # Where Node Will be listening
 
@@ -51,7 +51,7 @@ services:
     privileged: true   
     hostname: htapmaster
     init: true
-    image: intersystemsdc/irisdemo-demo-htap:master-version-2.7.0
+    image: intersystemsdc/irisdemo-demo-htap:master-version-2.7.1
     ports:
       - "10002:8080" # Where Springboot Will be listening
     environment:
@@ -80,7 +80,7 @@ services:
     privileged: true   
     hostname: ingest-worker1
     init: true
-    image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.7.0
+    image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.7.1
     ports:
       - "10003:8080" # Where Springboot Will be listening
     environment:
@@ -96,7 +96,7 @@ services:
     privileged: true   
     hostname: query-worker1
     init: true
-    image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.7.0
+    image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.7.1
     ports:
       - "10004:8080" # Where Springboot Will be listening
     environment:
@@ -109,7 +109,7 @@ services:
   #   container_name: ingest-worker2
   #   hostname: ingest-worker2
   #   init: true
-  #   image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.7.0
+  #   image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.7.1
   #   ports:
   #     - "10005:8080" # Where Springboot Will be listening
   #   environment:
@@ -122,7 +122,7 @@ services:
   #   container_name: query-worker2
   #   hostname: query-worker2
   #   init: true
-  #   image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.7.0
+  #   image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.7.1
   #   ports:
   #     - "10006:8080" # Where Springboot Will be listening
   #   environment:
