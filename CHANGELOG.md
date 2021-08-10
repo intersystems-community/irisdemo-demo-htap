@@ -1,3 +1,9 @@
+## 2.7.0 (August 10, 2021)
+  - Making the query workers fetch all keys (not only the first 4)
+  - Making speed test containers run with --security-opt seccomp=unconfined --privileged
+  - Bumping IRIS version to 2021.1.0.215.0
+  - Adding code that helps us to extract jar files from a running IRIS image and register it on our local maven repository.
+
 ## 2.6.1 (July 21, 2021)
   - Adding functions to stop/start containers in machines
   - IRIS 2021.1.215 uses port 1972 as its default Super Server port.

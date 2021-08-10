@@ -72,8 +72,8 @@ public class IRISWorker implements IWorker
 		ResultSet rs;
 		ResultSetMetaData rsmd;
 		Connection connection = getDataSource().getConnection();
-		double t0, t1, t2, t3, rowCount;
-		int idIndex, rowSizeInBytes, colnumCount;
+		double t0, t1, rowCount;
+		int idIndex, rowSizeInBytes, colnumCount =0;
 		
 		logger.info("Starting Consumer thread "+threadNum+"...");
 		accumulatedMetrics.incrementNumberOfActiveQueryThreads();
@@ -105,31 +105,32 @@ public class IRISWorker implements IWorker
 		{
 			preparedStatement = connection.prepareStatement(config.getQueryByIdStatement());
 			
+			// Run one query just to know how many columns are going to come
+			preparedStatement.setString(1, IDs[0]);
+			rs = preparedStatement.executeQuery();
+			rs.next(); // It doesn't atter if we have a record or not. We just want the metadata
+			rsmd = rs.getMetaData();
+			colnumCount = rsmd.getColumnCount();
+			// Now colnumCount has a value
+	
 			while(workerSemaphore.green())
 			{
-				for (idIndex = 0; idIndex<4; idIndex++)
-				{					
+
+				for (idIndex = 0; idIndex<IDs.length; idIndex++)
+				{		
 					t0 = System.currentTimeMillis();
+					rowCount=0;
+					rowSizeInBytes=0;
+				
 					preparedStatement.setString(1, IDs[idIndex]);
 					rs = preparedStatement.executeQuery();
-					
-					t1= System.currentTimeMillis();
-					
+										
 					/* 
 					 * The customer said that it is not fair if we just read the data and
 					 * don't do anything with it. So we will just compute the approximate size of
 					 * the data we have read to show "proof of work".
-					 */
-					
-					rsmd = rs.getMetaData();
-	                rowSizeInBytes=0;
-	                rowCount=0;
-					
-	                t2= System.currentTimeMillis();                
-	                
-	                colnumCount = rsmd.getColumnCount();
-	                
-	                while (rs.next()) 
+					 */					
+	                if (rs.next()) 
 	                {
 	                	rowCount++;
 	                    for (int column=1; column<=colnumCount; column++) 
@@ -138,11 +139,13 @@ public class IRISWorker implements IWorker
 	                    	rowSizeInBytes += rs.getString(column).getBytes().length;
 	                    }
 	                 }
-					 t3= System.currentTimeMillis();
 					 
-					 accumulatedMetrics.addToStats(t3-t0, rowCount, rowSizeInBytes);
+					 t1= System.currentTimeMillis(); 
+					 accumulatedMetrics.addToStats(t1-t0, rowCount, rowSizeInBytes);
+	 
 				}
-				
+
+		   
 				if (config.getConsumptionTimeBetweenQueriesInMillis()>0)
 				{
 					Thread.sleep(config.getConsumptionTimeBetweenQueriesInMillis());
