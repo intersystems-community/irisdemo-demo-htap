@@ -24,7 +24,7 @@
 	  	<dependency>
 	  		<groupId>com.intersystems</groupId>
 	  		<artifactId>intersystems-jdbc</artifactId>
-	  		<version>3.0.0</version>
+	  		<version>3.3.0</version>
 	  	</dependency>
 
 	  	<dependency>

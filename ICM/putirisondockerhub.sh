@@ -45,7 +45,7 @@ function checkError() {
 #
 # Can receive one parameter with the docker registry to log in to. Ex:
 #
-#   dockerLogin docker.iscinternal.com
+#   dockerLogin containers.intersystems.com
 #
 # If no parameter is given, will do the docker login on Docker Hub.
 #
@@ -87,28 +87,28 @@ function dockerLogin() {
 # MAIN
 #
 
-printf "\n\n${YELLOW}Loggin into docker.iscinternal.com (VPN Required!) to download newer images...${NC}\n"
-dockerLogin docker.iscinternal.com
+printf "\n\n${YELLOW}Loggin into containers.intersystems.com (VPN Required!) to download newer images...${NC}\n"
+dockerLogin containers.intersystems.com
 
-printf "\n\n${YELLOW}Pulling image docker.iscinternal.com/intersystems/iris:$IRIS_TAG...${NC}\n"
+printf "\n\n${YELLOW}Pulling image containers.intersystems.com/intersystems/iris:$IRIS_TAG...${NC}\n"
 
-docker pull docker.iscinternal.com/intersystems/iris:$IRIS_TAG
+docker pull containers.intersystems.com/intersystems/iris:$IRIS_TAG
 checkError "IRIS Pull failed." "Pull successful!"
 
-printf "\n\n${YELLOW}Pulling image docker.iscinternal.com/intersystems/icm:$ICM_TAG...${NC}\n"
+printf "\n\n${YELLOW}Pulling image containers.intersystems.com/intersystems/icm:$ICM_TAG...${NC}\n"
 
-docker pull docker.iscinternal.com/intersystems/icm:$ICM_TAG
+docker pull containers.intersystems.com/intersystems/icm:$ICM_TAG
 checkError "ICM Pull failed." "Pull successful!"
 
-printf "\n${YELLOW}Tagging image docker.iscinternal.com/intersystems/iris:$IRIS_TAG as $IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG...${NC}\n"
+printf "\n${YELLOW}Tagging image containers.intersystems.com/intersystems/iris:$IRIS_TAG as $IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG...${NC}\n"
 
 # Retagging the image so that we can upload it to the user's private docker registry
-docker tag docker.iscinternal.com/intersystems/iris:$IRIS_TAG $IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG
+docker tag containers.intersystems.com/intersystems/iris:$IRIS_TAG $IRIS_PRIVATE_REPO:$IRIS_PRIVATE_REPO_TAG
 checkError "IRIS Tagging failed." "IRIS Tagging successful!"
 
 # InterSystems' internal docker registry tags the images with the full name of the docker registry on it. 
 # Let's retag it to just intersystems/icm so that it will match the tag used by WRC
-docker tag docker.iscinternal.com/intersystems/icm:$ICM_TAG $ICM_REPO:$ICM_TAG
+docker tag containers.intersystems.com/intersystems/icm:$ICM_TAG $ICM_REPO:$ICM_TAG
 checkError "ICM Tagging failed." "ICM Tagging successful!"
 
 printf "\n\n${YELLOW}Loggin into Docker Hub:${NC}\n"
