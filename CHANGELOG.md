@@ -1,3 +1,6 @@
+## 2.8.1 (December 28, 2021)
+  - Fixing version of parent docker image to node:10.24.1-alpine3.11 in order to prevent error 'Error: error:0308010C:digital envelope routines::unsupported'
+
 ## 2.8.0 (December 28, 2021)
   - Bumped IRIS and ICM version to 2021.2.0.619.0
 

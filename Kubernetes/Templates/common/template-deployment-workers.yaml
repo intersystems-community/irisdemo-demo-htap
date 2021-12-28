@@ -18,7 +18,7 @@ spec:
         speedtest/node-type: ingest
       containers:
       - name: ingestion-worker-container
-        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.8.0
+        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-ingest-worker-version-2.8.1
         ports:
         - containerPort: 8080
         env:
@@ -48,7 +48,7 @@ spec:
         speedtest/node-type: query
       containers:
       - name: query-worker-container
-        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.8.0
+        image: intersystemsdc/irisdemo-demo-htap:iris-jdbc-query-worker-version-2.8.1
         ports:
         - containerPort: 8080
         env:
