@@ -1,4 +1,4 @@
-FROM node:alpine AS builder
+FROM node:10.24.1-alpine3.11 AS builder
 
 ADD . /app
 
