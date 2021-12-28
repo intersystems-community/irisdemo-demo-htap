@@ -1,3 +1,6 @@
+## 2.8.0 (December 28, 2021)
+  - Bumped IRIS and ICM version to 2021.2.0.619.0
+
 ## 2.7.2 (August 10, 2021)
   - Making worker machine type and java JMX configurable
 
