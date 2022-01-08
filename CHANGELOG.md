@@ -1,3 +1,6 @@
+## 2.8.2 (January 08, 2022)
+  - Bumping IRIS version to 2021.2.0.637.0
+
 ## 2.8.1 (December 28, 2021)
   - Fixing version of parent docker image to node:10.24.1-alpine3.11 in order to prevent error 'Error: error:0308010C:digital envelope routines::unsupported'
 
