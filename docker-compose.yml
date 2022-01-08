@@ -34,7 +34,7 @@ services:
     # version-1.8.0 is based on IRIS Community 2021.1.0.215.0
     # version-1.8.1 is based on IRIS Community 2021.1.0.215.3
     # version-1.9.1 is based on IRIS Community 2021.2.0.619.0
-    image: intersystemsdc/irisdemo-base-irisdb-community:version-1.9.1
+    image: intersystemsdc/irisdemo-base-irisdb-community:version-1.9.2
     hostname: htapirisdb
     init: true
     container_name: htapirisdb
