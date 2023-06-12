@@ -60,7 +60,7 @@ services:
     ports:
       - "10002:8080" # Where Springboot Will be listening
     environment:
-      - MASTER_SPEEDTEST_TITLE=SpeedTest | IRIS Community 2021.2.0.649.0
+      - MASTER_SPEEDTEST_TITLE=SpeedTest | IRIS Community 2023.2.0.202.0
       - START_CONSUMERS=true
       - DISABLE_JOURNAL_FOR_DROP_TABLE=true
       - DISABLE_JOURNAL_FOR_TRUNCATE_TABLE=true
