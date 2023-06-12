@@ -1,3 +1,6 @@
+## 2.8.5 (June 12, 2023)
+  - Removing kubernetes stuff and adding support for IRIS 2023.2
+
 ## 2.8.4 (January 26, 2022)
   - Bumping IRIS version to 2021.2.0.649.0
 
