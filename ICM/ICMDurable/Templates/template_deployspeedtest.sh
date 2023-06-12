@@ -12,6 +12,7 @@ fi
 printf "\n\n${GREEN}Please, specify which speedtest you want to deploy. Available options are:"
 printf "\n\n\t ${YELLOW}iris${RESET}  - InterSystems IRIS"
 # printf "\n\n\t ${YELLOW}mysql${RESET} - MySQL/AWSAurora (not implemented)"
+printf "\n\n\t ${YELLOW}sqlaas${RESET}  - InterSystems IRIS SQLaaS"
 printf "\n\n\t ${YELLOW}hana${RESET}  - SAP HANA"
 printf "\n\n\t ${YELLOW}aurora${RESET}  - AWS Aurora"
 printf "\n\n\t ${YELLOW}mssqlserver${RESET}  - AWS RDS SQL Server"
@@ -33,6 +34,17 @@ case $SPEED_TEST_TO_DEPLOY in
 
         printf "\n\n${YELLOW}If you are planning on deploying SAP HANA, AWS Aurora or any other AWS database, deploy them on the VPC_ID $VPC_ID.${RESET}\n\n"
 
+        break
+        ;;
+    sqlaas)
+        DB_TITLE="InterSystems SQLaaS"
+        read_endpoint_and_credentials "$DB_TITLE" "SuperUser"
+        exit_if_error "We need all the information to proceed."
+
+        INGESTION_JDBC_URL=jdbc:IRIS://${DB_HOSTNAME}:1972/USER
+        CONSUMER_JDBC_URL=jdbc:IRIS://${DB_HOSTNAME}:1972/USER
+
+        deploy "sqlaas" "SpeedTest | $DB_TITLE" "$INGESTION_JDBC_URL" "$CONSUMER_JDBC_URL" "$DB_JDBC_USERNAME" "$DB_JDBC_PASSWORD"
         break
         ;;
     hana)

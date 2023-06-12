@@ -209,6 +209,11 @@ deploy()
         JDBC_PASSWORD=$6
     fi
 
+    if [ "$IMAGE_PREFIX" = "sqlaas" ];
+    then
+        IMAGE_PREFIX="iris"
+    else
+
     find_iris_database_size
 
     CN_MACHINE_GROUP="${ICM_LABEL}-VM-IRISSpeedTest"
